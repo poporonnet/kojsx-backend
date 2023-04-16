@@ -24,7 +24,5 @@ func TestJWTTokenParser_Parse(t *testing.T) {
 	if err != nil {
 		t.Fail()
 	}
-
 	assert.Equal(t, id.SnowFlakeID("112233"), parsed)
-
 }
