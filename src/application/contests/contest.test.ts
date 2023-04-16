@@ -5,8 +5,8 @@ import {
   InmemoryProblemRepository,
 } from "../../repository/memory/contest.js";
 import { InmemorySubmissionsRepository } from "../../repository/memory/submission.js";
-import { Contest } from "../../models/contest.js";
-import { Problem } from "../../models/problems.js";
+import { Contest } from "../../domain/contest.js";
+import { Problem } from "../../domain/problems.js";
 import { DummyQueue } from "./jobqueuemanager.js";
 
 describe("コンテスト", () => {

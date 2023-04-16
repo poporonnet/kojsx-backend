@@ -3,7 +3,7 @@ import { IPasswordEncoder } from "../../common/password/passwordEncoder.js";
 import { Argon2PasswordEncoder } from "../../common/password/argon2.js";
 import { SnowflakeIDGenerator } from "../../common/id/snowflakeIDGenerator.js";
 import { Failure, Result, Success } from "../../common/result.js";
-import { User, userUpdateArgs } from "../../models/users.js";
+import { User, userUpdateArgs } from "../../domain/users.js";
 import { Snowflake } from "../../common/id/snowflakeID.js";
 import {
   JWTTokenGenerator,

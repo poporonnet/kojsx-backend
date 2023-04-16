@@ -1,5 +1,5 @@
 import { Result } from "../common/result.js";
-import { User, userUpdateArgs } from "../models/users.js";
+import { User, userUpdateArgs } from "../domain/users.js";
 
 export interface UserRepository {
   /* createUser ユーザー作成

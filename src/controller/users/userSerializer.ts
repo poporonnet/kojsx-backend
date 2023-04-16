@@ -1,4 +1,4 @@
-import { User } from "../../models/users.js";
+import { User } from "../../domain/users.js";
 import { CreateUserResponseJSON } from "./types.js";
 
 export class UserSerializer {

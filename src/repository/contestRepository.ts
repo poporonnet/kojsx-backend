@@ -1,6 +1,6 @@
-import { Contest } from "../models/contest.js";
+import { Contest } from "../domain/contest.js";
 import { Result } from "../common/result.js";
-import { Case, Problem } from "../models/problems.js";
+import { Case, Problem } from "../domain/problems.js";
 
 export type contestUpdateArg = Partial<{
   title: string;

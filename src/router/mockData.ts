@@ -1,8 +1,8 @@
-import { Contest } from "../models/contest.js";
+import { Contest } from "../domain/contest.js";
 import { ISODateToObject } from "../common/time.js";
-import { Submission } from "../models/submissions.js";
-import { Case, Problem } from "../models/problems.js";
-import { User } from "../models/users.js";
+import { Submission } from "../domain/submissions.js";
+import { Case, Problem } from "../domain/problems.js";
+import { User } from "../domain/users.js";
 
 export const ContestsMockData = [
   new Contest(

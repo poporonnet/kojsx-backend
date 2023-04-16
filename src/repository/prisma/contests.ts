@@ -5,9 +5,9 @@ import {
   problemUpdateArgs,
 } from "../contestRepository.js";
 import { PrismaClient } from "@prisma/client/index.js";
-import { Contest } from "../../models/contest.js";
+import { Contest } from "../../domain/contest.js";
 import { Failure, Result, Success } from "../../common/result.js";
-import { Case, Problem } from "../../models/problems.js";
+import { Case, Problem } from "../../domain/problems.js";
 
 export type contestUpdateArg = Partial<{
   title: string;

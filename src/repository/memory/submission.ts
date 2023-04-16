@@ -1,5 +1,5 @@
 import { SubmissionsRepository } from "../submissionRepository.js";
-import { Submission, SubmissionState } from "../../models/submissions.js";
+import { Submission, SubmissionState } from "../../domain/submissions.js";
 import { Failure, Result, Success } from "../../common/result.js";
 
 export class InmemorySubmissionsRepository implements SubmissionsRepository {

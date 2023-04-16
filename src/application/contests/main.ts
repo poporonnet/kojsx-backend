@@ -4,9 +4,9 @@ import {
 } from "../../repository/contestRepository.js";
 import { SubmissionsRepository } from "../../repository/submissionRepository.js";
 import { Failure, Result, Success } from "../../common/result.js";
-import { Submission, SubmissionState } from "../../models/submissions.js";
-import { Case, Problem } from "../../models/problems.js";
-import { Contest } from "../../models/contest.js";
+import { Submission, SubmissionState } from "../../domain/submissions.js";
+import { Case, Problem } from "../../domain/problems.js";
+import { Contest } from "../../domain/contest.js";
 import { Snowflake } from "../../common/id/snowflakeID.js";
 import { SnowflakeIDGenerator } from "../../common/id/snowflakeIDGenerator.js";
 import { Queue } from "./jobqueuemanager.js";
@@ -285,7 +285,7 @@ export class ContestUseCase {
         return "TLE";
       }
 
-      let caseOutput: string = "";
+      let caseOutput = "";
       cases.map((c) => {
         if (c.id === o.caseID) {
           caseOutput = c.output;

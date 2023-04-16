@@ -6,8 +6,8 @@ import {
   problemUpdateArgs,
 } from "../contestRepository.js";
 import { Failure, Result, Success } from "../../common/result.js";
-import { Contest } from "../../models/contest.js";
-import { Case, Problem } from "../../models/problems.js";
+import { Contest } from "../../domain/contest.js";
+import { Case, Problem } from "../../domain/problems.js";
 
 export class InmemoryContestsRepository implements ContestsRepository {
   private readonly _contests: Set<Contest>;

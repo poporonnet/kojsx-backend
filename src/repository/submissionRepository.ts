@@ -1,5 +1,5 @@
 import { Result } from "../common/result.js";
-import { Submission, SubmissionState } from "../models/submissions.js";
+import { Submission, SubmissionState } from "../domain/submissions.js";
 
 export interface SubmissionsRepository {
   createSubmission(arg: {

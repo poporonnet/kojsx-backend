@@ -1,4 +1,4 @@
-import { Contest } from "../../models/contest.js";
+import { Contest } from "../../domain/contest.js";
 import {
   CreateProblemResponseJSON,
   GetAllContestsResponseJSON,
@@ -6,7 +6,7 @@ import {
   GetContestResponseJSON,
   GetProblemResponseJSON,
 } from "./types";
-import { Problem } from "../../models/problems.js";
+import { Problem } from "../../domain/problems.js";
 import { DateObjectToISODate } from "../../common/time.js";
 export class ContestSerializer {
   parseGetAllContestsResponse(q: Array<Contest>): GetAllContestsResponseJSON {

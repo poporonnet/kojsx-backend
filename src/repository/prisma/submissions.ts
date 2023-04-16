@@ -1,7 +1,7 @@
 import { SubmissionsRepository } from "../submissionRepository.js";
 import { PrismaClient } from "@prisma/client/index.js";
 import { Failure, Result, Success } from "../../common/result.js";
-import { Submission, SubmissionState } from "../../models/submissions.js";
+import { Submission, SubmissionState } from "../../domain/submissions.js";
 
 export class PrismaSubmissionsRepository implements SubmissionsRepository {
   private readonly _prisma: PrismaClient;

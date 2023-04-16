@@ -1,5 +1,5 @@
 import { UserRepository } from "../userRepository.js";
-import { User, userUpdateArgs } from "../../models/users.js";
+import { User, userUpdateArgs } from "../../domain/users.js";
 import { Failure, Result, Success } from "../../common/result.js";
 
 export class InmemoryUserRepository implements UserRepository {

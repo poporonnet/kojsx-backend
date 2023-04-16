@@ -1,7 +1,7 @@
 import { UserRepository } from "../userRepository.js";
 import { PrismaClient } from "@prisma/client/index.js";
 import { Failure, Result, Success } from "../../common/result.js";
-import { User } from "../../models/users.js";
+import { User } from "../../domain/users.js";
 
 export class PrismaUsersRepository implements UserRepository {
   private _prisma: PrismaClient;
