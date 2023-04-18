@@ -2,9 +2,10 @@ package domain
 
 import (
 	"errors"
-	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 	"time"
 	"unicode/utf8"
+
+	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 )
 
 type Submission struct {
@@ -21,51 +22,51 @@ type Submission struct {
 	submittedAt  time.Time
 }
 
-func (s Submission) GetID() id.SnowFlakeID {
+func (s *Submission) GetID() id.SnowFlakeID {
 	return s.id
 }
 
-func (s Submission) GetProblemID() id.SnowFlakeID {
+func (s *Submission) GetProblemID() id.SnowFlakeID {
 	return s.problemID
 }
 
-func (s Submission) GetContestantID() id.SnowFlakeID {
+func (s *Submission) GetContestantID() id.SnowFlakeID {
 	return s.contestantID
 }
 
-func (s Submission) GetPoint() int {
+func (s *Submission) GetPoint() int {
 	return s.point
 }
 
-func (s Submission) GetLang() string {
+func (s *Submission) GetLang() string {
 	return s.lang
 }
 
-func (s Submission) GetCodeLength() int {
+func (s *Submission) GetCodeLength() int {
 	return s.codeLength
 }
 
-func (s Submission) GetResult() string {
+func (s *Submission) GetResult() string {
 	return s.result
 }
 
-func (s Submission) GetExecTime() int {
+func (s *Submission) GetExecTime() int {
 	return s.execTime
 }
 
-func (s Submission) GetExecMemory() int {
+func (s *Submission) GetExecMemory() int {
 	return s.execMemory
 }
 
-func (s Submission) GetCode() string {
+func (s *Submission) GetCode() string {
 	return s.code
 }
 
-func (s Submission) GetSubmittedAt() time.Time {
+func (s *Submission) GetSubmittedAt() time.Time {
 	return s.submittedAt
 }
 
-func (s Submission) SetPoint(point int) error {
+func (s *Submission) SetPoint(point int) error {
 	// 0~5000点, 100点刻み
 	if point < 0 || point > 5000 || point%100 != 0 {
 		return errors.New("InvalidPoint")
@@ -74,15 +75,15 @@ func (s Submission) SetPoint(point int) error {
 	return nil
 }
 
-func (s Submission) SetResult(result string) {
+func (s *Submission) SetResult(result string) {
 	s.result = result
 }
 
-func (s Submission) SetExecTime(execTime int) {
+func (s *Submission) SetExecTime(execTime int) {
 	s.execTime = execTime
 }
 
-func (s Submission) SetExecMemory(execMemory int) {
+func (s *Submission) SetExecMemory(execMemory int) {
 	s.execMemory = execMemory
 }
 
