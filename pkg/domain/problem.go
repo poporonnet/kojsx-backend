@@ -1,8 +1,9 @@
 package domain
 
 import (
-	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 	"unicode/utf8"
+
+	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 )
 
 type Problem struct {
