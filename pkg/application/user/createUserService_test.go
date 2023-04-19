@@ -15,11 +15,11 @@ func TestCreateUserService_Handle(t *testing.T) {
 	cUserService := NewCreateUserService(r, *uService)
 
 	// 成功するとき
-	err := cUserService.Handle("yamada", "yamada@example.jp")
+	err := cUserService.Handle("miyoshi", "miyoshi@example.jp")
 	assert.Equal(t, nil, err)
 
 	// 失敗するとき
 	// 重複したとき
-	err2 := cUserService.Handle("yamada", "yamada@example.jp")
+	err2 := cUserService.Handle("miyoshi", "miyoshi@example.jp")
 	assert.NotEqual(t, nil, err2)
 }

@@ -18,7 +18,6 @@ func (s *UserService) IsExists(u domain.User) bool {
 	i := s.userRepository.FindUserByID(u.GetID())
 	n := s.userRepository.FindUserByName(u.GetName())
 	e := s.userRepository.FindUserByEmail(u.GetEmail())
-
 	if i == nil && n == nil && e == nil {
 		return false
 	}
