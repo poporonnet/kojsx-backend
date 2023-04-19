@@ -2,6 +2,7 @@ package domain
 
 import (
 	"errors"
+
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 )
 
