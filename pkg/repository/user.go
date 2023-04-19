@@ -6,6 +6,7 @@ import (
 )
 
 type UserRepository interface {
+	CreateUser(d domain.User) error
 	FindUserByID(id id.SnowFlakeID) *domain.User
 	FindUserByName(name string) *domain.User
 	FindUserByEmail(email string) *domain.User

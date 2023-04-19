@@ -13,7 +13,12 @@ func NewUserRepository(d []domain.User) *UserRepository {
 	return &UserRepository{data: d}
 }
 
-func (u UserRepository) FindUserByID(id id.SnowFlakeID) *domain.User {
+func (u *UserRepository) CreateUser(d domain.User) error {
+	u.data = append(u.data, d)
+	return nil
+}
+
+func (u *UserRepository) FindUserByID(id id.SnowFlakeID) *domain.User {
 	for _, v := range u.data {
 		if v.GetID() == id {
 			return &v
@@ -22,7 +27,7 @@ func (u UserRepository) FindUserByID(id id.SnowFlakeID) *domain.User {
 	return nil
 }
 
-func (u UserRepository) FindUserByName(name string) *domain.User {
+func (u *UserRepository) FindUserByName(name string) *domain.User {
 	for _, v := range u.data {
 		if v.GetName() == name {
 			return &v
@@ -31,7 +36,7 @@ func (u UserRepository) FindUserByName(name string) *domain.User {
 	return nil
 }
 
-func (u UserRepository) FindUserByEmail(email string) *domain.User {
+func (u *UserRepository) FindUserByEmail(email string) *domain.User {
 	for _, v := range u.data {
 		if v.GetEmail() == email {
 			return &v
