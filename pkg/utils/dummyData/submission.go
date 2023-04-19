@@ -1,8 +1,9 @@
 package dummyData
 
 import (
-	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"time"
+
+	"github.com/mct-joken/kojs5-backend/pkg/domain"
 )
 
 var (
@@ -14,4 +15,3 @@ var (
 
 	SubmissionArray = []domain.Submission{*o, *p}
 )
-

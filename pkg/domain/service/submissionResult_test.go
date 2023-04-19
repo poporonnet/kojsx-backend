@@ -1,10 +1,11 @@
 package service
 
 import (
+	"testing"
+
 	"github.com/mct-joken/kojs5-backend/pkg/repository/inmemory"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/dummyData"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestSubmissionResultService_IsExists(t *testing.T) {

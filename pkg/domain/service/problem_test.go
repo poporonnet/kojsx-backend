@@ -1,10 +1,11 @@
 package service
 
 import (
+	"testing"
+
 	"github.com/mct-joken/kojs5-backend/pkg/repository/inmemory"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/dummyData"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestProblemService_IsExists(t *testing.T) {
@@ -16,5 +17,5 @@ func TestProblemService_IsExists(t *testing.T) {
 
 	// falseになるとき
 	assert.Equal(t, false, s.IsExists(*dummyData.NotExistsProblem))
-	
+
 }
