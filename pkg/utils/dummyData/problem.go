@@ -14,4 +14,3 @@ var (
 	ExistsProblem    = e
 	ProblemArray     = []domain.Problem{*e, *f}
 )
-

@@ -11,4 +11,3 @@ var (
 
 	CaseArray = []domain.Case{*h, *j}
 )
-

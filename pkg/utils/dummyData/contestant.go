@@ -11,4 +11,3 @@ var (
 
 	ContestantArray = []domain.Contestant{*m, *n}
 )
-
