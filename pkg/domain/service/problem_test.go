@@ -17,5 +17,4 @@ func TestProblemService_IsExists(t *testing.T) {
 
 	// falseになるとき
 	assert.Equal(t, false, s.IsExists(*dummyData.NotExistsProblem))
-
 }
