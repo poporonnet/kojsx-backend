@@ -6,6 +6,8 @@ import (
 )
 
 type ContestRepository interface {
+	// FindAllContests コンテストをすべて取得
+	FindAllContests() []domain.Contest
 	// FindContestByID コンテストを1つ取得(IDで検索
 	FindContestByID(id id.SnowFlakeID) *domain.Contest
 	// FindContestByTitle コンテストを1つ取得(タイトルで検索

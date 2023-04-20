@@ -23,3 +23,12 @@ func (s *FindContestService) FindByID(id id.SnowFlakeID) (*Data, error) {
 	res := DomainToData(*r)
 	return &res, nil
 }
+
+func (s *FindContestService) FindAll() ([]Data, error) {
+	r := s.contestRepository.FindAllContests()
+	res := make([]Data, len(r))
+	for i, v := range r {
+		res[i] = DomainToData(v)
+	}
+	return res, nil
+}

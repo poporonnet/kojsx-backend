@@ -20,3 +20,17 @@ func TestFindContestService_FindByID(t *testing.T) {
 	var ex *Data = nil
 	assert.Equal(t, ex, r2)
 }
+
+func TestFindContestService_FindAll(t *testing.T) {
+	r := inmemory.NewContestRepository(dummyData.ContestArray)
+	s := NewFindContestService(r)
+
+	// 取得できる
+	r1, _ := s.FindAll()
+	ex := make([]Data, len(dummyData.ContestArray))
+	for i, v := range dummyData.ContestArray {
+		ex[i] = DomainToData(v)
+	}
+
+	assert.Equal(t, ex, r1)
+}
