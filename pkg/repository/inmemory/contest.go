@@ -9,6 +9,10 @@ type ContestRepository struct {
 	data []domain.Contest
 }
 
+func (c ContestRepository) FindAllContests() []domain.Contest {
+	return c.data
+}
+
 func (c ContestRepository) FindContestByID(id id.SnowFlakeID) *domain.Contest {
 	for _, v := range c.data {
 		if v.GetID() == id {
