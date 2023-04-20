@@ -6,6 +6,8 @@ import (
 )
 
 type ContestantRepository interface {
+	// JoinContest コンテストに参加
+	JoinContest(d domain.Contestant) error
 	// FindContestantByID 参加者を1つ取得(参加者IDで検索
 	FindContestantByID(id id.SnowFlakeID) *domain.Contestant
 	// FindContestantByUserID 参加者を取得(ユーザーIDで検索
