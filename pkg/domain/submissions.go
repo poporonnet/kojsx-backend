@@ -20,6 +20,23 @@ type Submission struct {
 	execMemory   int
 	code         string
 	submittedAt  time.Time
+
+	results []SubmissionResult
+}
+
+func (s *Submission) GetResults() []SubmissionResult {
+	return s.results
+}
+
+func (s *Submission) AddResult(result SubmissionResult) error {
+	for _, v := range s.results {
+		if v.GetID() == result.GetID() {
+			return errors.New("AlreadyAdded")
+		}
+	}
+	result.setSubmissionID(s.id)
+	s.results = append(s.results, result)
+	return nil
 }
 
 func (s *Submission) GetID() id.SnowFlakeID {
