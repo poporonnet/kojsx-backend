@@ -12,35 +12,43 @@ type SubmissionResult struct {
 	execMemory   int
 }
 
-func (s SubmissionResult) GetID() id.SnowFlakeID {
+func (s *SubmissionResult) GetID() id.SnowFlakeID {
 	return s.id
 }
 
-func (s SubmissionResult) GetSubmissionID() id.SnowFlakeID {
+func (s *SubmissionResult) GetSubmissionID() id.SnowFlakeID {
 	return s.submissionID
 }
 
-func (s SubmissionResult) GetResult() string {
+func (s *SubmissionResult) GetResult() string {
 	return s.result
 }
 
-func (s SubmissionResult) GetCaseName() string {
+func (s *SubmissionResult) GetCaseName() string {
 	return s.caseName
 }
 
-func (s SubmissionResult) GetExecTime() int {
+func (s *SubmissionResult) GetExecTime() int {
 	return s.execTime
 }
 
-func (s SubmissionResult) GetExecMemory() int {
+func (s *SubmissionResult) GetExecMemory() int {
 	return s.execMemory
 }
 
+// setSubmissionID Submissionに追加するときのみ使う
+func (s *SubmissionResult) setSubmissionID(id id.SnowFlakeID) {
+	// すでに設定されているときだけ使える
+	if s.submissionID == "" {
+		s.submissionID = id
+	}
+}
+
 // NewSubmissionResult 不変値: すべて
-func NewSubmissionResult(id id.SnowFlakeID, submissionID id.SnowFlakeID, result string, caseName string, execTime int, execMemory int) *SubmissionResult {
+func NewSubmissionResult(id id.SnowFlakeID, result string, caseName string, execTime int, execMemory int) *SubmissionResult {
 	return &SubmissionResult{
 		id:           id,
-		submissionID: submissionID,
+		submissionID: "",
 		result:       result,
 		caseName:     caseName,
 		execTime:     execTime,

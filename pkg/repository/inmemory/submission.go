@@ -22,12 +22,3 @@ func (s SubmissionRepository) FindSubmissionByID(id id.SnowFlakeID) *domain.Subm
 	}
 	return nil
 }
-
-func (s SubmissionRepository) FindSubmissionResultByID(id id.SnowFlakeID) *domain.SubmissionResult {
-	for _, v := range s.result {
-		if v.GetID() == id {
-			return &v
-		}
-	}
-	return nil
-}
