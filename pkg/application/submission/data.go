@@ -148,7 +148,6 @@ func DomainToData(in domain.Submission) *Data {
 func submissionResultToResults(in []domain.SubmissionResult) []Result {
 	res := make([]Result, len(in))
 	for i, v := range in {
-
 		res[i] = *newResult(v.GetResult(), v.GetCaseName(), v.GetExecTime(), v.GetExecMemory())
 	}
 	return res
