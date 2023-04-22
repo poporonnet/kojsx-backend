@@ -19,37 +19,65 @@ type Data struct {
 	execMemory   int
 	code         string
 	submittedAt  time.Time
+
+	results []Result
 }
 
-type result struct {
+type Result struct {
 	result     string
 	caseName   string
 	execTime   int
 	execMemory int
 }
 
-func newResult(resultString string, caseName string, execTime int, execMemory int) *result {
-	return &result{result: resultString, caseName: caseName, execTime: execTime, execMemory: execMemory}
+func newResult(resultString string, caseName string, execTime int, execMemory int) *Result {
+	return &Result{result: resultString, caseName: caseName, execTime: execTime, execMemory: execMemory}
 }
 
-func (r result) GetResult() string {
+func (r Result) GetResult() string {
 	return r.result
 }
 
-func (r result) GetCaseName() string {
+func (r Result) GetCaseName() string {
 	return r.caseName
 }
 
-func (r result) GetExecTime() int {
+func (r Result) GetExecTime() int {
 	return r.execTime
 }
 
-func (r result) GetExecMemory() int {
+func (r Result) GetExecMemory() int {
 	return r.execMemory
 }
 
-func NewData(id id.SnowFlakeID, problemID id.SnowFlakeID, contestantID id.SnowFlakeID, point int, lang string, codeLength int, result string, execTime int, execMemory int, code string, submittedAt time.Time) *Data {
-	return &Data{id: id, problemID: problemID, contestantID: contestantID, point: point, lang: lang, codeLength: codeLength, result: result, execTime: execTime, execMemory: execMemory, code: code, submittedAt: submittedAt}
+func NewData(
+	id id.SnowFlakeID,
+	problemID id.SnowFlakeID,
+	contestantID id.SnowFlakeID,
+	point int,
+	lang string,
+	codeLength int,
+	result string,
+	execTime int,
+	execMemory int,
+	code string,
+	submittedAt time.Time,
+	results []Result,
+) *Data {
+	return &Data{
+		id:           id,
+		problemID:    problemID,
+		contestantID: contestantID,
+		point:        point,
+		lang:         lang,
+		codeLength:   codeLength,
+		result:       result,
+		execTime:     execTime,
+		execMemory:   execMemory,
+		code:         code,
+		submittedAt:  submittedAt,
+		results:      results,
+	}
 }
 
 func (d Data) GetID() id.SnowFlakeID {
@@ -96,6 +124,53 @@ func (d Data) GetSubmittedAt() time.Time {
 	return d.submittedAt
 }
 
-func DomainToData(submission domain.Submission, result []domain.SubmissionResult) {
-	
+func (d Data) GetResults() []Result {
+	return d.results
+}
+
+func DomainToData(in domain.Submission) *Data {
+	return NewData(
+		in.GetID(),
+		in.GetProblemID(),
+		in.GetContestantID(),
+		in.GetPoint(),
+		in.GetLang(),
+		in.GetCodeLength(),
+		in.GetResult(),
+		in.GetExecTime(),
+		in.GetExecMemory(),
+		in.GetCode(),
+		in.GetSubmittedAt(),
+		submissionResultToResults(in.GetResults()),
+	)
+}
+
+func submissionResultToResults(in []domain.SubmissionResult) []Result {
+	res := make([]Result, len(in))
+	for i, v := range in {
+
+		res[i] = *newResult(v.GetResult(), v.GetCaseName(), v.GetExecTime(), v.GetExecMemory())
+	}
+	return res
+}
+
+func DataToDomain(in Data) *domain.Submission {
+	r, _ := domain.NewSubmission(in.GetID(), in.GetProblemID(), in.GetContestantID(), in.GetLang(), in.GetCode(), in.GetSubmittedAt())
+	addSubmissionResult(r, in.GetResults())
+	return r
+}
+
+func resultToSubmissionResult(in []Result) []domain.SubmissionResult {
+	res := make([]domain.SubmissionResult, len(in))
+	return res
+}
+
+func addSubmissionResult(in *domain.Submission, results []Result) {
+	r := resultToSubmissionResult(results)
+	for i := range results {
+		err := in.AddResult(r[i])
+		if err != nil {
+			return
+		}
+	}
 }

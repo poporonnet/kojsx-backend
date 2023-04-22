@@ -13,5 +13,5 @@ func TestFindSubmissionService_FindByID(t *testing.T) {
 	s := NewFindSubmissionService(r)
 
 	res, _ := s.FindByID("1")
-	assert.Equal(t, dummyData.ExistsSubmission, res)
+	assert.Equal(t, DomainToData(*dummyData.ExistsSubmission), res)
 }
