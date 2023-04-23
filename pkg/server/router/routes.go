@@ -5,7 +5,6 @@ import "github.com/labstack/echo/v4"
 func rootRouter(e *echo.Echo) {
 	v2 := e.Group("/api/v2")
 	{
-
 		v2.POST("/login", dummyHandler)
 		v2.POST("/logout", dummyHandler)
 		v2.POST("/refresh", dummyHandler)
@@ -49,7 +48,6 @@ func rootRouter(e *echo.Echo) {
 			contest.GET("/:id/submissions", dummyHandler)
 			contest.GET("/:id/submissions/:submissionId", dummyHandler)
 		}
-
 	}
 }
 
