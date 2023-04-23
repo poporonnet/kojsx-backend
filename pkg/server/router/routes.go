@@ -38,7 +38,7 @@ func rootRouter(e *echo.Echo) {
 		contest := v2.Group("/contests")
 		{
 			contest.POST("/", contestHandler.CreateContest)
-			contest.GET("/:id", dummyHandler)
+			contest.GET("/:id", contestHandler.FindContestByID)
 			contest.PUT("/:id", dummyHandler)
 			contest.POST("/:id/join", dummyHandler)
 			contest.GET("/:id/problems", dummyHandler)

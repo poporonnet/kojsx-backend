@@ -26,6 +26,7 @@ func initServer() {
 		*controller.NewContestController(
 			contestRepository,
 			*contest.NewCreateContestService(contestRepository),
+			*contest.NewFindContestService(contestRepository),
 		),
 	)
 }
