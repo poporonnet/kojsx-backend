@@ -9,9 +9,29 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/mct-joken/kojs5-backend/pkg/application/contest"
+	"github.com/mct-joken/kojs5-backend/pkg/domain"
+	"github.com/mct-joken/kojs5-backend/pkg/repository/inmemory"
+	"github.com/mct-joken/kojs5-backend/pkg/server/controller"
+	"github.com/mct-joken/kojs5-backend/pkg/server/handlers"
 )
 
+var (
+	contestHandler *handlers.ContestHandlers
+)
+
+func initServer() {
+	contestRepository := inmemory.NewContestRepository([]domain.Contest{})
+	contestHandler = handlers.NewContestHandlers(
+		*controller.NewContestController(
+			contestRepository,
+			*contest.NewCreateContestService(contestRepository),
+		),
+	)
+}
+
 func StartServer(port int) {
+	initServer()
 	e := echo.New()
 	e.Use(middleware.CORS())
 	e.Use(middleware.Recover())

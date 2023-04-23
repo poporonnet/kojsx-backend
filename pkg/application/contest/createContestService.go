@@ -22,11 +22,20 @@ func NewCreateContestService(contestRepository repository.ContestRepository) *Cr
 	}
 }
 
-func (s *CreateContestService) Handle(title string) (*Data, error) {
+func (s *CreateContestService) Handle(title string, description string, startAt time.Time, endAt time.Time) (*Data, error) {
 	gen := id.NewSnowFlakeIDGenerator()
 	id := gen.NewID(time.Now())
 	c := domain.NewContest(id)
 	if err := c.SetTitle(title); err != nil {
+		return nil, err
+	}
+	if err := c.SetDescription(description); err != nil {
+		return nil, err
+	}
+	if err := c.SetStartAt(startAt); err != nil {
+		return nil, err
+	}
+	if err := c.SetEndAt(endAt); err != nil {
 		return nil, err
 	}
 
@@ -37,5 +46,6 @@ func (s *CreateContestService) Handle(title string) (*Data, error) {
 	if err := s.contestRepository.CreateContest(*c); err != nil {
 		return nil, err
 	}
-	return nil, nil
+	r := DomainToData(*c)
+	return &r, nil
 }

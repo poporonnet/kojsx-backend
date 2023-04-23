@@ -35,9 +35,9 @@ func rootRouter(e *echo.Echo) {
 			problem.DELETE("/:id/sets/:setId/cases/:caseId", dummyHandler)
 		}
 
-		contest := e.Group("/contests")
+		contest := v2.Group("/contests")
 		{
-			contest.POST("/", dummyHandler)
+			contest.POST("/", contestHandler.CreateContest)
 			contest.GET("/:id", dummyHandler)
 			contest.PUT("/:id", dummyHandler)
 			contest.POST("/:id/join", dummyHandler)
@@ -52,5 +52,5 @@ func rootRouter(e *echo.Echo) {
 }
 
 func dummyHandler(c echo.Context) error {
-	return nil
+	return c.String(200, "ok")
 }
