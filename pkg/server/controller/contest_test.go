@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -16,7 +17,8 @@ var controller *ContestController
 func init() {
 	r := inmemory.NewContestRepository(dummyData.ContestArray)
 	s := contest.NewCreateContestService(r)
-	controller = NewContestController(r, *s)
+	f := contest.NewFindContestService(r)
+	controller = NewContestController(r, *s, *f)
 }
 
 func TestContestController_CreateContest(t *testing.T) {
@@ -33,4 +35,13 @@ func TestContestController_CreateContest(t *testing.T) {
 	assert.Equal(t, req.Description, res.Description)
 	assert.Equal(t, req.StartAt, res.StartAt)
 	assert.Equal(t, req.EndAt, res.EndAt)
+}
+
+func TestContestController_FindContestByID(t *testing.T) {
+	res, err := controller.FindContestByID("1")
+	fmt.Println(err)
+	assert.Equal(t, dummyData.ExistsContestData.GetTitle(), res.Title)
+	assert.Equal(t, dummyData.ExistsContestData.GetDescription(), res.Description)
+	assert.Equal(t, dummyData.ExistsContestData.GetStartAt(), res.StartAt)
+	assert.Equal(t, dummyData.ExistsContestData.GetEndAt(), res.EndAt)
 }

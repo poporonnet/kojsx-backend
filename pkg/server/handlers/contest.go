@@ -30,3 +30,12 @@ func (h *ContestHandlers) CreateContest(c echo.Context) error {
 	}
 	return c.JSON(http.StatusCreated, res)
 }
+
+func (h *ContestHandlers) FindContestByID(c echo.Context) error {
+	id := c.Param("id")
+	res, err := h.controller.FindContestByID(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
+	}
+	return c.JSON(http.StatusOK, res)
+}

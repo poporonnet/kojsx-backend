@@ -18,7 +18,7 @@ func NewFindContestService(contestRepository repository.ContestRepository) *Find
 func (s *FindContestService) FindByID(id id.SnowFlakeID) (*Data, error) {
 	r := s.contestRepository.FindContestByID(id)
 	if r == nil {
-		return nil, errors.New("NotExists")
+		return nil, errors.New("NotFound")
 	}
 	res := DomainToData(*r)
 	return &res, nil

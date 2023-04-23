@@ -16,3 +16,5 @@ type CreateContestResponseJSON struct {
 	StartAt     time.Time `json:"startAt"`
 	EndAt       time.Time `json:"endAt"`
 }
+
+type FindContestResponseJSON = CreateContestResponseJSON
