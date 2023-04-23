@@ -1,11 +1,17 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/mct-joken/kojs5-backend/pkg/server/router"
+)
 
 func main() {
 	fmt.Println(`
-JK-OJS
+KOJS
 version 6.0.0.pre-alpha.0
-(C) 2023 MCT-JOKEN
+(C) 2023 Poporon Network
     `)
+
+	router.StartServer(3000)
 }
