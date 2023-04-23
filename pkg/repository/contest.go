@@ -6,6 +6,8 @@ import (
 )
 
 type ContestRepository interface {
+	// CreateContest コンテストを作成
+	CreateContest(d domain.Contest) error
 	// FindAllContests コンテストをすべて取得
 	FindAllContests() []domain.Contest
 	// FindContestByID コンテストを1つ取得(IDで検索
