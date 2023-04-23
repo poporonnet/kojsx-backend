@@ -13,5 +13,5 @@ version 6.0.0.pre-alpha.0
 (C) 2023 Poporon Network
     `)
 
-	router.StartServer(3000)
+	router.StartServer(3060)
 }

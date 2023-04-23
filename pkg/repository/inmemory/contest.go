@@ -9,11 +9,16 @@ type ContestRepository struct {
 	data []domain.Contest
 }
 
-func (c ContestRepository) FindAllContests() []domain.Contest {
+func (c *ContestRepository) CreateContest(d domain.Contest) error {
+	c.data = append(c.data, d)
+	return nil
+}
+
+func (c *ContestRepository) FindAllContests() []domain.Contest {
 	return c.data
 }
 
-func (c ContestRepository) FindContestByID(id id.SnowFlakeID) *domain.Contest {
+func (c *ContestRepository) FindContestByID(id id.SnowFlakeID) *domain.Contest {
 	for _, v := range c.data {
 		if v.GetID() == id {
 			return &v
@@ -22,7 +27,7 @@ func (c ContestRepository) FindContestByID(id id.SnowFlakeID) *domain.Contest {
 	return nil
 }
 
-func (c ContestRepository) FindContestByTitle(title string) *domain.Contest {
+func (c *ContestRepository) FindContestByTitle(title string) *domain.Contest {
 	for _, v := range c.data {
 		if v.GetTitle() == title {
 			return &v

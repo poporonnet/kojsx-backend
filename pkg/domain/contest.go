@@ -38,7 +38,7 @@ type ContestDateInvalidError struct {
 }
 
 func (e ContestDateInvalidError) Error() string {
-	return ""
+	return "コンテスト開始/終了時刻が不正です"
 }
 
 /*
@@ -101,7 +101,7 @@ func (c *Contest) SetStartAt(at time.Time) error {
 		StartAt/EndAt 制約
 		EndAtはStartAtより1分以上後にしなければいけない
 	*/
-	if at.After(c.endAt) || at.Sub(c.endAt) < 60*time.Second {
+	if c.endAt != time.Date(0001, 01, 01, 00, 00, 00, 0, time.UTC) && (at.After(c.endAt) || at.Sub(c.endAt) < 60*time.Second) {
 		return ContestDateInvalidError{}
 	}
 
@@ -110,7 +110,7 @@ func (c *Contest) SetStartAt(at time.Time) error {
 }
 
 func (c *Contest) SetEndAt(at time.Time) error {
-	if at.Before(c.startAt) || at.Sub(c.endAt) < 60*time.Second {
+	if c.startAt != time.Date(0001, 01, 01, 00, 00, 00, 0, time.UTC) && (at.Before(c.startAt) || at.Sub(c.endAt) < 60*time.Second) {
 		return ContestDateInvalidError{}
 	}
 
