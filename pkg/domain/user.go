@@ -70,11 +70,16 @@ func (u *User) GetPassword() string {
 	return u.password
 }
 
+func (u *User) IsVerified() bool {
+	return u.role != 2
+}
+
 func (u *User) IsAdmin() bool {
 	/*
 		role:
 			admin 0
 			normal 1
+			unverified 2
 	*/
 	return u.role == 0
 }
@@ -87,6 +92,12 @@ func (u *User) SetAdmin() {
 
 func (u *User) SetNormal() {
 	if u.IsAdmin() {
+		u.role = 1
+	}
+}
+
+func (u *User) SetVerified() {
+	if !u.IsVerified() {
 		u.role = 1
 	}
 }
