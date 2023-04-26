@@ -51,6 +51,7 @@ func NewUser(uID id.SnowFlakeID, name string, email string) (*User, error) {
 		id:    uID,
 		name:  name,
 		email: email,
+		role:  2,
 	}, nil
 }
 
