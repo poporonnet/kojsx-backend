@@ -44,6 +44,7 @@ func initServer() {
 				dummy.NewMailer(),
 				"",
 			),
+			*user.NewFindUserService(userRepository),
 		),
 	)
 }
