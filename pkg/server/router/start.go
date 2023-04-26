@@ -46,7 +46,6 @@ func initServer() {
 			),
 		),
 	)
-
 }
 
 func StartServer(port int) {
