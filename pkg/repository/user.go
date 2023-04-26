@@ -10,4 +10,5 @@ type UserRepository interface {
 	FindUserByID(id id.SnowFlakeID) *domain.User
 	FindUserByName(name string) *domain.User
 	FindUserByEmail(email string) *domain.User
+	UpdateUser(d domain.User) error
 }

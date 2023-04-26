@@ -1,6 +1,8 @@
 package inmemory
 
 import (
+	"errors"
+
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 )
@@ -42,5 +44,19 @@ func (u *UserRepository) FindUserByEmail(email string) *domain.User {
 			return &v
 		}
 	}
+	return nil
+}
+
+func (u *UserRepository) UpdateUser(d domain.User) error {
+	if d := u.FindUserByID(d.GetID()); d == nil {
+		return errors.New("no such user")
+	}
+
+	for i, v := range u.data {
+		if v.GetID() == d.GetID() {
+			u.data[i] = d
+		}
+	}
+
 	return nil
 }
