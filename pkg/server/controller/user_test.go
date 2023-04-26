@@ -16,7 +16,8 @@ func TestUserController_Create(t *testing.T) {
 	r := inmemory.NewUserRepository(dummyData.UserArray)
 	u := service.NewUserService(r)
 	s := user.NewCreateUserService(r, *u, dummy.NewMailer(), "")
-	c := NewUserController(r, *s)
+	f := user.NewFindUserService(r)
+	c := NewUserController(r, *s, *f)
 
 	res, _ := c.Create(model.CreateUserRequestJSON{
 		Name:     "miyoshi",
