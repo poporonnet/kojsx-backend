@@ -10,14 +10,18 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/mct-joken/kojs5-backend/pkg/application/contest"
+	"github.com/mct-joken/kojs5-backend/pkg/application/user"
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
+	"github.com/mct-joken/kojs5-backend/pkg/domain/service"
 	"github.com/mct-joken/kojs5-backend/pkg/repository/inmemory"
 	"github.com/mct-joken/kojs5-backend/pkg/server/controller"
 	"github.com/mct-joken/kojs5-backend/pkg/server/handlers"
+	"github.com/mct-joken/kojs5-backend/pkg/utils/mail/dummy"
 )
 
 var (
 	contestHandler *handlers.ContestHandlers
+	userHandler    *handlers.UserHandlers
 )
 
 func initServer() {
@@ -29,6 +33,20 @@ func initServer() {
 			*contest.NewFindContestService(contestRepository),
 		),
 	)
+
+	userRepository := inmemory.NewUserRepository([]domain.User{})
+	userHandler = handlers.NewUserHandlers(
+		*controller.NewUserController(
+			userRepository,
+			*user.NewCreateUserService(
+				userRepository,
+				*service.NewUserService(userRepository),
+				dummy.NewMailer(),
+				"",
+			),
+		),
+	)
+
 }
 
 func StartServer(port int) {

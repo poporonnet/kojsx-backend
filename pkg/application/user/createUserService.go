@@ -10,6 +10,7 @@ import (
 	"github.com/mct-joken/kojs5-backend/pkg/repository"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/mail"
+	"github.com/mct-joken/kojs5-backend/pkg/utils/password/argon2"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/token"
 )
 
@@ -35,12 +36,22 @@ func NewCreateUserService(userRepository repository.UserRepository, service serv
 	}
 }
 
-func (s *CreateUserService) Handle(name string, email string) (*domain.User, string, error) {
+func (s *CreateUserService) Handle(name string, password string, email string) (*domain.User, string, error) {
 	newID := s.idGenerator.NewID(time.Now())
+
+	encoder := argon2.NewArgon2PasswordEncoder()
+	pw, err := encoder.EncodePassword(password)
+	if err != nil {
+		return nil, "", err
+	}
+
 	d, err := domain.NewUser(newID, name, email)
 	if err != nil {
 		return nil, "", err
 	}
+
+	d.SetPassword(string(pw))
+
 	exists := s.userService.IsExists(*d)
 	if exists {
 		return nil, "", errors.New("UserExists")

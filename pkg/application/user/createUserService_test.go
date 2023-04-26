@@ -16,12 +16,12 @@ func TestCreateUserService_Handle(t *testing.T) {
 	cUserService := NewCreateUserService(r, *uService, dummy.NewMailer(), "123")
 
 	// 成功するとき
-	_, _, err := cUserService.Handle("miyoshi", "miyoshi@example.jp")
+	_, _, err := cUserService.Handle("miyoshi", "hello", "miyoshi@example.jp")
 	assert.Equal(t, nil, err)
 
 	// 失敗するとき
 	// 重複したとき
-	_, _, err2 := cUserService.Handle("miyoshi", "miyoshi@example.jp")
+	_, _, err2 := cUserService.Handle("miyoshi", "hello", "miyoshi@example.jp")
 	assert.NotEqual(t, nil, err2)
 }
 
@@ -30,7 +30,7 @@ func TestCreateUserService_Verify(t *testing.T) {
 	uService := service.NewUserService(r)
 	cService := NewCreateUserService(r, *uService, dummy.NewMailer(), "123")
 
-	d, token, _ := cService.Handle("miyoshi", "miyoshi@example.jp")
+	d, token, _ := cService.Handle("miyoshi", "hello", "miyoshi@example.jp")
 	err := cService.Verify(d.GetID(), token)
 	assert.Equal(t, nil, err)
 }
