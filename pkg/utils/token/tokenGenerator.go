@@ -16,11 +16,12 @@ func NewJWTTokenGenerator(key string) *JWTTokenGenerator {
 	return &JWTTokenGenerator{key: key}
 }
 
-func (g *JWTTokenGenerator) NewToken(uid id.SnowFlakeID) (string, error) {
-	c := jwt.RegisteredClaims{
-		Subject:   string(uid),
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
-		IssuedAt:  jwt.NewNumericDate(time.Now()),
+func (g *JWTTokenGenerator) NewAccessToken(uid id.SnowFlakeID) (string, error) {
+	c := jwt.MapClaims{
+		"sub":  string(uid),
+		"exp":  jwt.NewNumericDate(time.Now().Add(time.Minute * 10)),
+		"iat":  jwt.NewNumericDate(time.Now()),
+		"type": "access",
 	}
 
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
@@ -29,5 +30,37 @@ func (g *JWTTokenGenerator) NewToken(uid id.SnowFlakeID) (string, error) {
 		return "", errors.New("failed to generate token")
 	}
 
+	return res, nil
+}
+
+func (g *JWTTokenGenerator) NewRefreshToken(uid id.SnowFlakeID) (string, error) {
+	c := jwt.MapClaims{
+		"sub":  string(uid),
+		"exp":  jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 30)),
+		"iat":  jwt.NewNumericDate(time.Now()),
+		"type": "refresh",
+	}
+
+	t := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
+	res, err := t.SignedString([]byte(g.key))
+	if err != nil {
+		return "", err
+	}
+	return res, nil
+}
+
+func (g *JWTTokenGenerator) NewVerifyToken(uid id.SnowFlakeID) (string, error) {
+	c := jwt.MapClaims{
+		"sub":  string(uid),
+		"exp":  jwt.NewNumericDate(time.Now().Add(time.Minute * 30)),
+		"iat":  jwt.NewNumericDate(time.Now()),
+		"type": "verify",
+	}
+
+	t := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
+	res, err := t.SignedString([]byte(g.key))
+	if err != nil {
+		return "", err
+	}
 	return res, nil
 }

@@ -15,23 +15,33 @@ func NewJWTTokenParser(key string) *JWTTokenParser {
 	return &JWTTokenParser{key: key}
 }
 
+type JWTTokenData struct {
+	ID   id.SnowFlakeID
+	Type string
+}
+
 // Parse トークンからユーザー情報を抜き出す
-func (g *JWTTokenParser) Parse(token string) (id.SnowFlakeID, error) {
+func (g *JWTTokenParser) Parse(token string) (JWTTokenData, error) {
 	t, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 		return []byte(g.key), nil
 	})
 	if err != nil {
-		return "", errors.New("failed to parse token")
+		return JWTTokenData{}, errors.New("failed to parse token")
 	}
 
 	if !t.Valid {
-		return "", errors.New("token is invalid")
+		return JWTTokenData{}, errors.New("token is invalid")
 	}
 
 	subject, err := t.Claims.GetSubject()
 	if err != nil {
-		return "", err
+		return JWTTokenData{}, err
 	}
 
-	return id.SnowFlakeID(subject), nil
+	_, ok := t.Claims.(jwt.MapClaims)
+	if !ok {
+		return JWTTokenData{}, errors.New("failed to parse token")
+	}
+
+	return JWTTokenData{ID: id.SnowFlakeID(subject), Type: t.Claims.(jwt.MapClaims)["type"].(string)}, nil
 }

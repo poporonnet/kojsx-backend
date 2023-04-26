@@ -1,10 +1,7 @@
 package token
 
 import (
-	"fmt"
 	"testing"
-
-	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -14,15 +11,14 @@ func TestJWTTokenParser_Parse(t *testing.T) {
 	g := NewJWTTokenGenerator(key)
 	p := NewJWTTokenParser(key)
 
-	token, err := g.NewToken("112233")
+	tok, err := g.NewAccessToken("112233")
 	if err != nil {
 		t.Fail()
 	}
-	fmt.Println(token)
 
-	parsed, err := p.Parse(token)
+	parsed, err := p.Parse(tok)
 	if err != nil {
 		t.Fail()
 	}
-	assert.Equal(t, id.SnowFlakeID("112233"), parsed)
+	assert.Equal(t, JWTTokenData{ID: "112233", Type: "access"}, parsed)
 }
