@@ -20,6 +20,10 @@ func (u *UserRepository) CreateUser(d domain.User) error {
 	return nil
 }
 
+func (u *UserRepository) FindAllUsers() []domain.User {
+	return u.data
+}
+
 func (u *UserRepository) FindUserByID(id id.SnowFlakeID) *domain.User {
 	for _, v := range u.data {
 		if v.GetID() == id {

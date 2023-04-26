@@ -15,6 +15,17 @@ func NewFindUserService(userRepository repository.UserRepository) *FindUserServi
 	return &FindUserService{userRepository: userRepository}
 }
 
+func (s *FindUserService) FindAllUsers() ([]Data, error) {
+	r := s.userRepository.FindAllUsers()
+	u := make([]Data, len(r))
+
+	for i, v := range r {
+		u[i] = DomainToData(v)
+	}
+
+	return u, nil
+}
+
 func (s *FindUserService) FindByID(id id.SnowFlakeID) (Data, error) {
 	u := s.userRepository.FindUserByID(id)
 	if u == nil {
