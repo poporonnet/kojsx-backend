@@ -46,6 +46,7 @@ func initServer() {
 			),
 			*user.NewFindUserService(userRepository),
 		),
+		*controller.NewAuthController(userRepository, ""),
 	)
 }
 

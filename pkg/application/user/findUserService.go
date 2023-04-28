@@ -33,3 +33,11 @@ func (s *FindUserService) FindByID(id id.SnowFlakeID) (Data, error) {
 	}
 	return DomainToData(*u), nil
 }
+
+func (s *FindUserService) FindUserByEmail(email string) (Data, error) {
+	u := s.userRepository.FindUserByEmail(email)
+	if u == nil {
+		return Data{}, errors.New("not found")
+	}
+	return DomainToData(*u), nil
+}
