@@ -57,3 +57,15 @@ func (h *UserHandlers) Login(c echo.Context) error {
 
 	return c.JSON(http.StatusCreated, res)
 }
+
+func (h *UserHandlers) Verify(c echo.Context) error {
+	t := c.Param("token")
+	ok, err := h.auth.Verify(t)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, responses.InvalidRequestErrorResponseJSON)
+	}
+	if !ok {
+		return c.JSON(http.StatusBadRequest, responses.InvalidRequestErrorResponseJSON)
+	}
+	return c.NoContent(http.StatusOK)
+}

@@ -11,6 +11,7 @@ import (
 
 func TestLoginService_Login(t *testing.T) {
 	d, _ := domain.NewUser("123", "test", "me@example.jp")
+	d.SetVerified()
 	enc := argon2.NewArgon2PasswordEncoder()
 	encd, _ := enc.EncodePassword("hello")
 	d.SetPassword(string(encd))

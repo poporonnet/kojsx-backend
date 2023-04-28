@@ -26,3 +26,8 @@ func (c *AuthController) Login(req model.LoginRequestJSON) (model.LoginResponseJ
 		RefreshToken: r,
 	}, nil
 }
+
+func (c *AuthController) Verify(token string) (bool, error) {
+	res := c.loginService.Verify(token)
+	return res, nil
+}

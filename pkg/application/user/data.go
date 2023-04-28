@@ -37,12 +37,17 @@ func (d Data) IsAdmin() bool {
 	return d.role == 0
 }
 
+func (d Data) IsVerified() bool {
+	return d.role != 2
+}
+
 // DataToDomain DTOをドメインモデルに変換
 func DataToDomain(in Data) domain.User {
 	u, _ := domain.NewUser(in.GetID(), in.GetName(), in.GetEmail())
 	if in.IsAdmin() {
 		u.SetAdmin()
 	}
+	u.SetPassword(in.GetPassword())
 	return *u
 }
 
@@ -51,6 +56,9 @@ func DomainToData(in domain.User) Data {
 	role := 0
 	if !in.IsAdmin() {
 		role = 1
+	}
+	if !in.IsVerified() {
+		role = 2
 	}
 	return *NewData(in.GetID(), in.GetName(), in.GetEmail(), in.GetPassword(), role)
 }
