@@ -20,5 +20,4 @@ func TestLoginService_Login(t *testing.T) {
 
 	_, _, err := s.Login("me@example.jp", "hello")
 	assert.Equal(t, nil, err)
-
 }
