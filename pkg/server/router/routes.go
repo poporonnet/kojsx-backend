@@ -5,7 +5,7 @@ import "github.com/labstack/echo/v4"
 func rootRouter(e *echo.Echo) {
 	v2 := e.Group("/api/v2")
 	{
-		v2.POST("/login", dummyHandler)
+		v2.POST("/login", userHandler.Login)
 		v2.POST("/logout", dummyHandler)
 		v2.POST("/refresh", dummyHandler)
 

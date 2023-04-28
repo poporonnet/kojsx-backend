@@ -12,10 +12,11 @@ import (
 
 type UserHandlers struct {
 	controller.UserController
+	auth controller.AuthController
 }
 
-func NewUserHandlers(userController controller.UserController) *UserHandlers {
-	return &UserHandlers{userController}
+func NewUserHandlers(userController controller.UserController, authController controller.AuthController) *UserHandlers {
+	return &UserHandlers{userController, authController}
 }
 
 func (h *UserHandlers) CreateUser(c echo.Context) error {
@@ -40,4 +41,19 @@ func (h *UserHandlers) FindAllUser(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, res)
+}
+
+func (h *UserHandlers) Login(c echo.Context) error {
+	req := model.LoginRequestJSON{}
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, responses.InvalidRequestErrorResponseJSON)
+	}
+
+	res, err := h.auth.Login(req)
+	if err != nil {
+		fmt.Println(err)
+		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
+	}
+
+	return c.JSON(http.StatusCreated, res)
 }
