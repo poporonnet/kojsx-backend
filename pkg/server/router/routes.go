@@ -17,7 +17,7 @@ func rootRouter(e *echo.Echo) {
 			user.GET("/:id", dummyHandler)
 			user.GET("/", userHandler.FindAllUser)
 			user.POST("/", userHandler.CreateUser)
-			user.POST("/verify/:token", dummyHandler)
+			user.POST("/verify/:token", userHandler.Verify)
 		}
 
 		problem := v2.Group("/problems")
