@@ -53,5 +53,5 @@ func rootRouter(e *echo.Echo) {
 }
 
 func dummyHandler(c echo.Context) error {
-	return c.String(200, "ok")
+	return c.String(400, "未実装のエンドポイントです")
 }
