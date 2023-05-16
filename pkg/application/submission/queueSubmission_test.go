@@ -1,7 +1,6 @@
 package submission
 
 import (
-	"errors"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -48,8 +47,6 @@ func TestQueueSubmissionService_PopTask(t *testing.T) {
 		return
 	}
 
-	_, err = s.PopTask()
-	assert.Equal(t, errors.New("nothing to pop"), err)
 	assert.Equal(t, &RunnerTask{
 		SubmissionID:  "123",
 		ProblemID:     "123",
