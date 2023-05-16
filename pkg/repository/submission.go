@@ -8,4 +8,6 @@ import (
 type SubmissionRepository interface {
 	// FindSubmissionByID 提出を1つ取得
 	FindSubmissionByID(id id.SnowFlakeID) *domain.Submission
+	// CreateSubmission 提出を作成
+	CreateSubmission(submission domain.Submission) error
 }

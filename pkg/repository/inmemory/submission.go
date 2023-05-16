@@ -14,11 +14,16 @@ func NewSubmissionRepository(s []domain.Submission, r []domain.SubmissionResult)
 	return &SubmissionRepository{submission: s, result: r}
 }
 
-func (s SubmissionRepository) FindSubmissionByID(id id.SnowFlakeID) *domain.Submission {
+func (s *SubmissionRepository) FindSubmissionByID(id id.SnowFlakeID) *domain.Submission {
 	for _, v := range s.submission {
 		if v.GetID() == id {
 			return &v
 		}
 	}
+	return nil
+}
+
+func (s *SubmissionRepository) CreateSubmission(submission domain.Submission) error {
+	s.submission = append(s.submission, submission)
 	return nil
 }
