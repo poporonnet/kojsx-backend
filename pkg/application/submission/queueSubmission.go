@@ -2,9 +2,10 @@ package submission
 
 import (
 	"errors"
-	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 	"sort"
 	"time"
+
+	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 )
 
 /*
