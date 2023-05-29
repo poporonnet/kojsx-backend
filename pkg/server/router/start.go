@@ -62,7 +62,7 @@ func StartServer(port int) {
 
 	// グレイスフルシャットダウン用
 	go func() {
-		if err := e.Start(fmt.Sprintf(":%d", port)); err != nil {
+		if err := e.Start(fmt.Sprintf("localhost:%d", port)); err != nil {
 			e.Logger.Fatal("Shutting down server", err)
 		}
 	}()
