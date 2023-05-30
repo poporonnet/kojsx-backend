@@ -6,6 +6,7 @@ import (
 )
 
 type ProblemRepository interface {
+	CreateProblem(in domain.Problem) error
 	// FindProblemByID 問題を1つ取得
 	FindProblemByID(id id.SnowFlakeID) *domain.Problem
 	// FindProblemByTitle 問題をタイトルで取得

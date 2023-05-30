@@ -22,7 +22,7 @@ func rootRouter(e *echo.Echo) {
 
 		problem := v2.Group("/problems")
 		{
-			problem.POST("/", dummyHandler)
+			problem.POST("/", problemHandler.CreateProblem)
 
 			problem.GET("/:id", dummyHandler)
 			problem.PUT("/:id", dummyHandler)

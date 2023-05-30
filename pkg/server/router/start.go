@@ -10,6 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/mct-joken/kojs5-backend/pkg/application/contest"
+	"github.com/mct-joken/kojs5-backend/pkg/application/problem"
 	"github.com/mct-joken/kojs5-backend/pkg/application/user"
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/domain/service"
@@ -22,6 +23,7 @@ import (
 var (
 	contestHandler *handlers.ContestHandlers
 	userHandler    *handlers.UserHandlers
+	problemHandler *handlers.ProblemHandlers
 )
 
 func initServer() {
@@ -48,6 +50,17 @@ func initServer() {
 		),
 		*controller.NewAuthController(userRepository, ""),
 	)
+
+	problemRespository := inmemory.NewProblemRepository([]domain.Problem{}, []domain.Caseset{}, []domain.Case{})
+	problemHandler = handlers.NewProblemHandlers(
+		*controller.NewProblemController(
+			problemRespository,
+			*problem.NewCreateProblemService(
+				problemRespository,
+				*service.NewProblemService(problemRespository),
+			),
+		),
+	)
 }
 
 func StartServer(port int) {
@@ -62,7 +75,7 @@ func StartServer(port int) {
 
 	// グレイスフルシャットダウン用
 	go func() {
-		if err := e.Start(fmt.Sprintf(":%d", port)); err != nil {
+		if err := e.Start(fmt.Sprintf("localhost:%d", port)); err != nil {
 			e.Logger.Fatal("Shutting down server", err)
 		}
 	}()
