@@ -1,6 +1,5 @@
 package handlers
 
-import "C"
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
