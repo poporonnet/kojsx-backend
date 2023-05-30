@@ -3,7 +3,6 @@ package router
 import (
 	"context"
 	"fmt"
-	"github.com/mct-joken/kojs5-backend/pkg/application/problem"
 	"os"
 	"os/signal"
 	"time"
@@ -11,6 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/mct-joken/kojs5-backend/pkg/application/contest"
+	"github.com/mct-joken/kojs5-backend/pkg/application/problem"
 	"github.com/mct-joken/kojs5-backend/pkg/application/user"
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/domain/service"

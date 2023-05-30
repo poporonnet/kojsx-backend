@@ -65,18 +65,33 @@ func NewData(
 	}
 }
 
-func DataToDomain(in Data) domain.Problem {
+func DataToDomain(in Data) *domain.Problem {
 	d := domain.NewProblem(
 		in.GetID(),
 		in.GetContestID(),
 	)
-	d.SetIndex(in.GetIndex())
-	d.SetTitle(in.GetTitle())
-	d.SetText(in.GetText())
-	d.SetPoint(in.GetPoint())
-	d.SetTimeLimit(in.GetTimeLimit())
+	err := d.SetIndex(in.GetIndex())
+	if err != nil {
+		return nil
+	}
+	err = d.SetTitle(in.GetTitle())
+	if err != nil {
+		return nil
+	}
+	err = d.SetText(in.GetText())
+	if err != nil {
+		return nil
+	}
+	err = d.SetPoint(in.GetPoint())
+	if err != nil {
+		return nil
+	}
+	err = d.SetTimeLimit(in.GetTimeLimit())
+	if err != nil {
+		return nil
+	}
 
-	return *d
+	return d
 }
 
 func DomainToData(in domain.Problem) Data {
