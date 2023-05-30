@@ -3,6 +3,7 @@ package router
 import (
 	"context"
 	"fmt"
+	"github.com/mct-joken/kojs5-backend/pkg/application/problem"
 	"os"
 	"os/signal"
 	"time"
@@ -22,6 +23,7 @@ import (
 var (
 	contestHandler *handlers.ContestHandlers
 	userHandler    *handlers.UserHandlers
+	problemHandler *handlers.ProblemHandlers
 )
 
 func initServer() {
@@ -47,6 +49,17 @@ func initServer() {
 			*user.NewFindUserService(userRepository),
 		),
 		*controller.NewAuthController(userRepository, ""),
+	)
+
+	problemRespository := inmemory.NewProblemRepository([]domain.Problem{}, []domain.Caseset{}, []domain.Case{})
+	problemHandler = handlers.NewProblemHandlers(
+		*controller.NewProblemController(
+			problemRespository,
+			*problem.NewCreateProblemService(
+				problemRespository,
+				*service.NewProblemService(problemRespository),
+			),
+		),
 	)
 }
 
