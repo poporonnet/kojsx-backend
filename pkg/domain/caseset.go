@@ -11,6 +11,8 @@ type Caseset struct {
 	id    id.SnowFlakeID
 	name  string
 	point int
+
+	cases []Case
 }
 
 // NewCaseset 不変値: id
@@ -43,5 +45,14 @@ func (c *Caseset) SetPoint(point int) error {
 		return errors.New("InvalidPointError")
 	}
 	c.point = point
+	return nil
+}
+
+func (c *Caseset) AddCase(in Case) error {
+	if len(c.cases) >= 64 {
+		return errors.New("")
+	}
+
+	c.cases = append(c.cases, in)
 	return nil
 }
