@@ -24,7 +24,7 @@ func rootRouter(e *echo.Echo) {
 		{
 			problem.POST("/", problemHandler.CreateProblem)
 
-			problem.GET("/:id", dummyHandler)
+			problem.GET("/:id", problemHandler.FindByID)
 			problem.PUT("/:id", dummyHandler)
 
 			problem.POST("/:id/sets", dummyHandler)

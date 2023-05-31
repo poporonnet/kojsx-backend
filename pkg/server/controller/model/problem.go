@@ -21,3 +21,5 @@ type CreateProblemResponseJSON struct {
 		Time   int `json:"time"`
 	} `json:"limits"`
 }
+
+type FindProblemResponseJSON = CreateProblemResponseJSON
