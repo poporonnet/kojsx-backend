@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"errors"
 	"unicode/utf8"
 
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
@@ -15,6 +16,8 @@ type Problem struct {
 	point       int
 	memoryLimit int
 	timeLimit   int
+
+	caseSet []Caseset
 }
 
 // ProblemIndexInvalidError 問題の添字制約エラー
@@ -103,6 +106,15 @@ func (p *Problem) GetMemoryLimit() int {
 
 func (p *Problem) GetTimeLimit() int {
 	return p.timeLimit
+}
+
+func (p *Problem) AddCaseSet(in Caseset) error {
+	if len(p.caseSet) > 64 {
+		return errors.New("")
+	}
+
+	p.caseSet = append(p.caseSet, in)
+	return nil
 }
 
 func (p *Problem) SetIndex(index string) error {
