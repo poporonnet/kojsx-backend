@@ -28,6 +28,9 @@ var (
 
 func initServer() {
 	contestRepository := inmemory.NewContestRepository([]domain.Contest{})
+	userRepository := inmemory.NewUserRepository([]domain.User{})
+	problemRepository := inmemory.NewProblemRepository([]domain.Problem{}, []domain.Caseset{}, []domain.Case{})
+
 	contestHandler = handlers.NewContestHandlers(
 		*controller.NewContestController(
 			contestRepository,
@@ -36,7 +39,6 @@ func initServer() {
 		),
 	)
 
-	userRepository := inmemory.NewUserRepository([]domain.User{})
 	userHandler = handlers.NewUserHandlers(
 		*controller.NewUserController(
 			userRepository,
@@ -51,15 +53,14 @@ func initServer() {
 		*controller.NewAuthController(userRepository, ""),
 	)
 
-	problemRespository := inmemory.NewProblemRepository([]domain.Problem{}, []domain.Caseset{}, []domain.Case{})
 	problemHandler = handlers.NewProblemHandlers(
 		*controller.NewProblemController(
-			problemRespository,
+			problemRepository,
 			*problem.NewCreateProblemService(
-				problemRespository,
-				*service.NewProblemService(problemRespository),
+				problemRepository,
+				*service.NewProblemService(problemRepository),
 			),
-			*problem.NewFindProblemService(problemRespository),
+			*problem.NewFindProblemService(problemRepository),
 		),
 	)
 }
