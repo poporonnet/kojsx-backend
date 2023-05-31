@@ -1,9 +1,11 @@
 package entity
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
-	"time"
 )
 
 type CaseSet struct {
@@ -11,14 +13,14 @@ type CaseSet struct {
 	Name  string
 	Point int
 
-	Cases []Case
+	Cases []Case `bson:"cases"`
 }
 
-func (c CaseSet) toDomain() domain.Caseset {
+func (c CaseSet) ToDomain() domain.Caseset {
 	cs := domain.NewCaseset(c.ID)
 	_ = cs.SetName(c.Name)
-	_ = cs.SetPoint(c.Point)
-
+	err := cs.SetPoint(c.Point)
+	fmt.Println(err)
 	return *cs
 }
 
@@ -29,7 +31,7 @@ type Case struct {
 	Out       string
 }
 
-func (c Case) toDomain() domain.Case {
+func (c Case) ToDomain() domain.Case {
 	ca := domain.NewCase(c.ID, c.CaseSetID)
 	_ = ca.SetIn(c.In)
 	_ = ca.SetOut(c.Out)
@@ -38,7 +40,7 @@ func (c Case) toDomain() domain.Case {
 }
 
 type Problem struct {
-	ID        id.SnowFlakeID
+	ID        id.SnowFlakeID `bson:"_id"`
 	ContestID id.SnowFlakeID `bson:"contestID"`
 
 	Index       string
@@ -52,11 +54,26 @@ type Problem struct {
 }
 
 func (p Problem) ToDomain() domain.Problem {
+	pr := domain.NewProblem(p.ID, p.ContestID)
+	_ = pr.SetTitle(p.Title)
+	_ = pr.SetIndex(p.Index)
+	_ = pr.SetText(p.Text)
+	_ = pr.SetPoint(p.Point)
+	_ = pr.SetTimeLimit(p.TimeLimit)
 
+	for _, v := range p.CaseSets {
+		sets := v.ToDomain()
+		for _, k := range v.Cases {
+			_ = sets.AddCase(k.ToDomain())
+		}
+		_ = pr.AddCaseSet(sets)
+	}
+
+	return *pr
 }
 
 type Contestant struct {
-	ID        id.SnowFlakeID
+	ID        id.SnowFlakeID `bson:"_id"`
 	ContestID id.SnowFlakeID `bson:"contestID"`
 	UserID    id.SnowFlakeID `bson:"userID"`
 
@@ -64,39 +81,80 @@ type Contestant struct {
 	Point int
 }
 
+func (c Contestant) ToDomain() domain.Contestant {
+	co := domain.NewContestant(c.ID, c.ContestID, c.UserID)
+	if c.Role == 1 {
+		co.SetAdmin()
+	}
+	_ = co.SetPoint(c.Point)
+
+	return *co
+}
+
 type Contest struct {
-	ID id.SnowFlakeID
+	ID id.SnowFlakeID `bson:"_id"`
 
 	Title       string
 	Description string
-	StartAt     string `bson:"startAt"`
-	EndAt       string `bson:"endAt"`
+	StartAt     time.Time `bson:"startAt"`
+	EndAt       time.Time `bson:"endAt"`
+}
+
+func (c Contest) ToDomain() domain.Contest {
+	co := domain.NewContest(c.ID)
+	_ = co.SetTitle(c.Title)
+	_ = co.SetStartAt(c.StartAt)
+	_ = co.SetEndAt(c.StartAt)
+	return *co
 }
 
 type User struct {
-	ID       id.SnowFlakeID
+	ID       id.SnowFlakeID `bson:"_id"`
 	Name     string
 	Email    string
 	Password string
 	Role     int
 }
 
+func (u User) ToDomain() domain.User {
+	ur, _ := domain.NewUser(u.ID, u.Name, u.Email)
+	switch u.Role {
+	case 0:
+		ur.SetAdmin()
+	case 1:
+		ur.SetNormal()
+	}
+	ur.SetPassword(u.Password)
+	return *ur
+}
+
 type Submission struct {
-	ID           id.SnowFlakeID
+	ID           id.SnowFlakeID `bson:"_id"`
 	ProblemID    id.SnowFlakeID
 	ContestantID id.SnowFlakeID `bson:"contestantID"`
 
-	Point      int
-	Lang       string
-	CodeLength int
-	Result     string
-	ExecTime   int `bson:"execTime"`
-	ExecMemory int `bson:"execMemory"`
-	Code       string
-
+	Point       int
+	Lang        string
+	CodeLength  int
+	Result      string
+	ExecTime    int `bson:"execTime"`
+	ExecMemory  int `bson:"execMemory"`
+	Code        string
 	SubmittedAt time.Time
 
 	Results []SubmissionResult
+}
+
+func (s Submission) ToDomain() domain.Submission {
+	sb, _ := domain.NewSubmission(s.ID, s.ProblemID, s.ContestantID, s.Lang, s.Code, s.SubmittedAt)
+	_ = sb.SetPoint(s.Point)
+	sb.SetExecMemory(s.ExecMemory)
+	sb.SetExecTime(s.ExecTime)
+
+	for _, v := range s.Results {
+		_ = sb.AddResult(v.toDomain())
+	}
+	return *sb
 }
 
 type SubmissionResult struct {
@@ -106,4 +164,8 @@ type SubmissionResult struct {
 	CaseName     string `bson:"caseName"`
 	ExecTime     int    `bson:"execTime"`
 	ExecMemory   int    `bson:"execMemory"`
+}
+
+func (s SubmissionResult) toDomain() domain.SubmissionResult {
+	return *domain.NewSubmissionResult(s.SubmissionID, s.Result, s.CaseName, s.ExecTime, s.ExecMemory)
 }

@@ -1,36 +1,103 @@
 package mongodb
 
 import (
+	"context"
+
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
+	"github.com/mct-joken/kojs5-backend/pkg/repository/mongodb/entity"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type UserRepository struct {
+	client Client
+}
+
+func NewUserRepository(c Client) *UserRepository {
+	return &UserRepository{client: c}
 }
 
 func (u UserRepository) CreateUser(d domain.User) error {
-	//TODO implement me
-	panic("implement me")
+	role := 2
+	if d.IsVerified() {
+		role = 1
+	}
+	if d.IsAdmin() {
+		role = 0
+	}
+
+	e := entity.User{
+		ID:       d.GetID(),
+		Name:     d.GetName(),
+		Email:    d.GetEmail(),
+		Password: d.GetPassword(),
+		Role:     role,
+	}
+
+	_, err := u.client.Cli.Database("kojs").Collection("user").InsertOne(context.Background(), e)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (u UserRepository) FindAllUsers() []domain.User {
-	//TODO implement me
-	panic("implement me")
+	filter := &bson.D{}
+	cursor, err := u.client.Cli.Database("kojs").Collection("user").Find(context.Background(), filter)
+	if err != nil {
+		return []domain.User{}
+	}
+
+	var user []entity.User
+	if err := cursor.All(context.Background(), &user); err != nil {
+		return []domain.User{}
+	}
+
+	res := make([]domain.User, len(user))
+	for i, v := range user {
+		res[i] = v.ToDomain()
+	}
+	return res
 }
 
 func (u UserRepository) FindUserByID(id id.SnowFlakeID) *domain.User {
-	//TODO implement me
-	panic("implement me")
+	filter := &bson.M{"_id": id}
+
+	result := u.client.Cli.Database("kojs").Collection("user").FindOne(context.Background(), filter)
+
+	var user entity.User
+	if err := result.Decode(&user); err != nil {
+		return nil
+	}
+	res := user.ToDomain()
+	return &res
 }
 
 func (u UserRepository) FindUserByName(name string) *domain.User {
-	//TODO implement me
-	panic("implement me")
+	filter := &bson.M{"name": name}
+
+	result := u.client.Cli.Database("kojs").Collection("user").FindOne(context.Background(), filter)
+
+	var user entity.User
+	if err := result.Decode(&user); err != nil {
+		return nil
+	}
+	res := user.ToDomain()
+	return &res
 }
 
 func (u UserRepository) FindUserByEmail(email string) *domain.User {
-	//TODO implement me
-	panic("implement me")
+	filter := &bson.M{"email": email}
+
+	result := u.client.Cli.Database("kojs").Collection("user").FindOne(context.Background(), filter)
+
+	var user entity.User
+	if err := result.Decode(&user); err != nil {
+		return nil
+	}
+	res := user.ToDomain()
+	return &res
 }
 
 func (u UserRepository) UpdateUser(d domain.User) error {

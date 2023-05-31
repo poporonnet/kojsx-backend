@@ -117,6 +117,10 @@ func (p *Problem) AddCaseSet(in Caseset) error {
 	return nil
 }
 
+func (p *Problem) GetCaseSets() []Caseset {
+	return p.caseSet
+}
+
 func (p *Problem) SetIndex(index string) error {
 	// Indexの制約: アルファベット大文字、1文字以上3文字以下(コンテスト最大問題数が64なため
 	if utf8.RuneCountInString(index) > 2 {
