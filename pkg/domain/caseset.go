@@ -56,3 +56,7 @@ func (c *Caseset) AddCase(in Case) error {
 	c.cases = append(c.cases, in)
 	return nil
 }
+
+func (c *Caseset) GetCases() []Case {
+	return c.cases
+}

@@ -12,6 +12,5 @@ func main() {
  | 0 0 |   "Kemomimi" Online Judge System
  |  ω  |   (C) 2023 Poporon Network / Tatsuto Yamamoto
     `)
-
 	router.StartServer(3060)
 }
