@@ -59,6 +59,7 @@ func initServer() {
 				problemRespository,
 				*service.NewProblemService(problemRespository),
 			),
+			*problem.NewFindProblemService(problemRespository),
 		),
 	)
 }
@@ -67,7 +68,15 @@ func StartServer(port int) {
 	initServer()
 	e := echo.New()
 	e.Use(middleware.CORS())
-	e.Use(middleware.Recover())
+	e.Use(middleware.RecoverWithConfig(middleware.RecoverConfig{
+		StackSize: 5 << 10,
+		LogLevel:  1,
+		LogErrorFunc: func(c echo.Context, err error, stack []byte) error {
+			msg := fmt.Sprintf("ERROR: %v\n%s\n", err, string(stack))
+			fmt.Fprint(os.Stderr, msg)
+			return err
+		},
+	}))
 	e.HideBanner = true
 
 	// routerの呼び出し
