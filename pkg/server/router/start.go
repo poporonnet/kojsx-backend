@@ -3,6 +3,8 @@ package router
 import (
 	"context"
 	"fmt"
+	"github.com/mct-joken/kojs5-backend/pkg/repository"
+	"github.com/mct-joken/kojs5-backend/pkg/repository/mongodb"
 	"os"
 	"os/signal"
 	"time"
@@ -27,9 +29,24 @@ var (
 )
 
 func initServer() {
-	contestRepository := inmemory.NewContestRepository([]domain.Contest{})
-	userRepository := inmemory.NewUserRepository([]domain.User{})
-	problemRepository := inmemory.NewProblemRepository([]domain.Problem{}, []domain.Caseset{}, []domain.Case{})
+	mode := os.Getenv("KOJS_MODE")
+	var (
+		contestRepository repository.ContestRepository
+		userRepository    repository.UserRepository
+		problemRepository repository.ProblemRepository
+	)
+	if mode == "dev" {
+		contestRepository = inmemory.NewContestRepository([]domain.Contest{})
+		userRepository = inmemory.NewUserRepository([]domain.User{})
+		problemRepository = inmemory.NewProblemRepository([]domain.Problem{}, []domain.Caseset{}, []domain.Case{})
+		fmt.Println("[INFO] Dev mode")
+	} else {
+		c := mongodb.NewMongoDBClient("mongodb://localhost:27017")
+		contestRepository = mongodb.NewContestRepository(*c)
+		userRepository = mongodb.NewUserRepository(*c)
+		problemRepository = mongodb.NewProblemRepository(*c)
+		fmt.Println("[INFO] Prod MODE")
+	}
 
 	contestHandler = handlers.NewContestHandlers(
 		*controller.NewContestController(

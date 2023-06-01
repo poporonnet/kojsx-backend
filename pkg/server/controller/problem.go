@@ -70,3 +70,32 @@ func (c *ProblemController) FindByID(i string) (model.FindProblemResponseJSON, e
 		}),
 	}, nil
 }
+
+func (c *ProblemController) FindByContestID(id id.SnowFlakeID) ([]model.FindProblemResponseJSON, error) {
+	res, err := c.findService.FindByContestID(id)
+	if err != nil {
+		return []model.FindProblemResponseJSON{}, err
+	}
+
+	response := make([]model.FindProblemResponseJSON, len(res))
+	for i, v := range res {
+		response[i] = model.CreateProblemResponseJSON{
+			ID:     string(v.GetID()),
+			Title:  v.GetTitle(),
+			Text:   v.GetText(),
+			Points: v.GetPoint(),
+			Limits: struct {
+				Memory int `json:"memory"`
+				Time   int `json:"time"`
+			}(struct {
+				Memory int
+				Time   int
+			}{
+				Memory: v.GetMemoryLimit(),
+				Time:   v.GetTimeLimit(),
+			}),
+		}
+	}
+
+	return response, nil
+}

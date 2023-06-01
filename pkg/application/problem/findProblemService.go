@@ -2,7 +2,6 @@ package problem
 
 import (
 	"errors"
-
 	"github.com/mct-joken/kojs5-backend/pkg/repository"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 )
@@ -22,4 +21,13 @@ func (s *FindProblemService) FindByID(id id.SnowFlakeID) (*Data, error) {
 	}
 	res := DomainToData(*p)
 	return &res, nil
+}
+
+func (s *FindProblemService) FindByContestID(id id.SnowFlakeID) ([]Data, error) {
+	p := s.repository.FindProblemByContestID(id)
+	res := make([]Data, len(p))
+	for i, v := range p {
+		res[i] = DomainToData(v)
+	}
+	return res, nil
 }

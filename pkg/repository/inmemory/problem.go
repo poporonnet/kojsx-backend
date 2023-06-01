@@ -15,6 +15,16 @@ func NewProblemRepository(data []domain.Problem, sets []domain.Caseset, caseData
 	return &ProblemRepository{data: data, sets: sets, caseData: caseData}
 }
 
+func (p *ProblemRepository) FindProblemByContestID(id id.SnowFlakeID) []domain.Problem {
+	res := make([]domain.Problem, 0)
+	for _, v := range p.data {
+		if v.GetContestID() == id {
+			res = append(res, v)
+		}
+	}
+	return res
+}
+
 func (p *ProblemRepository) CreateProblem(in domain.Problem) error {
 	p.data = append(p.data, in)
 	return nil

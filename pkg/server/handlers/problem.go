@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -35,6 +36,16 @@ func (h *ProblemHandlers) CreateProblem(c echo.Context) error {
 func (h *ProblemHandlers) FindByID(c echo.Context) error {
 	id := c.Param("id")
 	res, err := h.controller.FindByID(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
+	}
+
+	return c.JSON(http.StatusOK, res)
+}
+
+func (h *ProblemHandlers) FindByContestID(c echo.Context) error {
+	i := c.Param("id")
+	res, err := h.controller.FindByContestID(id.SnowFlakeID(i))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
 	}
