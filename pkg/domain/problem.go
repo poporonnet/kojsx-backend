@@ -25,7 +25,7 @@ type ProblemIndexInvalidError struct {
 }
 
 func (e ProblemIndexInvalidError) Error() string {
-	return ""
+	return "問題添字が不正です"
 }
 
 // ProblemTitleLengthError 問題のタイトル制約エラー
@@ -33,7 +33,7 @@ type ProblemTitleLengthError struct {
 }
 
 func (e ProblemTitleLengthError) Error() string {
-	return ""
+	return "問題のタイトルが不正です"
 }
 
 // ProblemTextLengthError 問題文の長さ制約エラー
@@ -41,7 +41,7 @@ type ProblemTextLengthError struct {
 }
 
 func (p ProblemTextLengthError) Error() string {
-	return ""
+	return "問題文の長さが不正です"
 }
 
 // ProblemPointInvalidError 問題ポイント制約エラー
@@ -49,7 +49,7 @@ type ProblemPointInvalidError struct {
 }
 
 func (ProblemPointInvalidError) Error() string {
-	return ""
+	return "問題の得点が不正です"
 }
 
 // ProblemTimeLimitInvalidError 問題実行時間制約エラー
@@ -57,7 +57,7 @@ type ProblemTimeLimitInvalidError struct {
 }
 
 func (ProblemTimeLimitInvalidError) Error() string {
-	return ""
+	return "問題の実行時間が不正です"
 }
 
 // MemoryLimit 512 MB = 512000 KB
@@ -110,7 +110,7 @@ func (p *Problem) GetTimeLimit() int {
 
 func (p *Problem) AddCaseSet(in Caseset) error {
 	if len(p.caseSet) > 64 {
-		return errors.New("")
+		return errors.New("これ以上ケースセットを追加できません")
 	}
 
 	p.caseSet = append(p.caseSet, in)

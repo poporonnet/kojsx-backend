@@ -17,20 +17,18 @@ type User struct {
 
 // UserNameLengthError ユーザー名の長さエラー
 type UserNameLengthError struct {
-	message string
 }
 
 func (e UserNameLengthError) Error() string {
-	return e.message
+	return "ユーザー名の長さが不正です"
 }
 
 // UserEmailLengthError メールアドレスの長さエラー
 type UserEmailLengthError struct {
-	message string
 }
 
 func (e UserEmailLengthError) Error() string {
-	return e.message
+	return "メールアドレスの長さが不正です"
 }
 
 /*

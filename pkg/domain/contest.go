@@ -17,20 +17,18 @@ type Contest struct {
 
 // ContestTitleLengthError コンテストタイトルの文字数エラー
 type ContestTitleLengthError struct {
-	message string
 }
 
 func (e ContestTitleLengthError) Error() string {
-	return e.message
+	return "コンテストタイトルの長さが不正です"
 }
 
-// ContestDescriptionLengthError コンテストタイトルの文字数エラー
+// ContestDescriptionLengthError コンテスト説明の文字数エラー
 type ContestDescriptionLengthError struct {
-	message string
 }
 
 func (e ContestDescriptionLengthError) Error() string {
-	return e.message
+	return "コンテスト説明の長さが不正です"
 }
 
 // ContestDateInvalidError コンテスト開始/終了時刻が不正のときのエラー
