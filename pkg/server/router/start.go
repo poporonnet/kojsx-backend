@@ -3,8 +3,6 @@ package router
 import (
 	"context"
 	"fmt"
-	"github.com/mct-joken/kojs5-backend/pkg/repository"
-	"github.com/mct-joken/kojs5-backend/pkg/repository/mongodb"
 	"os"
 	"os/signal"
 	"time"
@@ -16,7 +14,9 @@ import (
 	"github.com/mct-joken/kojs5-backend/pkg/application/user"
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/domain/service"
+	"github.com/mct-joken/kojs5-backend/pkg/repository"
 	"github.com/mct-joken/kojs5-backend/pkg/repository/inmemory"
+	"github.com/mct-joken/kojs5-backend/pkg/repository/mongodb"
 	"github.com/mct-joken/kojs5-backend/pkg/server/controller"
 	"github.com/mct-joken/kojs5-backend/pkg/server/handlers"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/mail/dummy"
