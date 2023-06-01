@@ -8,6 +8,7 @@ import (
 	"github.com/mct-joken/kojs5-backend/pkg/server/controller"
 	"github.com/mct-joken/kojs5-backend/pkg/server/controller/model"
 	"github.com/mct-joken/kojs5-backend/pkg/server/responses"
+	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 )
 
 type ProblemHandlers struct {
@@ -35,6 +36,16 @@ func (h *ProblemHandlers) CreateProblem(c echo.Context) error {
 func (h *ProblemHandlers) FindByID(c echo.Context) error {
 	id := c.Param("id")
 	res, err := h.controller.FindByID(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
+	}
+
+	return c.JSON(http.StatusOK, res)
+}
+
+func (h *ProblemHandlers) FindByContestID(c echo.Context) error {
+	i := c.Param("id")
+	res, err := h.controller.FindByContestID(id.SnowFlakeID(i))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
 	}

@@ -115,6 +115,27 @@ func (p ProblemRepository) FindCaseByID(id id.SnowFlakeID) *domain.Case {
 	return nil
 }
 
+func (p ProblemRepository) FindProblemByContestID(id id.SnowFlakeID) []domain.Problem {
+	cursor, err := p.cli.Cli.Database("kojs").Collection("problem").Find(context.Background(), &bson.M{"contestID": id})
+	if err != nil {
+		fmt.Println(err)
+		return []domain.Problem{}
+	}
+
+	var problem []entity.Problem
+	if err := cursor.All(context.Background(), &problem); err != nil {
+		fmt.Println(err)
+		return []domain.Problem{}
+	}
+	fmt.Println(problem)
+	res := make([]domain.Problem, len(problem))
+	for i, v := range problem {
+		res[i] = v.ToDomain()
+	}
+
+	return res
+}
+
 func NewProblemRepository(cli Client) *ProblemRepository {
 	return &ProblemRepository{cli: cli}
 }

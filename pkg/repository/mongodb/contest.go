@@ -22,7 +22,7 @@ func (c ContestRepository) CreateContest(d domain.Contest) error {
 		EndAt:       d.GetEndAt(),
 	}
 
-	_, err := c.client.Cli.Database("kojs").Collection("user").InsertOne(context.Background(), e)
+	_, err := c.client.Cli.Database("kojs").Collection("contest").InsertOne(context.Background(), e)
 	if err != nil {
 		return err
 	}
@@ -32,7 +32,7 @@ func (c ContestRepository) CreateContest(d domain.Contest) error {
 
 func (c ContestRepository) FindAllContests() []domain.Contest {
 	filter := &bson.D{}
-	cursor, err := c.client.Cli.Database("kojs").Collection("user").Find(context.Background(), filter)
+	cursor, err := c.client.Cli.Database("kojs").Collection("contest").Find(context.Background(), filter)
 	if err != nil {
 		return []domain.Contest{}
 	}
@@ -52,7 +52,7 @@ func (c ContestRepository) FindAllContests() []domain.Contest {
 
 func (c ContestRepository) FindContestByID(id id.SnowFlakeID) *domain.Contest {
 	filter := &bson.M{"_id": id}
-	result := c.client.Cli.Database("kojs").Collection("user").FindOne(context.Background(), filter)
+	result := c.client.Cli.Database("kojs").Collection("contest").FindOne(context.Background(), filter)
 
 	var contest entity.Contest
 	if err := result.Decode(&contest); err != nil {
@@ -64,7 +64,7 @@ func (c ContestRepository) FindContestByID(id id.SnowFlakeID) *domain.Contest {
 
 func (c ContestRepository) FindContestByTitle(title string) *domain.Contest {
 	filter := &bson.M{"title": title}
-	result := c.client.Cli.Database("kojs").Collection("user").FindOne(context.Background(), filter)
+	result := c.client.Cli.Database("kojs").Collection("contest").FindOne(context.Background(), filter)
 
 	var contest entity.Contest
 	if err := result.Decode(&contest); err != nil {

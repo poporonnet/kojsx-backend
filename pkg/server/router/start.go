@@ -14,7 +14,9 @@ import (
 	"github.com/mct-joken/kojs5-backend/pkg/application/user"
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/domain/service"
+	"github.com/mct-joken/kojs5-backend/pkg/repository"
 	"github.com/mct-joken/kojs5-backend/pkg/repository/inmemory"
+	"github.com/mct-joken/kojs5-backend/pkg/repository/mongodb"
 	"github.com/mct-joken/kojs5-backend/pkg/server/controller"
 	"github.com/mct-joken/kojs5-backend/pkg/server/handlers"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/mail/dummy"
@@ -27,9 +29,24 @@ var (
 )
 
 func initServer() {
-	contestRepository := inmemory.NewContestRepository([]domain.Contest{})
-	userRepository := inmemory.NewUserRepository([]domain.User{})
-	problemRepository := inmemory.NewProblemRepository([]domain.Problem{}, []domain.Caseset{}, []domain.Case{})
+	mode := os.Getenv("KOJS_MODE")
+	var (
+		contestRepository repository.ContestRepository
+		userRepository    repository.UserRepository
+		problemRepository repository.ProblemRepository
+	)
+	if mode == "dev" {
+		contestRepository = inmemory.NewContestRepository([]domain.Contest{})
+		userRepository = inmemory.NewUserRepository([]domain.User{})
+		problemRepository = inmemory.NewProblemRepository([]domain.Problem{}, []domain.Caseset{}, []domain.Case{})
+		fmt.Println("[INFO] Dev mode")
+	} else {
+		c := mongodb.NewMongoDBClient("mongodb://localhost:27017")
+		contestRepository = mongodb.NewContestRepository(*c)
+		userRepository = mongodb.NewUserRepository(*c)
+		problemRepository = mongodb.NewProblemRepository(*c)
+		fmt.Println("[INFO] Prod MODE")
+	}
 
 	contestHandler = handlers.NewContestHandlers(
 		*controller.NewContestController(

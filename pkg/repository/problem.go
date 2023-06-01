@@ -7,6 +7,8 @@ import (
 
 type ProblemRepository interface {
 	CreateProblem(in domain.Problem) error
+	// FindProblemByContestID コンテストの問題リストを取得
+	FindProblemByContestID(id id.SnowFlakeID) []domain.Problem
 	// FindProblemByID 問題を1つ取得
 	FindProblemByID(id id.SnowFlakeID) *domain.Problem
 	// FindProblemByTitle 問題をタイトルで取得
