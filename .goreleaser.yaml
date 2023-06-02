@@ -1,0 +1,12 @@
+before:
+  hooks:
+    - go mod download
+builds:
+  - binary: kojs
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+archives:
+  - wrap_in_directory: true
