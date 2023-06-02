@@ -20,39 +20,39 @@ func (u *UserRepository) CreateUser(d domain.User) error {
 	return nil
 }
 
-func (u *UserRepository) FindAllUsers() []domain.User {
-	return u.data
+func (u *UserRepository) FindAllUsers() ([]domain.User, error) {
+	return u.data, nil
 }
 
-func (u *UserRepository) FindUserByID(id id.SnowFlakeID) *domain.User {
+func (u *UserRepository) FindUserByID(id id.SnowFlakeID) (*domain.User, error) {
 	for _, v := range u.data {
 		if v.GetID() == id {
-			return &v
+			return &v, nil
 		}
 	}
-	return nil
+	return nil, errors.New("no such user")
 }
 
-func (u *UserRepository) FindUserByName(name string) *domain.User {
+func (u *UserRepository) FindUserByName(name string) (*domain.User, error) {
 	for _, v := range u.data {
 		if v.GetName() == name {
-			return &v
+			return &v, nil
 		}
 	}
-	return nil
+	return nil, errors.New("no such user")
 }
 
-func (u *UserRepository) FindUserByEmail(email string) *domain.User {
+func (u *UserRepository) FindUserByEmail(email string) (*domain.User, error) {
 	for _, v := range u.data {
 		if v.GetEmail() == email {
-			return &v
+			return &v, nil
 		}
 	}
-	return nil
+	return nil, errors.New("no such user")
 }
 
 func (u *UserRepository) UpdateUser(d domain.User) error {
-	if d := u.FindUserByID(d.GetID()); d == nil {
+	if _, e := u.FindUserByID(d.GetID()); e != nil {
 		return errors.New("no such user")
 	}
 

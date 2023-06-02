@@ -81,7 +81,7 @@ func (s *CreateUserService) Verify(id id.SnowFlakeID, t string) error {
 	p := token.NewJWTTokenParser(s.key)
 	tt, err := p.Parse(t)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to parse token: %w", err)
 	}
 
 	if tt.Type != "verify" {
@@ -92,16 +92,16 @@ func (s *CreateUserService) Verify(id id.SnowFlakeID, t string) error {
 		return errors.New("user mismatched")
 	}
 
-	u := s.userRepository.FindUserByID(id)
-	if u == nil {
-		return errors.New("no such user")
+	u, err := s.userRepository.FindUserByID(id)
+	if err != nil {
+		return fmt.Errorf("not found: %w", err)
 	}
 
 	u.SetVerified()
 
 	err = s.userRepository.UpdateUser(*u)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to update user: %w", err)
 	}
 
 	return nil

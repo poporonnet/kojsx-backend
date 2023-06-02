@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/mct-joken/kojs5-backend/pkg/application/user"
 	"github.com/mct-joken/kojs5-backend/pkg/repository"
 	"github.com/mct-joken/kojs5-backend/pkg/server/controller/model"
@@ -19,7 +20,7 @@ func NewUserController(repository repository.UserRepository, createService user.
 func (c *UserController) Create(req model.CreateUserRequestJSON) (model.CreateUserResponseJSON, error) {
 	d, _, err := c.createService.Handle(req.Name, req.Password, req.Email)
 	if err != nil {
-		return model.CreateUserResponseJSON{}, err
+		return model.CreateUserResponseJSON{}, fmt.Errorf("failed to create user: %w", err)
 	}
 
 	return model.CreateUserResponseJSON{ID: string(d.GetID()), Name: d.GetName(), Email: d.GetEmail()}, nil
@@ -28,7 +29,7 @@ func (c *UserController) Create(req model.CreateUserRequestJSON) (model.CreateUs
 func (c *UserController) FindAllUsers() ([]model.FindUsersResponseJSON, error) {
 	d, err := c.findService.FindAllUsers()
 	if err != nil {
-		return []model.FindUsersResponseJSON{}, err
+		return []model.FindUsersResponseJSON{}, fmt.Errorf("failed to find users: %w", err)
 	}
 
 	res := make([]model.FindUsersResponseJSON, len(d))

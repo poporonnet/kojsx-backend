@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/mct-joken/kojs5-backend/pkg/application/contest"
 	"github.com/mct-joken/kojs5-backend/pkg/repository"
 	"github.com/mct-joken/kojs5-backend/pkg/server/controller/model"
@@ -24,7 +25,7 @@ func NewContestController(repository repository.ContestRepository, createService
 func (c *ContestController) CreateContest(req model.CreateContestRequestJSON) (model.CreateContestResponseJSON, error) {
 	res, err := c.createService.Handle(req.Title, req.Description, req.StartAt, req.EndAt)
 	if err != nil {
-		return model.CreateContestResponseJSON{}, err
+		return model.CreateContestResponseJSON{}, fmt.Errorf("failed to create contest: %w", err)
 	}
 	return model.CreateContestResponseJSON{
 		ID:          string(res.GetID()),
@@ -38,7 +39,7 @@ func (c *ContestController) CreateContest(req model.CreateContestRequestJSON) (m
 func (c *ContestController) FindContestByID(i string) (*model.FindContestResponseJSON, error) {
 	res, err := c.findService.FindByID(id.SnowFlakeID(i))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to find contest: %w", err)
 	}
 	return &model.FindContestResponseJSON{
 		ID:          string(res.GetID()),

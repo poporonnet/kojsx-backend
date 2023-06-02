@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
@@ -49,83 +50,79 @@ func (p ProblemRepository) CreateProblem(in domain.Problem) error {
 
 	_, err := p.cli.Cli.Database("kojs").Collection("problem").InsertOne(context.Background(), e)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create problem: %w", err)
 	}
 
 	return nil
 }
 
-func (p ProblemRepository) FindProblemByID(id id.SnowFlakeID) *domain.Problem {
+func (p ProblemRepository) FindProblemByID(id id.SnowFlakeID) (*domain.Problem, error) {
 	result := p.cli.Cli.Database("kojs").Collection("problem").FindOne(context.Background(), &bson.M{"_id": id})
 
 	var problem entity.Problem
 	if err := result.Decode(&problem); err != nil {
-		fmt.Println(err)
-		return nil
+		return nil, fmt.Errorf("failed to decode problem data: %w", err)
 	}
 	res := problem.ToDomain()
-	return &res
+	return &res, nil
 }
 
-func (p ProblemRepository) FindProblemByTitle(name string) *domain.Problem {
+func (p ProblemRepository) FindProblemByTitle(name string) (*domain.Problem, error) {
 	result := p.cli.Cli.Database("kojs").Collection("problem").FindOne(context.Background(), &bson.M{"name": name})
 
 	var problem entity.Problem
 	if err := result.Decode(&problem); err != nil {
-		return nil
+		return nil, fmt.Errorf("failed to decode problem data: %w", err)
 	}
 	res := problem.ToDomain()
-	return &res
+	return &res, nil
 }
 
-func (p ProblemRepository) FindCaseSetByID(id id.SnowFlakeID) *domain.Caseset {
+func (p ProblemRepository) FindCaseSetByID(id id.SnowFlakeID) (*domain.Caseset, error) {
 	filter := &bson.M{"casesets.id": id}
 	cursor := p.cli.Cli.Database("kojs").Collection("problem").FindOne(context.Background(), filter)
 
 	var problem entity.Problem
 	if err := cursor.Decode(&problem); err != nil {
-		return nil
+		return nil, fmt.Errorf("failed to decode problem data: %w", err)
 	}
 	res := problem.ToDomain()
 	for _, v := range res.GetCaseSets() {
 		if v.GetID() == id {
-			return &v
+			return &v, nil
 		}
 	}
-	return nil
+	return nil, errors.New("no such case set")
 }
 
-func (p ProblemRepository) FindCaseByID(id id.SnowFlakeID) *domain.Case {
+func (p ProblemRepository) FindCaseByID(id id.SnowFlakeID) (*domain.Case, error) {
 	cursor := p.cli.Cli.Database("kojs").Collection("problem").FindOne(context.Background(), &bson.M{"casesets.cases.id": id})
 
 	var problem entity.Problem
 	if err := cursor.Decode(&problem); err != nil {
-		fmt.Println(err)
-		return nil
+		return nil, fmt.Errorf("failed to decode problem data: %w", err)
 	}
 	res := problem.ToDomain()
 	for _, v := range res.GetCaseSets() {
 		for _, k := range v.GetCases() {
 			if k.GetID() == id {
-				return &k
+				return &k, nil
 			}
 		}
 	}
 
-	return nil
+	return nil, errors.New("no such case")
 }
 
-func (p ProblemRepository) FindProblemByContestID(id id.SnowFlakeID) []domain.Problem {
+func (p ProblemRepository) FindProblemByContestID(id id.SnowFlakeID) ([]domain.Problem, error) {
 	cursor, err := p.cli.Cli.Database("kojs").Collection("problem").Find(context.Background(), &bson.M{"contestID": id})
 	if err != nil {
-		fmt.Println(err)
-		return []domain.Problem{}
+		return []domain.Problem{}, fmt.Errorf("failed to find problems: %w", err)
 	}
 
 	var problem []entity.Problem
 	if err := cursor.All(context.Background(), &problem); err != nil {
-		fmt.Println(err)
-		return []domain.Problem{}
+		return []domain.Problem{}, fmt.Errorf("failed to decode problems: %w", err)
 	}
 	fmt.Println(problem)
 	res := make([]domain.Problem, len(problem))
@@ -133,7 +130,7 @@ func (p ProblemRepository) FindProblemByContestID(id id.SnowFlakeID) []domain.Pr
 		res[i] = v.ToDomain()
 	}
 
-	return res
+	return res, nil
 }
 
 func NewProblemRepository(cli Client) *ProblemRepository {

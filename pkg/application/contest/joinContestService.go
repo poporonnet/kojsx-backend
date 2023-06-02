@@ -2,6 +2,7 @@ package contest
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
@@ -31,7 +32,7 @@ func (s JoinContestService) Join(contestID, userID id.SnowFlakeID) error {
 
 	err := s.contestantRepository.JoinContest(*d)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to join contest: %w", err)
 	}
 	return nil
 }

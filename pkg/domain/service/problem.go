@@ -15,8 +15,8 @@ func NewProblemService(repository repository.ProblemRepository) *ProblemService 
 
 func (s *ProblemService) IsExists(p domain.Problem) bool {
 	// 重複判定: ID/title
-	i := s.problemRepository.FindProblemByID(p.GetProblemID())
-	t := s.problemRepository.FindProblemByTitle(p.GetTitle())
+	i, _ := s.problemRepository.FindProblemByID(p.GetProblemID())
+	t, _ := s.problemRepository.FindProblemByTitle(p.GetTitle())
 
 	if i == nil && t == nil {
 		return false

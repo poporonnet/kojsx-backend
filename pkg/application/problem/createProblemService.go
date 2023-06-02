@@ -2,6 +2,7 @@ package problem
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
@@ -32,23 +33,23 @@ func (s *CreateProblemService) Handle(
 	p := domain.NewProblem(id, contestID)
 	err := p.SetIndex(index)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to set index: %w", err)
 	}
 	err = p.SetTitle(title)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to set title: %w", err)
 	}
 	err = p.SetText(text)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to set text: %w", err)
 	}
 	err = p.SetPoint(point)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to set point: %w", err)
 	}
 	err = p.SetTimeLimit(timeLimit)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to set timeLimit: %w", err)
 	}
 
 	if s.problemService.IsExists(*p) {
@@ -56,7 +57,7 @@ func (s *CreateProblemService) Handle(
 	}
 
 	if err := s.problemRepository.CreateProblem(*p); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create problem: %w", err)
 	}
 
 	res := DomainToData(*p)

@@ -1,7 +1,7 @@
 package token
 
 import (
-	"errors"
+	"fmt"
 	"time"
 
 	jwt "github.com/golang-jwt/jwt/v5"
@@ -27,7 +27,7 @@ func (g *JWTTokenGenerator) NewAccessToken(uid id.SnowFlakeID) (string, error) {
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
 	res, err := t.SignedString([]byte(g.key))
 	if err != nil {
-		return "", errors.New("failed to generate token")
+		return "", fmt.Errorf("TokenGenerator: %w", err)
 	}
 
 	return res, nil
@@ -44,7 +44,7 @@ func (g *JWTTokenGenerator) NewRefreshToken(uid id.SnowFlakeID) (string, error) 
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
 	res, err := t.SignedString([]byte(g.key))
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("TokenGenerator: %w", err)
 	}
 	return res, nil
 }
@@ -60,7 +60,7 @@ func (g *JWTTokenGenerator) NewVerifyToken(uid id.SnowFlakeID) (string, error) {
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
 	res, err := t.SignedString([]byte(g.key))
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("TokenGenerator: %w", err)
 	}
 	return res, nil
 }
