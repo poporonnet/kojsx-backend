@@ -1,8 +1,9 @@
 package handlers
 
 import (
-	"go.uber.org/zap"
 	"net/http"
+
+	"go.uber.org/zap"
 
 	"github.com/labstack/echo/v4"
 	"github.com/mct-joken/kojs5-backend/pkg/server/controller"
