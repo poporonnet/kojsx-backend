@@ -29,7 +29,7 @@ func NewArgon2PasswordEncoder() *PasswordEncoder {
 func (e *PasswordEncoder) EncodePassword(rawPassword string) (password.EncodedPassword, error) {
 	random, err := rand.Int(rand.Reader, big.NewInt(1000))
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("PasswordEncoder: %w", err)
 	}
 
 	salt := fmt.Sprintf("%x[0]", random)
@@ -62,7 +62,7 @@ func (e *PasswordEncoder) decodeHash(encodedPassword password.EncodedPassword) (
 	encodedPasswordPart, salt := split[1], split[2]
 	decodedPasswordPart, err := hex.DecodeString(encodedPasswordPart)
 	if err != nil {
-		return "", "", err
+		return "", "", fmt.Errorf("PasswordEncoder: %w", err)
 	}
 
 	return string(decodedPasswordPart), salt, nil

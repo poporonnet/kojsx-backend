@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"fmt"
+
 	"github.com/mct-joken/kojs5-backend/pkg/application/problem"
 	"github.com/mct-joken/kojs5-backend/pkg/repository"
 	"github.com/mct-joken/kojs5-backend/pkg/server/controller/model"
@@ -28,7 +30,7 @@ func NewProblemController(
 func (c *ProblemController) CreateProblem(req model.CreateProblemRequestJSON) (model.CreateProblemResponseJSON, error) {
 	res, err := c.createService.Handle(id.SnowFlakeID(req.ContestID), string(req.Title[0]), req.Title, req.Text, req.Points, req.Limits.Time)
 	if err != nil {
-		return model.CreateProblemResponseJSON{}, err
+		return model.CreateProblemResponseJSON{}, fmt.Errorf("failed to create problem: %w", err)
 	}
 	return model.CreateProblemResponseJSON{
 		ID:     string(res.GetID()),
@@ -51,7 +53,7 @@ func (c *ProblemController) CreateProblem(req model.CreateProblemRequestJSON) (m
 func (c *ProblemController) FindByID(i string) (model.FindProblemResponseJSON, error) {
 	res, err := c.findService.FindByID(id.SnowFlakeID(i))
 	if err != nil {
-		return model.FindProblemResponseJSON{}, err
+		return model.FindProblemResponseJSON{}, fmt.Errorf("failed to find problem: %w", err)
 	}
 	return model.CreateProblemResponseJSON{
 		ID:     string(res.GetID()),
@@ -74,7 +76,7 @@ func (c *ProblemController) FindByID(i string) (model.FindProblemResponseJSON, e
 func (c *ProblemController) FindByContestID(id id.SnowFlakeID) ([]model.FindProblemResponseJSON, error) {
 	res, err := c.findService.FindByContestID(id)
 	if err != nil {
-		return []model.FindProblemResponseJSON{}, err
+		return []model.FindProblemResponseJSON{}, fmt.Errorf("failed to find problem: %w", err)
 	}
 
 	response := make([]model.FindProblemResponseJSON, len(res))

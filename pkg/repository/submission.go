@@ -7,5 +7,5 @@ import (
 
 type SubmissionRepository interface {
 	// FindSubmissionByID 提出を1つ取得
-	FindSubmissionByID(id id.SnowFlakeID) *domain.Submission
+	FindSubmissionByID(id id.SnowFlakeID) (*domain.Submission, error)
 }

@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"fmt"
+
 	"github.com/mct-joken/kojs5-backend/pkg/application/user"
 	"github.com/mct-joken/kojs5-backend/pkg/repository"
 	"github.com/mct-joken/kojs5-backend/pkg/server/controller/model"
@@ -18,7 +20,7 @@ func NewAuthController(userRepository repository.UserRepository, key string) *Au
 func (c *AuthController) Login(req model.LoginRequestJSON) (model.LoginResponseJSON, error) {
 	a, r, err := c.loginService.Login(req.Email, req.Password)
 	if err != nil {
-		return model.LoginResponseJSON{}, err
+		return model.LoginResponseJSON{}, fmt.Errorf("failed to login: %w", err)
 	}
 
 	return model.LoginResponseJSON{

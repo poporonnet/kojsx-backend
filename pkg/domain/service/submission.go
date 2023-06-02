@@ -15,7 +15,7 @@ func NewSubmissionService(repository repository.SubmissionRepository) *Submissio
 
 func (s *SubmissionService) IsExists(p domain.Submission) bool {
 	// 重複判定: ID
-	i := s.submissionRepository.FindSubmissionByID(p.GetID())
+	i, _ := s.submissionRepository.FindSubmissionByID(p.GetID())
 
 	if i == nil {
 		return false

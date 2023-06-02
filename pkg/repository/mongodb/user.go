@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/repository/mongodb/entity"
@@ -42,62 +43,62 @@ func (u UserRepository) CreateUser(d domain.User) error {
 	return nil
 }
 
-func (u UserRepository) FindAllUsers() []domain.User {
+func (u UserRepository) FindAllUsers() ([]domain.User, error) {
 	filter := &bson.D{}
 	cursor, err := u.client.Cli.Database("kojs").Collection("user").Find(context.Background(), filter)
 	if err != nil {
-		return []domain.User{}
+		return []domain.User{}, fmt.Errorf("failed to find users: %w", err)
 	}
 
 	var user []entity.User
 	if err := cursor.All(context.Background(), &user); err != nil {
-		return []domain.User{}
+		return []domain.User{}, fmt.Errorf("failed to decode users: %w", err)
 	}
 
 	res := make([]domain.User, len(user))
 	for i, v := range user {
 		res[i] = v.ToDomain()
 	}
-	return res
+	return res, nil
 }
 
-func (u UserRepository) FindUserByID(id id.SnowFlakeID) *domain.User {
+func (u UserRepository) FindUserByID(id id.SnowFlakeID) (*domain.User, error) {
 	filter := &bson.M{"_id": id}
 
 	result := u.client.Cli.Database("kojs").Collection("user").FindOne(context.Background(), filter)
 
 	var user entity.User
 	if err := result.Decode(&user); err != nil {
-		return nil
+		return nil, fmt.Errorf("failed to decode user: %w", err)
 	}
 	res := user.ToDomain()
-	return &res
+	return &res, nil
 }
 
-func (u UserRepository) FindUserByName(name string) *domain.User {
+func (u UserRepository) FindUserByName(name string) (*domain.User, error) {
 	filter := &bson.M{"name": name}
 
 	result := u.client.Cli.Database("kojs").Collection("user").FindOne(context.Background(), filter)
 
 	var user entity.User
 	if err := result.Decode(&user); err != nil {
-		return nil
+		return nil, fmt.Errorf("failed to decode user: %w", err)
 	}
 	res := user.ToDomain()
-	return &res
+	return &res, nil
 }
 
-func (u UserRepository) FindUserByEmail(email string) *domain.User {
+func (u UserRepository) FindUserByEmail(email string) (*domain.User, error) {
 	filter := &bson.M{"email": email}
 
 	result := u.client.Cli.Database("kojs").Collection("user").FindOne(context.Background(), filter)
 
 	var user entity.User
 	if err := result.Decode(&user); err != nil {
-		return nil
+		return nil, fmt.Errorf("failed to decode user: %w", err)
 	}
 	res := user.ToDomain()
-	return &res
+	return &res, nil
 }
 
 func (u UserRepository) UpdateUser(d domain.User) error {

@@ -1,7 +1,7 @@
 package user
 
 import (
-	"errors"
+	"fmt"
 
 	"github.com/mct-joken/kojs5-backend/pkg/repository"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
@@ -16,7 +16,10 @@ func NewFindUserService(userRepository repository.UserRepository) *FindUserServi
 }
 
 func (s *FindUserService) FindAllUsers() ([]Data, error) {
-	r := s.userRepository.FindAllUsers()
+	r, err := s.userRepository.FindAllUsers()
+	if err != nil {
+		return nil, fmt.Errorf("failed to find all users: %w", err)
+	}
 	u := make([]Data, len(r))
 
 	for i, v := range r {
@@ -27,17 +30,17 @@ func (s *FindUserService) FindAllUsers() ([]Data, error) {
 }
 
 func (s *FindUserService) FindByID(id id.SnowFlakeID) (Data, error) {
-	u := s.userRepository.FindUserByID(id)
-	if u == nil {
-		return Data{}, errors.New("")
+	u, err := s.userRepository.FindUserByID(id)
+	if err != nil {
+		return Data{}, fmt.Errorf("failed to find user: %w", err)
 	}
 	return DomainToData(*u), nil
 }
 
 func (s *FindUserService) FindUserByEmail(email string) (Data, error) {
-	u := s.userRepository.FindUserByEmail(email)
-	if u == nil {
-		return Data{}, errors.New("not found")
+	u, err := s.userRepository.FindUserByEmail(email)
+	if err != nil {
+		return Data{}, fmt.Errorf("failed to find user: %w", err)
 	}
 	return DomainToData(*u), nil
 }

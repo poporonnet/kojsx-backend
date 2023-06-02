@@ -2,6 +2,7 @@ package user
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/mct-joken/kojs5-backend/pkg/repository"
 	password2 "github.com/mct-joken/kojs5-backend/pkg/utils/password"
@@ -26,7 +27,7 @@ func NewLoginService(repository repository.UserRepository, key string) *LoginSer
 func (s *LoginService) Login(email string, password string) (string, string, error) {
 	res, err := s.findService.FindUserByEmail(email)
 	if err != nil {
-		return "", "", err
+		return "", "", fmt.Errorf("failed to find user: %w", err)
 	}
 
 	if !res.IsVerified() {

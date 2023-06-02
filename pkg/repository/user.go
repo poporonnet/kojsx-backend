@@ -7,9 +7,9 @@ import (
 
 type UserRepository interface {
 	CreateUser(d domain.User) error
-	FindAllUsers() []domain.User
-	FindUserByID(id id.SnowFlakeID) *domain.User
-	FindUserByName(name string) *domain.User
-	FindUserByEmail(email string) *domain.User
+	FindAllUsers() ([]domain.User, error)
+	FindUserByID(id id.SnowFlakeID) (*domain.User, error)
+	FindUserByName(name string) (*domain.User, error)
+	FindUserByEmail(email string) (*domain.User, error)
 	UpdateUser(d domain.User) error
 }

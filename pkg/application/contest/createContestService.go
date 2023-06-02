@@ -2,6 +2,7 @@ package contest
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
@@ -27,16 +28,16 @@ func (s *CreateContestService) Handle(title string, description string, startAt 
 	id := gen.NewID(time.Now())
 	c := domain.NewContest(id)
 	if err := c.SetTitle(title); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to set title: %w", err)
 	}
 	if err := c.SetDescription(description); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to set description: %w", err)
 	}
 	if err := c.SetStartAt(startAt); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to set startAt: %w", err)
 	}
 	if err := c.SetEndAt(endAt); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to set endAt: %w", err)
 	}
 
 	if s.contestService.IsExists(*c) {
@@ -44,7 +45,7 @@ func (s *CreateContestService) Handle(title string, description string, startAt 
 	}
 
 	if err := s.contestRepository.CreateContest(*c); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create contest: %w", err)
 	}
 	r := DomainToData(*c)
 	return &r, nil

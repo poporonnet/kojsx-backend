@@ -1,7 +1,7 @@
 package token
 
 import (
-	"errors"
+	"fmt"
 
 	jwt "github.com/golang-jwt/jwt/v5"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
@@ -26,21 +26,21 @@ func (g *JWTTokenParser) Parse(token string) (JWTTokenData, error) {
 		return []byte(g.key), nil
 	})
 	if err != nil {
-		return JWTTokenData{}, errors.New("failed to parse token")
+		return JWTTokenData{}, fmt.Errorf("failed to parse token: %w", err)
 	}
 
 	if !t.Valid {
-		return JWTTokenData{}, errors.New("token is invalid")
+		return JWTTokenData{}, fmt.Errorf("invalid token: %w", err)
 	}
 
 	subject, err := t.Claims.GetSubject()
 	if err != nil {
-		return JWTTokenData{}, err
+		return JWTTokenData{}, fmt.Errorf("failed to get ClaimSubject: %w", err)
 	}
 
 	_, ok := t.Claims.(jwt.MapClaims)
 	if !ok {
-		return JWTTokenData{}, errors.New("failed to parse token")
+		return JWTTokenData{}, fmt.Errorf("failed to parse token: %w", err)
 	}
 
 	return JWTTokenData{ID: id.SnowFlakeID(subject), Type: t.Claims.(jwt.MapClaims)["type"].(string)}, nil

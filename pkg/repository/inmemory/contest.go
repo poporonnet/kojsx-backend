@@ -1,6 +1,8 @@
 package inmemory
 
 import (
+	"errors"
+
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 )
@@ -14,26 +16,26 @@ func (c *ContestRepository) CreateContest(d domain.Contest) error {
 	return nil
 }
 
-func (c *ContestRepository) FindAllContests() []domain.Contest {
-	return c.data
+func (c *ContestRepository) FindAllContests() ([]domain.Contest, error) {
+	return c.data, nil
 }
 
-func (c *ContestRepository) FindContestByID(id id.SnowFlakeID) *domain.Contest {
+func (c *ContestRepository) FindContestByID(id id.SnowFlakeID) (*domain.Contest, error) {
 	for _, v := range c.data {
 		if v.GetID() == id {
-			return &v
+			return &v, nil
 		}
 	}
-	return nil
+	return nil, errors.New("not found")
 }
 
-func (c *ContestRepository) FindContestByTitle(title string) *domain.Contest {
+func (c *ContestRepository) FindContestByTitle(title string) (*domain.Contest, error) {
 	for _, v := range c.data {
 		if v.GetTitle() == title {
-			return &v
+			return &v, nil
 		}
 	}
-	return nil
+	return nil, errors.New("not found")
 }
 
 func NewContestRepository(d []domain.Contest) *ContestRepository {

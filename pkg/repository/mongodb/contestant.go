@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/repository/mongodb/entity"
@@ -33,54 +34,54 @@ func (c ContestantRepository) JoinContest(d domain.Contestant) error {
 	return nil
 }
 
-func (c ContestantRepository) FindContestantByID(id id.SnowFlakeID) *domain.Contestant {
+func (c ContestantRepository) FindContestantByID(id id.SnowFlakeID) (*domain.Contestant, error) {
 	filter := &bson.M{"_id": id}
 
 	result := c.client.Cli.Database("kojs").Collection("contestant").FindOne(context.Background(), filter)
 
 	var contestant entity.Contestant
 	if err := result.Decode(&contestant); err != nil {
-		return nil
+		return nil, fmt.Errorf("failed to decode contestant data: %w", err)
 	}
 	res := contestant.ToDomain()
-	return &res
+	return &res, nil
 }
 
-func (c ContestantRepository) FindContestantByUserID(id id.SnowFlakeID) []domain.Contestant {
+func (c ContestantRepository) FindContestantByUserID(id id.SnowFlakeID) ([]domain.Contestant, error) {
 	filter := &bson.M{"userID": id}
 
 	cursor, err := c.client.Cli.Database("kojs").Collection("contestant").Find(context.Background(), filter)
 	if err != nil {
-		return []domain.Contestant{}
+		return []domain.Contestant{}, fmt.Errorf("failed to find contestant data: %w", err)
 	}
 
 	var contestant []entity.Contestant
 	if err := cursor.All(context.Background(), &contestant); err != nil {
-		return nil
+		return nil, fmt.Errorf("failed to decode contestant data: %w", err)
 	}
 	res := make([]domain.Contestant, len(contestant))
 	for i, v := range contestant {
 		res[i] = v.ToDomain()
 	}
-	return res
+	return res, nil
 }
 
-func (c ContestantRepository) FindContestantByContestID(id id.SnowFlakeID) []domain.Contestant {
+func (c ContestantRepository) FindContestantByContestID(id id.SnowFlakeID) ([]domain.Contestant, error) {
 	filter := &bson.M{"contestID": id}
 	cursor, err := c.client.Cli.Database("kojs").Collection("contestant").Find(context.Background(), filter)
 	if err != nil {
-		return []domain.Contestant{}
+		return []domain.Contestant{}, fmt.Errorf("failed to find contestant data: %w", err)
 	}
 
 	var contestant []entity.Contestant
 	if err := cursor.All(context.Background(), &contestant); err != nil {
-		return nil
+		return nil, fmt.Errorf("failed to decode contestant data: %w", err)
 	}
 	res := make([]domain.Contestant, len(contestant))
 	for i, v := range contestant {
 		res[i] = v.ToDomain()
 	}
-	return res
+	return res, nil
 }
 
 func NewContestantRepository(cli Client) *ContestRepository {

@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/repository/mongodb/entity"
@@ -24,22 +25,22 @@ func (c ContestRepository) CreateContest(d domain.Contest) error {
 
 	_, err := c.client.Cli.Database("kojs").Collection("contest").InsertOne(context.Background(), e)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create contest: %w", err)
 	}
 
 	return nil
 }
 
-func (c ContestRepository) FindAllContests() []domain.Contest {
+func (c ContestRepository) FindAllContests() ([]domain.Contest, error) {
 	filter := &bson.D{}
 	cursor, err := c.client.Cli.Database("kojs").Collection("contest").Find(context.Background(), filter)
 	if err != nil {
-		return []domain.Contest{}
+		return []domain.Contest{}, fmt.Errorf("failed to find contests: %w", err)
 	}
 
 	var contest []entity.Contest
 	if err := cursor.All(context.Background(), &contest); err != nil {
-		return []domain.Contest{}
+		return []domain.Contest{}, fmt.Errorf("failed get value from cursor: %w", err)
 	}
 
 	res := make([]domain.Contest, len(contest))
@@ -47,31 +48,31 @@ func (c ContestRepository) FindAllContests() []domain.Contest {
 		res[i] = v.ToDomain()
 	}
 
-	return res
+	return res, nil
 }
 
-func (c ContestRepository) FindContestByID(id id.SnowFlakeID) *domain.Contest {
+func (c ContestRepository) FindContestByID(id id.SnowFlakeID) (*domain.Contest, error) {
 	filter := &bson.M{"_id": id}
 	result := c.client.Cli.Database("kojs").Collection("contest").FindOne(context.Background(), filter)
 
 	var contest entity.Contest
 	if err := result.Decode(&contest); err != nil {
-		return nil
+		return nil, fmt.Errorf("failed to decode contest data: %w", err)
 	}
 	res := contest.ToDomain()
-	return &res
+	return &res, nil
 }
 
-func (c ContestRepository) FindContestByTitle(title string) *domain.Contest {
+func (c ContestRepository) FindContestByTitle(title string) (*domain.Contest, error) {
 	filter := &bson.M{"title": title}
 	result := c.client.Cli.Database("kojs").Collection("contest").FindOne(context.Background(), filter)
 
 	var contest entity.Contest
 	if err := result.Decode(&contest); err != nil {
-		return nil
+		return nil, fmt.Errorf("failed to decode contest data: %w", err)
 	}
 	res := contest.ToDomain()
-	return &res
+	return &res, nil
 }
 
 func NewContestRepository(cli Client) *ContestRepository {

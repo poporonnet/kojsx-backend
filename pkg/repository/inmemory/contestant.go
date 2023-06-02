@@ -1,6 +1,8 @@
 package inmemory
 
 import (
+	"errors"
+
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 )
@@ -18,31 +20,31 @@ func (c *ContestantRepository) JoinContest(d domain.Contestant) error {
 	return nil
 }
 
-func (c *ContestantRepository) FindContestantByID(id id.SnowFlakeID) *domain.Contestant {
+func (c *ContestantRepository) FindContestantByID(id id.SnowFlakeID) (*domain.Contestant, error) {
 	for _, v := range c.data {
 		if v.GetID() == id {
-			return &v
+			return &v, nil
 		}
 	}
-	return nil
+	return nil, errors.New("not found")
 }
 
-func (c *ContestantRepository) FindContestantByUserID(id id.SnowFlakeID) []domain.Contestant {
+func (c *ContestantRepository) FindContestantByUserID(id id.SnowFlakeID) ([]domain.Contestant, error) {
 	res := make([]domain.Contestant, 0)
 	for _, v := range c.data {
 		if v.GetUserID() == id {
 			res = append(res, v)
 		}
 	}
-	return res
+	return res, nil
 }
 
-func (c *ContestantRepository) FindContestantByContestID(id id.SnowFlakeID) []domain.Contestant {
+func (c *ContestantRepository) FindContestantByContestID(id id.SnowFlakeID) ([]domain.Contestant, error) {
 	res := make([]domain.Contestant, 0)
 	for _, v := range c.data {
 		if v.GetContestID() == id {
 			res = append(res, v)
 		}
 	}
-	return res
+	return res, nil
 }

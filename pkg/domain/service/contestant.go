@@ -15,9 +15,9 @@ func NewContestantService(repository repository.ContestantRepository) *Contestan
 
 func (s *ContestantService) IsExists(p domain.Contestant) bool {
 	// 重複判定: ID/UserID/ContestID
-	i := s.contestantRepository.FindContestantByID(p.GetID())
-	u := s.contestantRepository.FindContestantByUserID(p.GetUserID())
-	c := s.contestantRepository.FindContestantByContestID(p.GetContestID())
+	i, _ := s.contestantRepository.FindContestantByID(p.GetID())
+	u, _ := s.contestantRepository.FindContestantByUserID(p.GetUserID())
+	c, _ := s.contestantRepository.FindContestantByContestID(p.GetContestID())
 	/*
 		IDはいかなる場合でも重複してはいけない
 		UserIDとContestIDの組み合わせが存在するときは重複しているとみなす
