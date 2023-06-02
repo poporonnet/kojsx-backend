@@ -155,5 +155,4 @@ func StartServer(port int) {
 		}
 		logger.Sugar().Info("Disconnected from database.")
 	}
-
 }
