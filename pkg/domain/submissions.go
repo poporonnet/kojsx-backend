@@ -116,7 +116,7 @@ func NewSubmission(id id.SnowFlakeID, pID id.SnowFlakeID, cID id.SnowFlakeID, la
 		point:        0,
 		lang:         lang,
 		codeLength:   utf8.RuneCountInString(code),
-		result:       "WJ",
+		result:       "WE",
 		execTime:     0,
 		execMemory:   0,
 		code:         code,
