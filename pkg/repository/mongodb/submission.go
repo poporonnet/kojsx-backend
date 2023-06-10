@@ -87,7 +87,7 @@ func (s SubmissionRepository) UpdateSubmissionResult(submission domain.Submissio
 		SubmittedAt:  submission.GetSubmittedAt(),
 		Results:      nil,
 	}
-	_, err := s.client.Cli.Database("kojs").Collection("submission").ReplaceOne(context.Background(), bson.D{{"_id", submission.GetID()}}, e)
+	_, err := s.client.Cli.Database("kojs").Collection("submission").ReplaceOne(context.Background(), bson.M{"_id": submission.GetID()}, e)
 	if err != nil {
 		return nil, fmt.Errorf("failed to update submission: %w", err)
 	}
