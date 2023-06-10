@@ -16,6 +16,6 @@ func main() {
  ∩_____∩   KOJS v6 (%s @%s)
  | 0 0 |   "Kemomimi" Online Judge System
  |  ω  |   (C) 2023 Poporon Network / Tatsuto Yamamoto
-    `, VERSION, REVISION)
+`, VERSION, REVISION)
 	router.StartServer(3060)
 }
