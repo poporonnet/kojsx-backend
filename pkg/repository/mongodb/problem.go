@@ -124,7 +124,6 @@ func (p ProblemRepository) FindProblemByContestID(id id.SnowFlakeID) ([]domain.P
 	if err := cursor.All(context.Background(), &problem); err != nil {
 		return []domain.Problem{}, fmt.Errorf("failed to decode problems: %w", err)
 	}
-	fmt.Println(problem)
 	res := make([]domain.Problem, len(problem))
 	for i, v := range problem {
 		res[i] = v.ToDomain()

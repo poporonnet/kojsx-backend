@@ -75,8 +75,9 @@ func initServer() {
 		submissionRepository = mongodb.NewSubmissionRepository(*mongoClient)
 		logger.Sugar().Info("start the server in production mode.")
 	} else {
-		contestRepository = inmemory.NewContestRepository([]domain.Contest{})
-		userRepository = inmemory.NewUserRepository([]domain.User{})
+		seeds := NewSeeds()
+		contestRepository = inmemory.NewContestRepository(seeds.Contests)
+		userRepository = inmemory.NewUserRepository(seeds.Users)
 		problemRepository = inmemory.NewProblemRepository([]domain.Problem{}, []domain.Caseset{}, []domain.Case{})
 		submissionRepository = inmemory.NewSubmissionRepository([]domain.Submission{}, []domain.SubmissionResult{})
 		logger.Sugar().Info("start the server in development mode.")
@@ -138,8 +139,10 @@ func initServer() {
 	}()
 
 	submissionHandler = func() *handlers.SubmissionHandlers {
-		createService := *submission.NewCreateSubmissionService(submissionRepository,
+		createService := *submission.NewCreateSubmissionService(
+			submissionRepository,
 			*service.NewSubmissionService(submissionRepository),
+			problemRepository,
 		)
 		findService := *submission.NewFindSubmissionService(submissionRepository)
 		findProblemService := *problem.NewFindProblemService(problemRepository)

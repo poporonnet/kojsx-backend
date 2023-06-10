@@ -73,6 +73,18 @@ func (s SubmissionRepository) FindSubmissionByStatus(status string) ([]domain.Su
 }
 
 func (s SubmissionRepository) UpdateSubmissionResult(submission domain.Submission) (*domain.Submission, error) {
+	r := make([]entity.SubmissionResult, len(submission.GetResults()))
+	for i, v := range submission.GetResults() {
+		r[i] = entity.SubmissionResult{
+			ID:         v.GetID(),
+			Result:     v.GetResult(),
+			Output:     v.GetOutput(),
+			CaseName:   v.GetCaseName(),
+			ExitStatus: v.GetExitStatus(),
+			ExecTime:   v.GetExecTime(),
+			ExecMemory: v.GetExecMemory(),
+		}
+	}
 	e := entity.Submission{
 		ID:           submission.GetID(),
 		ProblemID:    submission.GetProblemID(),
@@ -85,7 +97,7 @@ func (s SubmissionRepository) UpdateSubmissionResult(submission domain.Submissio
 		ExecMemory:   submission.GetExecMemory(),
 		Code:         submission.GetCode(),
 		SubmittedAt:  submission.GetSubmittedAt(),
-		Results:      nil,
+		Results:      r,
 	}
 	_, err := s.client.Cli.Database("kojs").Collection("submission").ReplaceOne(context.Background(), bson.M{"_id": submission.GetID()}, e)
 	if err != nil {

@@ -31,3 +31,20 @@ type GetSubmissionTaskResponseConfig struct {
 	TimeLimit   int `json:"timeLimit"`
 	MemoryLimit int `json:"memoryLimit"`
 }
+
+type CreateSubmissionResultRequestJSON struct {
+	SubmissionID        string                    `json:"submissionID"`
+	ProblemID           string                    `json:"problemID"`
+	LanguageType        string                    `json:"languageType"`
+	CompilerMessage     string                    `json:"compilerMessage"`
+	CompileErrorMessage string                    `json:"compileErrorMessage"`
+	Results             []CreateSubmissionResults `json:"results"`
+}
+
+type CreateSubmissionResults struct {
+	CaseName   string `json:"caseName"`
+	Output     string `json:"output"`
+	ExitStatus int    `json:"exitStatus"`
+	Duration   int    `json:"duration"`
+	Usage      int    `json:"usage"`
+}

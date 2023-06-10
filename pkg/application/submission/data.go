@@ -24,14 +24,35 @@ type Data struct {
 }
 
 type Result struct {
+	id         id.SnowFlakeID
 	result     string
+	output     string
 	caseName   string
+	exitStatus int
 	execTime   int
 	execMemory int
 }
 
-func newResult(resultString string, caseName string, execTime int, execMemory int) *Result {
-	return &Result{result: resultString, caseName: caseName, execTime: execTime, execMemory: execMemory}
+func newResult(id id.SnowFlakeID, output, result, caseName string, exitStatus, execTime, execMemory int) *Result {
+	return &Result{id: id,
+		result:     result,
+		caseName:   caseName,
+		exitStatus: exitStatus,
+		execTime:   execTime,
+		execMemory: execMemory,
+	}
+}
+
+func (r Result) GetID() id.SnowFlakeID {
+	return r.id
+}
+
+func (r Result) GetOutput() string {
+	return r.output
+}
+
+func (r Result) GetExitStatus() int {
+	return r.exitStatus
 }
 
 func (r Result) GetResult() string {
@@ -148,7 +169,15 @@ func DomainToData(in domain.Submission) *Data {
 func submissionResultToResults(in []domain.SubmissionResult) []Result {
 	res := make([]Result, len(in))
 	for i, v := range in {
-		res[i] = *newResult(v.GetResult(), v.GetCaseName(), v.GetExecTime(), v.GetExecMemory())
+		res[i] = *newResult(
+			v.GetID(),
+			v.GetOutput(),
+			v.GetResult(),
+			v.GetCaseName(),
+			v.GetExitStatus(),
+			v.GetExecTime(),
+			v.GetExecMemory(),
+		)
 	}
 	return res
 }
