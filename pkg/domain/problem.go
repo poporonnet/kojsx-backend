@@ -113,7 +113,12 @@ func (p *Problem) AddCaseSet(in Caseset) error {
 		return errors.New("これ以上ケースセットを追加できません")
 	}
 
+	if (p.point+in.GetPoint()) < 0 || (p.point+in.GetPoint()) > 5000 || (p.point+in.GetPoint())%100 != 0 {
+		return ProblemPointInvalidError{}
+	}
 	p.caseSet = append(p.caseSet, in)
+	// 得点はケースセット追加時に自動で計算される
+	p.point += in.GetPoint()
 	return nil
 }
 
@@ -145,15 +150,6 @@ func (p *Problem) SetText(text string) error {
 		return ProblemTextLengthError{}
 	}
 	p.text = text
-	return nil
-}
-
-func (p *Problem) SetPoint(point int) error {
-	// 0~5000の間 100点刻み
-	if point < 0 || point > 5000 || point%100 != 0 {
-		return ProblemPointInvalidError{}
-	}
-	p.point = point
 	return nil
 }
 

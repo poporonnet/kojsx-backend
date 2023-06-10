@@ -37,7 +37,6 @@ func init() {
 	_ = p.SetIndex("A")
 	_ = p.SetTitle("test problem")
 	_ = p.SetText("hello world")
-	_ = p.SetPoint(300)
 	_ = p.SetTimeLimit(2000)
 	_ = p.AddCaseSet(*set1)
 	_ = p.AddCaseSet(*set2)

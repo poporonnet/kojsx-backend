@@ -56,7 +56,6 @@ func (p Problem) ToDomain() domain.Problem {
 	_ = pr.SetTitle(p.Title)
 	_ = pr.SetIndex(p.Index)
 	_ = pr.SetText(p.Text)
-	_ = pr.SetPoint(p.Point)
 	_ = pr.SetTimeLimit(p.TimeLimit)
 
 	for _, v := range p.CaseSets {

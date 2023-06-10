@@ -70,7 +70,6 @@ func NewSeeds() Seeds {
 		problem := domain.NewProblem(generator.NewID(time.Now().Add(-110)), contest1.GetID())
 		_ = problem.SetIndex("A")
 		_ = problem.SetTitle("Moji")
-		_ = problem.SetPoint(300)
 		_ = problem.SetText("Calculate the number.\n")
 		_ = problem.SetTimeLimit(2000)
 
