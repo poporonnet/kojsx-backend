@@ -50,3 +50,21 @@ func (c *ContestController) FindContestByID(i string) (*model.FindContestRespons
 		EndAt:       res.GetEndAt(),
 	}, nil
 }
+
+func (c *ContestController) FindContest() ([]model.FindContestResponseJSON, error) {
+	co, err := c.findService.FindAll()
+	if err != nil {
+		return nil, err
+	}
+	res := make([]model.FindContestResponseJSON, len(co))
+	for i, v := range co {
+		res[i] = model.FindContestResponseJSON{
+			ID:          string(v.GetID()),
+			Title:       v.GetTitle(),
+			Description: v.GetDescription(),
+			StartAt:     v.GetStartAt(),
+			EndAt:       v.GetEndAt(),
+		}
+	}
+	return res, nil
+}

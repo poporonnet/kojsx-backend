@@ -35,7 +35,7 @@ func NewSeeds() Seeds {
 	user2, _ := domain.NewUser(generator.NewID(time.Now().Add(-30)), "Eric", "eric@example.jp")
 	enc2, _ := passwordEncoder.EncodePassword("294729dnr0@sn!")
 	user2.SetPassword(string(enc2))
-	user2.SetVerified()
+	user2.SetAdmin()
 	users := []domain.User{*user1, *user2}
 
 	problems := func() []domain.Problem {

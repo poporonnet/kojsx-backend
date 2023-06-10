@@ -45,3 +45,12 @@ func (h *ContestHandlers) FindContestByID(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, res)
 }
+
+func (h *ContestHandlers) FindContest(c echo.Context) error {
+	res, err := h.controller.FindContest()
+	if err != nil {
+		h.logger.Sugar().Errorf("%s", err)
+		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
+	}
+	return c.JSON(http.StatusOK, res)
+}
