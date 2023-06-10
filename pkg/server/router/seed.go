@@ -1,10 +1,11 @@
 package router
 
 import (
+	"time"
+
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/password/argon2"
-	"time"
 )
 
 type Seeds struct {

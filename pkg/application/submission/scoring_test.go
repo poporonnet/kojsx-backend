@@ -1,10 +1,11 @@
 package submission
 
 import (
-	"github.com/mct-joken/kojs5-backend/pkg/domain"
-	"github.com/stretchr/testify/assert"
 	"strconv"
 	"testing"
+
+	"github.com/mct-joken/kojs5-backend/pkg/domain"
+	"github.com/stretchr/testify/assert"
 )
 
 var (
