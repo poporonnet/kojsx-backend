@@ -3,9 +3,10 @@ package submission
 import (
 	"errors"
 	"fmt"
+	"sort"
+
 	"github.com/mct-joken/kojs5-backend/pkg/repository"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
-	"sort"
 )
 
 type FindSubmissionService struct {
