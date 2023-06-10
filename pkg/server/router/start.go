@@ -13,6 +13,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/mct-joken/kojs5-backend/pkg/application/contest"
 	"github.com/mct-joken/kojs5-backend/pkg/application/problem"
+	"github.com/mct-joken/kojs5-backend/pkg/application/submission"
 	"github.com/mct-joken/kojs5-backend/pkg/application/user"
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/domain/service"
@@ -27,19 +28,21 @@ import (
 )
 
 var (
-	contestHandler *handlers.ContestHandlers
-	userHandler    *handlers.UserHandlers
-	problemHandler *handlers.ProblemHandlers
-	logger         *zap.Logger
-	mongoClient    *mongodb.Client
+	contestHandler    *handlers.ContestHandlers
+	userHandler       *handlers.UserHandlers
+	problemHandler    *handlers.ProblemHandlers
+	submissionHandler *handlers.SubmissionHandlers
+	logger            *zap.Logger
+	mongoClient       *mongodb.Client
 )
 
 func initServer() {
 	mode := os.Getenv("KOJS_MODE")
 	var (
-		contestRepository repository.ContestRepository
-		userRepository    repository.UserRepository
-		problemRepository repository.ProblemRepository
+		contestRepository    repository.ContestRepository
+		userRepository       repository.UserRepository
+		problemRepository    repository.ProblemRepository
+		submissionRepository repository.SubmissionRepository
 	)
 
 	cfg := zap.Config{
@@ -69,49 +72,85 @@ func initServer() {
 		contestRepository = mongodb.NewContestRepository(*mongoClient)
 		userRepository = mongodb.NewUserRepository(*mongoClient)
 		problemRepository = mongodb.NewProblemRepository(*mongoClient)
+		submissionRepository = mongodb.NewSubmissionRepository(*mongoClient)
 		logger.Sugar().Info("start the server in production mode.")
 	} else {
 		contestRepository = inmemory.NewContestRepository([]domain.Contest{})
 		userRepository = inmemory.NewUserRepository([]domain.User{})
 		problemRepository = inmemory.NewProblemRepository([]domain.Problem{}, []domain.Caseset{}, []domain.Case{})
+		submissionRepository = inmemory.NewSubmissionRepository([]domain.Submission{}, []domain.SubmissionResult{})
 		logger.Sugar().Info("start the server in development mode.")
 	}
 
-	contestHandler = handlers.NewContestHandlers(
-		*controller.NewContestController(
+	contestHandler = func() *handlers.ContestHandlers {
+		createService := *contest.NewCreateContestService(contestRepository)
+		findService := *contest.NewFindContestService(contestRepository)
+		c := *controller.NewContestController(
 			contestRepository,
-			*contest.NewCreateContestService(contestRepository),
-			*contest.NewFindContestService(contestRepository),
-		),
-		logger,
-	)
+			createService,
+			findService,
+		)
+		return handlers.NewContestHandlers(
+			c,
+			logger,
+		)
+	}()
 
-	userHandler = handlers.NewUserHandlers(
-		*controller.NewUserController(
+	userHandler = func() *handlers.UserHandlers {
+		findService := *user.NewFindUserService(userRepository)
+		createService := *user.NewCreateUserService(
 			userRepository,
-			*user.NewCreateUserService(
-				userRepository,
-				*service.NewUserService(userRepository),
-				dummy.NewMailer(),
-				"",
-			),
-			*user.NewFindUserService(userRepository),
-		),
-		*controller.NewAuthController(userRepository, ""),
-		logger,
-	)
+			*service.NewUserService(userRepository),
+			dummy.NewMailer(),
+			"",
+		)
 
-	problemHandler = handlers.NewProblemHandlers(
-		*controller.NewProblemController(
+		cont := *controller.NewUserController(
+			userRepository,
+			createService,
+			findService,
+		)
+
+		auth := *controller.NewAuthController(userRepository, "")
+
+		return handlers.NewUserHandlers(
+			cont,
+			auth,
+			logger,
+		)
+	}()
+
+	problemHandler = func() *handlers.ProblemHandlers {
+		createService := *problem.NewCreateProblemService(
 			problemRepository,
-			*problem.NewCreateProblemService(
-				problemRepository,
-				*service.NewProblemService(problemRepository),
-			),
+			*service.NewProblemService(problemRepository),
+		)
+		cont := *controller.NewProblemController(
+			problemRepository,
+			createService,
 			*problem.NewFindProblemService(problemRepository),
-		),
-		logger,
-	)
+		)
+
+		return handlers.NewProblemHandlers(
+			cont,
+			logger,
+		)
+	}()
+
+	submissionHandler = func() *handlers.SubmissionHandlers {
+		createService := *submission.NewCreateSubmissionService(submissionRepository,
+			*service.NewSubmissionService(submissionRepository),
+		)
+		findService := *submission.NewFindSubmissionService(submissionRepository)
+		findProblemService := *problem.NewFindProblemService(problemRepository)
+		cont := *controller.NewSubmissionController(
+			submissionRepository,
+			createService,
+			findService,
+			findProblemService,
+		)
+		return handlers.NewSubmissionHandlers(cont, logger)
+	}()
 }
 
 func StartServer(port int) {

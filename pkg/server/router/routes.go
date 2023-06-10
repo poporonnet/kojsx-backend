@@ -45,9 +45,10 @@ func rootRouter(e *echo.Echo) {
 			contest.GET("/:id/problems", problemHandler.FindByContestID)
 			contest.GET("/:id/ranking", dummyHandler)
 
-			contest.POST("/:id/submissions", dummyHandler)
+			contest.POST("/:id/submissions", submissionHandler.CreateSubmission)
 			contest.GET("/:id/submissions", dummyHandler)
 			contest.GET("/:id/submissions/:submissionId", dummyHandler)
+			contest.GET("/:id/submissions/tasks", submissionHandler.GetTask)
 		}
 	}
 }
