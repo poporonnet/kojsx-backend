@@ -75,7 +75,7 @@ func (s CreateSubmissionService) CreateResult(submissionID id.SnowFlakeID, args 
 		d := domain.NewSubmissionResult(newID, v.Result, v.Output, v.CaseName, v.ExitStatus, v.ExecTime, v.ExecMemory)
 		results[i] = *d
 	}
-	scoreResult, err := scoring(*problem, results)
+	scoreResult, _ := scoring(*problem, results)
 	results = scoreResult.SubmissionResult
 
 	_ = submission.SetPoint(scoreResult.Point)
