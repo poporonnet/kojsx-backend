@@ -1,7 +1,6 @@
 package entity
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
@@ -19,8 +18,7 @@ type CaseSet struct {
 func (c CaseSet) ToDomain() domain.Caseset {
 	cs := domain.NewCaseset(c.ID)
 	_ = cs.SetName(c.Name)
-	err := cs.SetPoint(c.Point)
-	fmt.Println(err)
+	_ = cs.SetPoint(c.Point)
 	return *cs
 }
 
@@ -158,14 +156,23 @@ func (s Submission) ToDomain() domain.Submission {
 }
 
 type SubmissionResult struct {
-	ID           id.SnowFlakeID
-	SubmissionID id.SnowFlakeID `bson:"submissionID"`
-	Result       string
-	CaseName     string `bson:"caseName"`
-	ExecTime     int    `bson:"execTime"`
-	ExecMemory   int    `bson:"execMemory"`
+	ID         id.SnowFlakeID
+	Result     string
+	Output     string
+	CaseName   string `bson:"caseName"`
+	ExitStatus int    `bson:"exitStatus"`
+	ExecTime   int    `bson:"execTime"`
+	ExecMemory int    `bson:"execMemory"`
 }
 
 func (s SubmissionResult) toDomain() domain.SubmissionResult {
-	return *domain.NewSubmissionResult(s.SubmissionID, s.Result, s.CaseName, s.ExecTime, s.ExecMemory)
+	return *domain.NewSubmissionResult(
+		s.ID,
+		s.Result,
+		s.Output,
+		s.CaseName,
+		s.ExitStatus,
+		s.ExecTime,
+		s.ExecMemory,
+	)
 }

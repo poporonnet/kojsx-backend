@@ -34,7 +34,6 @@ func (s *Submission) AddResult(result SubmissionResult) error {
 			return errors.New("AlreadyAdded")
 		}
 	}
-	result.setSubmissionID(s.id)
 	s.results = append(s.results, result)
 	return nil
 }
@@ -84,8 +83,8 @@ func (s *Submission) GetSubmittedAt() time.Time {
 }
 
 func (s *Submission) SetPoint(point int) error {
-	// 0~5000点, 100点刻み
-	if point < 0 || point > 5000 || point%100 != 0 {
+	// 0~5000点, 10点刻み
+	if point < 0 || point > 5000 || point%10 != 0 {
 		return errors.New("InvalidPoint")
 	}
 	s.point = point

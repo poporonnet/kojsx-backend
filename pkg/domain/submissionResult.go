@@ -4,20 +4,25 @@ import "github.com/mct-joken/kojs5-backend/pkg/utils/id"
 
 // SubmissionResult 提出詳細(ケースごとの結果/ケース名/実行時間/実行メモリ
 type SubmissionResult struct {
-	id           id.SnowFlakeID
-	submissionID id.SnowFlakeID
-	result       string
-	caseName     string
-	execTime     int
-	execMemory   int
+	id         id.SnowFlakeID
+	output     string
+	result     string
+	caseName   string
+	exitStatus int
+	execTime   int
+	execMemory int
+}
+
+func (s *SubmissionResult) GetOutput() string {
+	return s.output
+}
+
+func (s *SubmissionResult) GetExitStatus() int {
+	return s.exitStatus
 }
 
 func (s *SubmissionResult) GetID() id.SnowFlakeID {
 	return s.id
-}
-
-func (s *SubmissionResult) GetSubmissionID() id.SnowFlakeID {
-	return s.submissionID
 }
 
 func (s *SubmissionResult) GetResult() string {
@@ -36,22 +41,15 @@ func (s *SubmissionResult) GetExecMemory() int {
 	return s.execMemory
 }
 
-// setSubmissionID Submissionに追加するときのみ使う
-func (s *SubmissionResult) setSubmissionID(id id.SnowFlakeID) {
-	// すでに設定されているときだけ使える
-	if s.submissionID == "" {
-		s.submissionID = id
-	}
-}
-
 // NewSubmissionResult 不変値: すべて
-func NewSubmissionResult(id id.SnowFlakeID, result string, caseName string, execTime int, execMemory int) *SubmissionResult {
+func NewSubmissionResult(id id.SnowFlakeID, result, output, caseName string, exitStatus, execTime, execMemory int) *SubmissionResult {
 	return &SubmissionResult{
-		id:           id,
-		submissionID: "",
-		result:       result,
-		caseName:     caseName,
-		execTime:     execTime,
-		execMemory:   execMemory,
+		id:         id,
+		output:     output,
+		result:     result,
+		caseName:   caseName,
+		exitStatus: exitStatus,
+		execTime:   execTime,
+		execMemory: execMemory,
 	}
 }

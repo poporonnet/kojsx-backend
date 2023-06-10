@@ -12,17 +12,20 @@ import (
 )
 
 type CreateSubmissionService struct {
-	repository  repository.SubmissionRepository
-	service     service.SubmissionService
-	idGenerator id.Generator
+	repository        repository.SubmissionRepository
+	problemRepository repository.ProblemRepository
+	service           service.SubmissionService
+	idGenerator       id.Generator
 }
 
 func NewCreateSubmissionService(
 	repo repository.SubmissionRepository,
 	service service.SubmissionService,
+	problemRepository repository.ProblemRepository,
 ) *CreateSubmissionService {
 	return &CreateSubmissionService{
 		repo,
+		problemRepository,
 		service,
 		id.NewSnowFlakeIDGenerator(),
 	}
@@ -45,4 +48,40 @@ func (s CreateSubmissionService) Handle(pID, cID id.SnowFlakeID, lang, code stri
 	}
 
 	return d, nil
+}
+
+type CreateResultArgs struct {
+	Result     string
+	Output     string
+	CaseName   string
+	ExitStatus int
+	ExecTime   int
+	ExecMemory int
+}
+
+func (s CreateSubmissionService) CreateResult(submissionID id.SnowFlakeID, args []CreateResultArgs) error {
+	newID := s.idGenerator.NewID(time.Now())
+	submission, err := s.repository.FindSubmissionByID(submissionID)
+	if err != nil {
+		return err
+	}
+	problem, err := s.problemRepository.FindProblemByID(submission.GetProblemID())
+	if err != nil {
+		return err
+	}
+
+	results := make([]domain.SubmissionResult, len(args))
+	for i, v := range args {
+		d := domain.NewSubmissionResult(newID, v.Result, v.Output, v.CaseName, v.ExitStatus, v.ExecTime, v.ExecMemory)
+		results[i] = *d
+	}
+	scoreResult, _ := scoring(*problem, results)
+
+	_ = submission.SetPoint(scoreResult.Point)
+	submission.SetResult(scoreResult.Status)
+	_, err = s.repository.UpdateSubmissionResult(*submission)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -50,6 +50,25 @@ func (c SubmissionController) CreateSubmission(cID string, req model.CreateSubmi
 	}, nil
 }
 
+func (c SubmissionController) CreateSubmissionResult(req model.CreateSubmissionResultRequestJSON) error {
+	arg := make([]submission.CreateResultArgs, len(req.Results))
+	for i, v := range req.Results {
+		arg[i] = submission.CreateResultArgs{
+			Result:     "WJ",
+			Output:     v.Output,
+			CaseName:   v.CaseName,
+			ExitStatus: v.ExitStatus,
+			ExecTime:   v.Duration,
+			ExecMemory: v.Usage,
+		}
+	}
+	err := c.createService.CreateResult(id.SnowFlakeID(req.SubmissionID), arg)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (c SubmissionController) FindTask() (model.GetSubmissionTaskResponseJSON, error) {
 	res, err := c.findService.FindTask()
 	if err != nil {
@@ -66,7 +85,7 @@ func (c SubmissionController) FindTask() (model.GetSubmissionTaskResponseJSON, e
 		for _, k := range v.GetCases() {
 			cases = append(cases,
 				model.GetSubmissionTaskResponseCases{
-					Name: fmt.Sprintf("%s-%d.txt", v.GetName(), len(cases)),
+					Name: fmt.Sprintf("%s.txt", v.GetID()),
 					Data: k.GetIn(),
 				},
 			)
