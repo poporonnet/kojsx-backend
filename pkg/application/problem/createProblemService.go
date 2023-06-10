@@ -43,10 +43,10 @@ func (s *CreateProblemService) Handle(
 	if err != nil {
 		return nil, fmt.Errorf("failed to set text: %w", err)
 	}
-	err = p.SetPoint(point)
-	if err != nil {
-		return nil, fmt.Errorf("failed to set point: %w", err)
-	}
+	//err = p.SetPoint(point)
+	//if err != nil {
+	//	return nil, fmt.Errorf("failed to set point: %w", err)
+	//}
 	err = p.SetTimeLimit(timeLimit)
 	if err != nil {
 		return nil, fmt.Errorf("failed to set timeLimit: %w", err)

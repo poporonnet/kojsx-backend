@@ -90,9 +90,8 @@ func DataToDomain(in Data) *domain.Problem {
 	if err != nil {
 		return nil
 	}
-	err = d.SetPoint(in.GetPoint())
-	if err != nil {
-		return nil
+	for _, v := range in.GetCaseSets() {
+		_ = d.AddCaseSet(*v.ToDomain())
 	}
 	err = d.SetTimeLimit(in.GetTimeLimit())
 	if err != nil {
