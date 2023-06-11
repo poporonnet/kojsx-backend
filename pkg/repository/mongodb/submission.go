@@ -39,7 +39,7 @@ func (s SubmissionRepository) CreateSubmission(submission domain.Submission) err
 }
 
 func (s SubmissionRepository) FindSubmissionByID(id id.SnowFlakeID) (*domain.Submission, error) {
-	filter := &bson.D{{"_id", id}}
+	filter := &bson.M{"_id": id}
 
 	result := s.client.Cli.Database("kojs").Collection("submission").FindOne(context.Background(), filter)
 
