@@ -1,14 +1,15 @@
 package submission
 
 import (
+	"testing"
+	"time"
+
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/domain/service"
 	"github.com/mct-joken/kojs5-backend/pkg/repository/inmemory"
 	"github.com/mct-joken/kojs5-backend/pkg/utils"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/seed"
 	"github.com/stretchr/testify/assert"
-	"testing"
-	"time"
 )
 
 var ss *CreateSubmissionService

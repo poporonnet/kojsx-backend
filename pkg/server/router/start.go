@@ -3,13 +3,14 @@ package router
 import (
 	"context"
 	"fmt"
-	"github.com/mct-joken/kojs5-backend/pkg/utils"
-	"github.com/mct-joken/kojs5-backend/pkg/utils/seed"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/mct-joken/kojs5-backend/pkg/utils"
+	"github.com/mct-joken/kojs5-backend/pkg/utils/seed"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

@@ -1,8 +1,9 @@
 package handlers
 
 import (
-	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 	"net/http"
+
+	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 
 	"github.com/labstack/echo/v4"
 	"github.com/mct-joken/kojs5-backend/pkg/server/controller"

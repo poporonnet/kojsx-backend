@@ -2,13 +2,12 @@ package controller
 
 import (
 	"fmt"
-	"github.com/Code-Hex/dd"
+
 	"github.com/mct-joken/kojs5-backend/pkg/application/problem"
 	"github.com/mct-joken/kojs5-backend/pkg/application/submission"
 	"github.com/mct-joken/kojs5-backend/pkg/application/user"
 	"github.com/mct-joken/kojs5-backend/pkg/repository"
 	"github.com/mct-joken/kojs5-backend/pkg/server/controller/model"
-	"github.com/mct-joken/kojs5-backend/pkg/utils"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 )
 
@@ -140,7 +139,6 @@ func (c SubmissionController) FindTask() (model.GetSubmissionTaskResponseJSON, e
 			)
 		}
 	}
-	utils.Logger.Sugar().Debugf("%v", dd.Dump(p))
 	return model.GetSubmissionTaskResponseJSON{
 		ID:        string(res.GetID()),
 		ProblemID: string(res.GetProblemID()),

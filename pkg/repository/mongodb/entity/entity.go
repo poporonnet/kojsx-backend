@@ -147,6 +147,7 @@ func (s Submission) ToDomain() domain.Submission {
 	_ = sb.SetPoint(s.Point)
 	sb.SetExecMemory(s.ExecMemory)
 	sb.SetExecTime(s.ExecTime)
+	sb.SetResult(s.Result)
 
 	for _, v := range s.Results {
 		_ = sb.AddResult(v.toDomain())

@@ -3,9 +3,10 @@ package submission
 import (
 	"errors"
 	"fmt"
-	"github.com/mct-joken/kojs5-backend/pkg/utils"
 	"sort"
 	"time"
+
+	"github.com/mct-joken/kojs5-backend/pkg/utils"
 
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/domain/service"
@@ -70,10 +71,8 @@ func (s CreateSubmissionService) CreateResult(submissionID id.SnowFlakeID, args 
 	if err != nil {
 		return Data{}, err
 	}
-	// ToDo: Resultsが1つしか追加されない問題の修正
 	results := make([]domain.SubmissionResult, len(args))
 	for i, v := range args {
-		// FIXME: id生成が(ループの速度が早いせいで)おかしくなってる？
 		time.Sleep(2 * time.Millisecond)
 		d := domain.NewSubmissionResult(
 			s.idGenerator.NewID(time.Now()),
