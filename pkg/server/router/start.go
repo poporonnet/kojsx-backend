@@ -55,7 +55,7 @@ func initServer(mode string) {
 		userRepository = mongodb.NewUserRepository(*mongoClient)
 		problemRepository = mongodb.NewProblemRepository(*mongoClient)
 		submissionRepository = mongodb.NewSubmissionRepository(*mongoClient)
-		utils.SugarLogger.Info("repository initialised")
+		utils.SugarLogger.Info("repository initialized")
 	} else {
 		logger.Sugar().Info("start the server in development mode.")
 		utils.SugarLogger.Info("in-memory repository initialisation with seeds...")
@@ -64,7 +64,7 @@ func initServer(mode string) {
 		userRepository = inmemory.NewUserRepository(seeds.Users)
 		problemRepository = inmemory.NewProblemRepository([]domain.Problem{})
 		submissionRepository = inmemory.NewSubmissionRepository([]domain.Submission{}, []domain.SubmissionResult{})
-		utils.SugarLogger.Info("repository initialised")
+		utils.SugarLogger.Info("repository initialized")
 	}
 
 	contestHandler = func() *handlers.ContestHandlers {
