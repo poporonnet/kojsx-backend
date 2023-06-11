@@ -23,14 +23,12 @@ func NewContestHandlers(controller controller.ContestController, logger *zap.Log
 func (h *ContestHandlers) CreateContest(c echo.Context) error {
 	req := model.CreateContestRequestJSON{}
 	if err := c.Bind(&req); err != nil {
-		h.logger.Sugar().Errorf("%s", err)
 		return c.JSON(http.StatusBadRequest, responses.InvalidRequestErrorResponseJSON)
 	}
 	res, err := h.controller.CreateContest(req)
 	if err != nil {
 		// ToDo: エラーの種類を判別する
 		// e.g: タイトルの長さが正しくありません
-		h.logger.Sugar().Errorf("%s", err)
 		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
 	}
 	return c.JSON(http.StatusCreated, res)
@@ -40,7 +38,6 @@ func (h *ContestHandlers) FindContestByID(c echo.Context) error {
 	id := c.Param("id")
 	res, err := h.controller.FindContestByID(id)
 	if err != nil {
-		h.logger.Sugar().Errorf("%s", err)
 		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
 	}
 	return c.JSON(http.StatusOK, res)
@@ -49,7 +46,6 @@ func (h *ContestHandlers) FindContestByID(c echo.Context) error {
 func (h *ContestHandlers) FindContest(c echo.Context) error {
 	res, err := h.controller.FindContest()
 	if err != nil {
-		h.logger.Sugar().Errorf("%s", err)
 		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
 	}
 	return c.JSON(http.StatusOK, res)
