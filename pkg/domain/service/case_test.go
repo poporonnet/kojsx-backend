@@ -9,7 +9,7 @@ import (
 )
 
 func TestCaseService_IsExists(t *testing.T) {
-	r := inmemory.NewProblemRepository(nil, nil, dummyData.CaseArray)
+	r := inmemory.NewProblemRepository(dummyData.ProblemArray)
 	s := NewCaseService(r)
 
 	// trueのとき

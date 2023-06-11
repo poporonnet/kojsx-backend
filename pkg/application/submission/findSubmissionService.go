@@ -18,7 +18,10 @@ func NewFindSubmissionService(submissionRepository repository.SubmissionReposito
 }
 
 func (s FindSubmissionService) FindByID(id id.SnowFlakeID) (*Data, error) {
-	su, _ := s.submissionRepository.FindSubmissionByID(id)
+	su, err := s.submissionRepository.FindSubmissionByID(id)
+	if err != nil {
+		return nil, err
+	}
 	return DomainToData(*su), nil
 }
 

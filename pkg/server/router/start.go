@@ -9,6 +9,9 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/mct-joken/kojs5-backend/pkg/utils"
+	"github.com/mct-joken/kojs5-backend/pkg/utils/seed"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/mct-joken/kojs5-backend/pkg/application/contest"
@@ -24,7 +27,6 @@ import (
 	"github.com/mct-joken/kojs5-backend/pkg/server/handlers"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/mail/dummy"
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 var (
@@ -45,28 +47,7 @@ func initServer() {
 		submissionRepository repository.SubmissionRepository
 	)
 
-	cfg := zap.Config{
-		Level:       zap.NewAtomicLevelAt(zap.DebugLevel),
-		Development: true,
-		Encoding:    "console",
-		EncoderConfig: zapcore.EncoderConfig{
-			TimeKey:        "T",
-			LevelKey:       "L",
-			NameKey:        "N",
-			CallerKey:      "C",
-			MessageKey:     "M",
-			StacktraceKey:  "S",
-			LineEnding:     zapcore.DefaultLineEnding,
-			EncodeLevel:    zapcore.CapitalColorLevelEncoder,
-			EncodeTime:     zapcore.ISO8601TimeEncoder,
-			EncodeDuration: zapcore.StringDurationEncoder,
-			EncodeCaller:   zapcore.ShortCallerEncoder,
-		},
-		OutputPaths:      []string{"stdout"},
-		ErrorOutputPaths: []string{"stderr"},
-	}
-	logger, _ = cfg.Build()
-
+	logger = utils.NewLogger()
 	if mode == "prod" {
 		mongoClient = mongodb.NewMongoDBClient("mongodb://localhost:27017")
 		contestRepository = mongodb.NewContestRepository(*mongoClient)
@@ -75,10 +56,10 @@ func initServer() {
 		submissionRepository = mongodb.NewSubmissionRepository(*mongoClient)
 		logger.Sugar().Info("start the server in production mode.")
 	} else {
-		seeds := NewSeeds()
+		seeds := seed.NewSeeds()
 		contestRepository = inmemory.NewContestRepository(seeds.Contests)
 		userRepository = inmemory.NewUserRepository(seeds.Users)
-		problemRepository = inmemory.NewProblemRepository([]domain.Problem{}, []domain.Caseset{}, []domain.Case{})
+		problemRepository = inmemory.NewProblemRepository([]domain.Problem{})
 		submissionRepository = inmemory.NewSubmissionRepository([]domain.Submission{}, []domain.SubmissionResult{})
 		logger.Sugar().Info("start the server in development mode.")
 	}
@@ -146,11 +127,13 @@ func initServer() {
 		)
 		findService := *submission.NewFindSubmissionService(submissionRepository)
 		findProblemService := *problem.NewFindProblemService(problemRepository)
+		findUserService := *user.NewFindUserService(userRepository)
 		cont := *controller.NewSubmissionController(
 			submissionRepository,
 			createService,
 			findService,
 			findProblemService,
+			findUserService,
 		)
 		return handlers.NewSubmissionHandlers(cont, logger)
 	}()

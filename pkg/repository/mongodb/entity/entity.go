@@ -127,17 +127,17 @@ func (u User) ToDomain() domain.User {
 
 type Submission struct {
 	ID           id.SnowFlakeID `bson:"_id"`
-	ProblemID    id.SnowFlakeID
+	ProblemID    id.SnowFlakeID `bson:"problemID"`
 	ContestantID id.SnowFlakeID `bson:"contestantID"`
 
 	Point       int
 	Lang        string
-	CodeLength  int
+	CodeLength  int `bson:"codeLength"`
 	Result      string
 	ExecTime    int `bson:"execTime"`
 	ExecMemory  int `bson:"execMemory"`
 	Code        string
-	SubmittedAt time.Time
+	SubmittedAt time.Time `bson:"submittedAt"`
 
 	Results []SubmissionResult
 }
@@ -147,6 +147,7 @@ func (s Submission) ToDomain() domain.Submission {
 	_ = sb.SetPoint(s.Point)
 	sb.SetExecMemory(s.ExecMemory)
 	sb.SetExecTime(s.ExecTime)
+	sb.SetResult(s.Result)
 
 	for _, v := range s.Results {
 		_ = sb.AddResult(v.toDomain())
