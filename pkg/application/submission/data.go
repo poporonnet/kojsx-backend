@@ -36,6 +36,7 @@ type Result struct {
 func newResult(id id.SnowFlakeID, output, result, caseName string, exitStatus, execTime, execMemory int) *Result {
 	return &Result{id: id,
 		result:     result,
+		output:     output,
 		caseName:   caseName,
 		exitStatus: exitStatus,
 		execTime:   execTime,

@@ -2,11 +2,13 @@ package controller
 
 import (
 	"fmt"
-
+	"github.com/Code-Hex/dd"
 	"github.com/mct-joken/kojs5-backend/pkg/application/problem"
 	"github.com/mct-joken/kojs5-backend/pkg/application/submission"
+	"github.com/mct-joken/kojs5-backend/pkg/application/user"
 	"github.com/mct-joken/kojs5-backend/pkg/repository"
 	"github.com/mct-joken/kojs5-backend/pkg/server/controller/model"
+	"github.com/mct-joken/kojs5-backend/pkg/utils"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 )
 
@@ -15,6 +17,7 @@ type SubmissionController struct {
 	createService      submission.CreateSubmissionService
 	findService        submission.FindSubmissionService
 	findProblemService problem.FindProblemService
+	findUserService    user.FindUserService
 }
 
 func NewSubmissionController(
@@ -22,12 +25,14 @@ func NewSubmissionController(
 	createService submission.CreateSubmissionService,
 	findService submission.FindSubmissionService,
 	findProblemService problem.FindProblemService,
+	findUserService user.FindUserService,
 ) *SubmissionController {
 	return &SubmissionController{
 		repository,
 		createService,
 		findService,
 		findProblemService,
+		findUserService,
 	}
 }
 
@@ -50,6 +55,50 @@ func (c SubmissionController) CreateSubmission(cID string, req model.CreateSubmi
 	}, nil
 }
 
+func (c SubmissionController) FindByID(id id.SnowFlakeID) (model.GetSubmissionResponseJSON, error) {
+	s, err := c.findService.FindByID(id)
+	if err != nil {
+		return model.GetSubmissionResponseJSON{}, err
+	}
+	p, err := c.findProblemService.FindByID(s.GetProblemID())
+	if err != nil {
+		return model.GetSubmissionResponseJSON{}, err
+	}
+
+	results := make([]model.GetSubmissionResults, len(s.GetResults()))
+	for i, v := range s.GetResults() {
+		results[i] = model.GetSubmissionResults{
+			Name:   v.GetCaseName(),
+			Status: v.GetResult(),
+			Time:   v.GetExecTime(),
+			Memory: v.GetExecMemory(),
+		}
+	}
+	// ToDo: Contestant情報を入れる
+	return model.GetSubmissionResponseJSON{
+		ID:          string(s.GetID()),
+		SubmittedAt: s.GetSubmittedAt(),
+		User: struct {
+			ID   string `json:"id"`
+			Name string `json:"name"`
+		}{},
+		Problem: struct {
+			ID   string `json:"id"`
+			Name string `json:"name"`
+		}{
+			string(s.GetProblemID()),
+			fmt.Sprintf("%s - %s", p.GetIndex(), p.GetTitle()),
+		},
+		Code:    s.GetCode(),
+		Lang:    s.GetLang(),
+		Points:  s.GetPoint(),
+		Status:  s.GetResult(),
+		Time:    s.GetExecTime(),
+		Memory:  s.GetExecMemory(),
+		Results: results,
+	}, nil
+}
+
 func (c SubmissionController) CreateSubmissionResult(req model.CreateSubmissionResultRequestJSON) error {
 	arg := make([]submission.CreateResultArgs, len(req.Results))
 	for i, v := range req.Results {
@@ -62,7 +111,7 @@ func (c SubmissionController) CreateSubmissionResult(req model.CreateSubmissionR
 			ExecMemory: v.Usage,
 		}
 	}
-	err := c.createService.CreateResult(id.SnowFlakeID(req.SubmissionID), arg)
+	_, err := c.createService.CreateResult(id.SnowFlakeID(req.SubmissionID), arg)
 	if err != nil {
 		return err
 	}
@@ -85,13 +134,13 @@ func (c SubmissionController) FindTask() (model.GetSubmissionTaskResponseJSON, e
 		for _, k := range v.GetCases() {
 			cases = append(cases,
 				model.GetSubmissionTaskResponseCases{
-					Name: fmt.Sprintf("%s.txt", v.GetID()),
+					Name: fmt.Sprintf("%s.txt", k.GetID()),
 					Data: k.GetIn(),
 				},
 			)
 		}
 	}
-
+	utils.Logger.Sugar().Debugf("%v", dd.Dump(p))
 	return model.GetSubmissionTaskResponseJSON{
 		ID:        string(res.GetID()),
 		ProblemID: string(res.GetProblemID()),

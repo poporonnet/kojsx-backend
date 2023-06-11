@@ -9,7 +9,7 @@ import (
 )
 
 func TestProblemService_IsExists(t *testing.T) {
-	r := inmemory.NewProblemRepository(dummyData.ProblemArray, nil, nil)
+	r := inmemory.NewProblemRepository(dummyData.ProblemArray)
 	s := NewProblemService(r)
 
 	// trueになるとき

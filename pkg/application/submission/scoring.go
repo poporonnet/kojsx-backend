@@ -2,8 +2,8 @@ package submission
 
 import (
 	"errors"
-
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
+	"github.com/mct-joken/kojs5-backend/pkg/utils"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 )
 
@@ -30,7 +30,7 @@ func scoring(problem domain.Problem, results []domain.SubmissionResult) (ScoreRe
 	// 全結果について調べる
 	for _, v := range results {
 		// 結果のケースセットを調べる
-		set, err := findCaseSet(problem, id.SnowFlakeID(v.GetCaseName()))
+		set, err := findCaseSetByCaseID(problem, id.SnowFlakeID(v.GetCaseName()))
 		if err != nil {
 			return ScoreResult{}, err
 		}
@@ -90,12 +90,18 @@ func scoring(problem domain.Problem, results []domain.SubmissionResult) (ScoreRe
 		// 正解
 		if v == "AC" {
 			// 満点
-			set, _ := findCaseSet(problem, k)
+			set, err := findCaseSetByID(problem, k)
+			if err != nil {
+				return ScoreResult{}, err
+			}
 			point += set.GetPoint()
 			status = v
 		} else {
 			// エラー
-			set, _ := findCaseSet(problem, k)
+			set, err := findCaseSetByCaseID(problem, k)
+			if err != nil {
+				return ScoreResult{}, err
+			}
 			point += set.GetPoint() / 10
 			status = v
 			break
@@ -130,6 +136,7 @@ func judge(out string, r domain.SubmissionResult, timeLim, memLim int) string {
 	return "AC"
 }
 
+// findCase 問題からケースを取得
 func findCase(in domain.Problem, id id.SnowFlakeID) (domain.Case, error) {
 	for _, v := range in.GetCaseSets() {
 		for _, k := range v.GetCases() {
@@ -138,10 +145,13 @@ func findCase(in domain.Problem, id id.SnowFlakeID) (domain.Case, error) {
 			}
 		}
 	}
+
+	utils.Logger.Sugar().Errorf("failed to find case: not found")
 	return domain.Case{}, errors.New("not found")
 }
 
-func findCaseSet(in domain.Problem, id id.SnowFlakeID) (domain.Caseset, error) {
+// findCaseSetByCaseID ケースセットを取得
+func findCaseSetByCaseID(in domain.Problem, id id.SnowFlakeID) (domain.Caseset, error) {
 	for _, v := range in.GetCaseSets() {
 		for _, k := range v.GetCases() {
 			if k.GetID() == id {
@@ -149,5 +159,16 @@ func findCaseSet(in domain.Problem, id id.SnowFlakeID) (domain.Caseset, error) {
 			}
 		}
 	}
+	utils.Logger.Sugar().Errorf("failed to find caseSet: not found")
+	return domain.Caseset{}, errors.New("not found")
+}
+
+func findCaseSetByID(in domain.Problem, id id.SnowFlakeID) (domain.Caseset, error) {
+	for _, v := range in.GetCaseSets() {
+		if v.GetID() == id {
+			return v, nil
+		}
+	}
+	utils.Logger.Sugar().Errorf("failed to find caseSet: not found")
 	return domain.Caseset{}, errors.New("not found")
 }

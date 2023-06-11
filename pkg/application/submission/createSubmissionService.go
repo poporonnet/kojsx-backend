@@ -3,6 +3,8 @@ package submission
 import (
 	"errors"
 	"fmt"
+	"github.com/mct-joken/kojs5-backend/pkg/utils"
+	"sort"
 	"time"
 
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
@@ -59,29 +61,58 @@ type CreateResultArgs struct {
 	ExecMemory int
 }
 
-func (s CreateSubmissionService) CreateResult(submissionID id.SnowFlakeID, args []CreateResultArgs) error {
-	newID := s.idGenerator.NewID(time.Now())
+func (s CreateSubmissionService) CreateResult(submissionID id.SnowFlakeID, args []CreateResultArgs) (Data, error) {
 	submission, err := s.repository.FindSubmissionByID(submissionID)
 	if err != nil {
-		return err
+		return Data{}, err
 	}
 	problem, err := s.problemRepository.FindProblemByID(submission.GetProblemID())
 	if err != nil {
-		return err
+		return Data{}, err
 	}
-
+	// ToDo: Resultsが1つしか追加されない問題の修正
 	results := make([]domain.SubmissionResult, len(args))
 	for i, v := range args {
-		d := domain.NewSubmissionResult(newID, v.Result, v.Output, v.CaseName, v.ExitStatus, v.ExecTime, v.ExecMemory)
+		// FIXME: id生成が(ループの速度が早いせいで)おかしくなってる？
+		time.Sleep(2 * time.Millisecond)
+		d := domain.NewSubmissionResult(
+			s.idGenerator.NewID(time.Now()),
+			v.Result,
+			v.Output,
+			v.CaseName,
+			v.ExitStatus,
+			v.ExecTime,
+			v.ExecMemory,
+		)
 		results[i] = *d
 	}
-	scoreResult, _ := scoring(*problem, results)
 
+	scoreResult, err := scoring(*problem, results)
+	if err != nil {
+		return Data{}, err
+	}
 	_ = submission.SetPoint(scoreResult.Point)
 	submission.SetResult(scoreResult.Status)
+	for _, v := range scoreResult.SubmissionResult {
+		err = submission.AddResult(v)
+		if err != nil {
+			utils.Logger.Sugar().Warnf("%v", err)
+		}
+	}
+
+	sort.Slice(scoreResult.SubmissionResult, func(i, j int) bool {
+		return scoreResult.SubmissionResult[i].GetExecTime() > scoreResult.SubmissionResult[j].GetExecTime()
+	})
+	sort.Slice(scoreResult.SubmissionResult, func(i, j int) bool {
+		return scoreResult.SubmissionResult[i].GetExecMemory() > scoreResult.SubmissionResult[j].GetExecMemory()
+	})
+	submission.SetExecTime(scoreResult.SubmissionResult[0].GetExecTime())
+	submission.SetExecMemory(scoreResult.SubmissionResult[0].GetExecMemory())
 	_, err = s.repository.UpdateSubmissionResult(*submission)
 	if err != nil {
-		return err
+		return Data{}, err
 	}
-	return nil
+
+	ret := *DomainToData(*submission)
+	return ret, nil
 }

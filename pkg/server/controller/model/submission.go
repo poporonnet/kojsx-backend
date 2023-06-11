@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 type CreateSubmissionRequestJSON struct {
 	ProblemID string `json:"problemID"`
 	Code      string `json:"code"`
@@ -47,4 +49,31 @@ type CreateSubmissionResults struct {
 	ExitStatus int    `json:"exitStatus"`
 	Duration   int    `json:"duration"`
 	Usage      int    `json:"usage"`
+}
+
+type GetSubmissionResponseJSON struct {
+	ID          string    `json:"id"`
+	SubmittedAt time.Time `json:"submittedAt"`
+	User        struct {
+		ID   string `json:"id"`
+		Name string `json:"name"`
+	} `json:"user"`
+	Problem struct {
+		ID   string `json:"id"`
+		Name string `json:"name"`
+	} `json:"problem"`
+	Code    string                 `json:"code"`
+	Lang    string                 `json:"lang"`
+	Points  int                    `json:"points"`
+	Status  string                 `json:"status"`
+	Time    int                    `json:"time"`
+	Memory  int                    `json:"memory"`
+	Results []GetSubmissionResults `json:"results"`
+}
+
+type GetSubmissionResults struct {
+	Name   string `json:"name"`
+	Status string `json:"status"`
+	Time   int    `json:"time"`
+	Memory int    `json:"memory"`
 }

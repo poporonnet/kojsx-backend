@@ -48,7 +48,7 @@ func rootRouter(e *echo.Echo) {
 
 			contest.POST("/:id/submissions", submissionHandler.CreateSubmission)
 			contest.GET("/:id/submissions", dummyHandler)
-			contest.GET("/:id/submissions/:submissionId", dummyHandler)
+			contest.GET("/:id/submissions/:submissionId", submissionHandler.FindByID)
 		}
 		v2.GET("/submissions/tasks", submissionHandler.GetTask)
 		v2.POST("/submissions/tasks", submissionHandler.CreateSubmissionResult)

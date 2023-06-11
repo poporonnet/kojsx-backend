@@ -8,13 +8,11 @@ import (
 )
 
 type ProblemRepository struct {
-	data     []domain.Problem
-	sets     []domain.Caseset
-	caseData []domain.Case
+	data []domain.Problem
 }
 
-func NewProblemRepository(data []domain.Problem, sets []domain.Caseset, caseData []domain.Case) *ProblemRepository {
-	return &ProblemRepository{data: data, sets: sets, caseData: caseData}
+func NewProblemRepository(data []domain.Problem) *ProblemRepository {
+	return &ProblemRepository{data: data}
 }
 
 func (p *ProblemRepository) FindProblemByContestID(id id.SnowFlakeID) ([]domain.Problem, error) {
@@ -51,18 +49,24 @@ func (p *ProblemRepository) FindProblemByTitle(name string) (*domain.Problem, er
 }
 
 func (p *ProblemRepository) FindCaseSetByID(id id.SnowFlakeID) (*domain.Caseset, error) {
-	for _, v := range p.sets {
-		if v.GetID() == id {
-			return &v, nil
+	for _, k := range p.data {
+		for _, v := range k.GetCaseSets() {
+			if v.GetID() == id {
+				return &v, nil
+			}
 		}
 	}
 	return nil, errors.New("not found")
 }
 
 func (p *ProblemRepository) FindCaseByID(id id.SnowFlakeID) (*domain.Case, error) {
-	for _, v := range p.caseData {
-		if v.GetID() == id {
-			return &v, nil
+	for _, k := range p.data {
+		for _, j := range k.GetCaseSets() {
+			for _, v := range j.GetCases() {
+				if v.GetID() == id {
+					return &v, nil
+				}
+			}
 		}
 	}
 	return nil, errors.New("not found")

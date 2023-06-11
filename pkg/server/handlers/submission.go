@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -38,12 +39,22 @@ func (h SubmissionHandlers) CreateSubmission(c echo.Context) error {
 	return c.JSON(http.StatusCreated, res)
 }
 
+func (h SubmissionHandlers) FindByID(c echo.Context) error {
+	i := c.Param("submissionId")
+	res, err := h.controller.FindByID(id.SnowFlakeID(i))
+	if err != nil {
+		h.logger.Sugar().Errorf("%s", err)
+		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
+	}
+	return c.JSON(http.StatusOK, res)
+}
+
 func (h SubmissionHandlers) GetTask(c echo.Context) error {
 	res, err := h.controller.FindTask()
 	if err != nil {
 		// ToDo: うまくunwrap出来ていない問題を修正する
 		if err.Error() == "failed to find task: not found" {
-			h.logger.Sugar().Infof("no judge task")
+			h.logger.Sugar().Infof("no judge task: %s", err)
 			return c.NoContent(http.StatusNoContent)
 		}
 		h.logger.Sugar().Errorf("%s", err)
