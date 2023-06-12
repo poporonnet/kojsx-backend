@@ -1,8 +1,10 @@
-package submission
+package submission_test
 
 import (
 	"testing"
 	"time"
+
+	"github.com/mct-joken/kojs5-backend/pkg/application/submission"
 
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/domain/service"
@@ -12,21 +14,21 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var ss *CreateSubmissionService
+var ss *submission.CreateSubmissionService
 var loc = time.UTC
 var d = time.Date(2021, time.October, 1, 0, 0, 0, 0, loc)
 
 func TestMain(m *testing.M) {
 	utils.NewLogger()
 	s := seed.NewSeeds()
-	submissionRepository := inmemory.NewSubmissionRepository(s.Submission, []domain.SubmissionResult{})
+	submissionRepository := inmemory.NewSubmissionRepository(s.Submission)
 	problemRepository := inmemory.NewProblemRepository(s.Problems)
-	ss = NewCreateSubmissionService(submissionRepository, *service.NewSubmissionService(submissionRepository), problemRepository)
+	ss = submission.NewCreateSubmissionService(submissionRepository, *service.NewSubmissionService(submissionRepository), problemRepository)
 	m.Run()
 }
 
 func TestCreateSubmissionService_CreateResult(t *testing.T) {
-	args := []CreateResultArgs{
+	args := []submission.CreateResultArgs{
 		{
 			Result:     "WJ",
 			Output:     "world\n",
@@ -76,24 +78,23 @@ func TestCreateSubmissionService_CreateResult(t *testing.T) {
 
 	t.Run("Result以外のテスト", func(t *testing.T) {
 		// Result以外のテスト
-		act := res
-		act.results = []Result{}
-		assert.Equal(t, *DomainToData(*e), act)
+		act := submission.NewData(res.GetID(), res.GetProblemID(), res.GetContestantID(), res.GetPoint(), res.GetLang(), res.GetCodeLength(), res.GetResult(), res.GetExecTime(), res.GetExecMemory(), res.GetCode(), res.GetSubmittedAt(), []submission.Result{})
+		assert.Equal(t, submission.DomainToData(*e), act)
 	})
 
 	t.Run("Resultのテスト", func(t *testing.T) {
-		act := res.results
+		act := res.GetResults()
 		for i, tt := range args {
 			t.Run(tt.CaseName, func(t *testing.T) {
-				exp := Result{
-					id:         act[i].GetID(),
-					result:     "AC",
-					output:     tt.Output,
-					caseName:   tt.CaseName,
-					exitStatus: tt.ExitStatus,
-					execTime:   tt.ExecTime,
-					execMemory: tt.ExecMemory,
-				}
+				exp := *submission.NewResult(
+					act[i].GetID(),
+					tt.Output,
+					"AC",
+					tt.CaseName,
+					tt.ExitStatus,
+					tt.ExecTime,
+					tt.ExecMemory,
+				)
 				assert.Equal(t, exp, act[i])
 			})
 		}

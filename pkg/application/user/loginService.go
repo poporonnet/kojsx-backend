@@ -58,7 +58,7 @@ func (s *LoginService) Verify(t string) bool {
 	if err != nil {
 		return false
 	}
-	do := DataToDomain(u)
+	do := u.ToDomain()
 	do.SetVerified()
 	// ToDo: updateService作る
 	err = s.repository.UpdateUser(do)

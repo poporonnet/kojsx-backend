@@ -39,13 +39,13 @@ func (d Data) GetEndAt() time.Time {
 	return d.endAt
 }
 
-// DataToDomain DTOをドメインモデルに
-func DataToDomain(in Data) domain.Contest {
-	u := domain.NewContest(in.GetID())
-	_ = u.SetTitle(in.GetTitle())
-	_ = u.SetDescription(in.GetDescription())
-	_ = u.SetStartAt(in.GetStartAt())
-	_ = u.SetEndAt(in.GetEndAt())
+// ToDomain DTOをドメインモデルに
+func (d Data) ToDomain() domain.Contest {
+	u := domain.NewContest(d.GetID())
+	_ = u.SetTitle(d.GetTitle())
+	_ = u.SetDescription(d.GetDescription())
+	_ = u.SetStartAt(d.GetStartAt())
+	_ = u.SetEndAt(d.GetEndAt())
 	return *u
 }
 

@@ -42,12 +42,12 @@ func (d Data) IsVerified() bool {
 }
 
 // DataToDomain DTOをドメインモデルに変換
-func DataToDomain(in Data) domain.User {
-	u, _ := domain.NewUser(in.GetID(), in.GetName(), in.GetEmail())
-	if in.IsAdmin() {
+func (d Data) ToDomain() domain.User {
+	u, _ := domain.NewUser(d.GetID(), d.GetName(), d.GetEmail())
+	if d.IsAdmin() {
 		u.SetAdmin()
 	}
-	u.SetPassword(in.GetPassword())
+	u.SetPassword(d.GetPassword())
 	return *u
 }
 
