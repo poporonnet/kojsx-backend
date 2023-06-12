@@ -75,3 +75,12 @@ func (h SubmissionHandlers) CreateSubmissionResult(c echo.Context) error {
 	}
 	return c.NoContent(http.StatusNoContent)
 }
+
+func (h SubmissionHandlers) FindSubmissionByContestID(c echo.Context) error {
+	i := c.Param("id")
+	res, err := h.controller.FindByContestID(i)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
+	}
+	return c.JSON(http.StatusOK, res)
+}

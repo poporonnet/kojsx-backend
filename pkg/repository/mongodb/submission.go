@@ -41,6 +41,28 @@ func (s SubmissionRepository) CreateSubmission(submission domain.Submission) err
 	return nil
 }
 
+func (s SubmissionRepository) FindSubmissionByProblemID(id id.SnowFlakeID) ([]domain.Submission, error) {
+	filter := &bson.M{"problemID": id}
+
+	cursor, err := s.client.Cli.Database("kojs").Collection("submission").Find(context.Background(), filter)
+	if err != nil {
+		utils.SugarLogger.Errorf("failed to find submission by problemID: %v", err)
+		return nil, fmt.Errorf("failed to find submission by problemID: %w", err)
+	}
+
+	var submission []entity.Submission
+	if err := cursor.All(context.Background(), &submission); err != nil {
+		utils.SugarLogger.Errorf("failed to decode submission data: %v", err)
+		return nil, fmt.Errorf("failed to decode submission data: %w", err)
+	}
+
+	res := make([]domain.Submission, len(submission))
+	for i, v := range submission {
+		res[i] = v.ToDomain()
+	}
+	return res, nil
+}
+
 func (s SubmissionRepository) FindSubmissionByID(id id.SnowFlakeID) (*domain.Submission, error) {
 	filter := &bson.M{"_id": id}
 
