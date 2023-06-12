@@ -11,6 +11,16 @@ type SubmissionRepository struct {
 	submission []domain.Submission
 }
 
+func (s *SubmissionRepository) FindSubmissionByProblemID(id id.SnowFlakeID) ([]domain.Submission, error) {
+	res := make([]domain.Submission, 0)
+	for _, v := range s.submission {
+		if v.GetProblemID() == id {
+			res = append(res, v)
+		}
+	}
+	return res, nil
+}
+
 func (s *SubmissionRepository) UpdateSubmissionResult(submission domain.Submission) (*domain.Submission, error) {
 	for i, v := range s.submission {
 		if v.GetID() == submission.GetID() {

@@ -13,3 +13,7 @@ var InternalServerErrorResponseJSON = commonAPIErrorResponseJSON{
 	Type:    "Internal Server Error",
 	Message: "エラーが発生しました",
 }
+var UnAuthorizedRequestErrorResponseJSON = commonAPIErrorResponseJSON{
+	Type:    "Unauthorized",
+	Message: "ログインしていません",
+}

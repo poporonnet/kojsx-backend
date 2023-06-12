@@ -151,3 +151,45 @@ func (c SubmissionController) FindTask() (model.GetSubmissionTaskResponseJSON, e
 		},
 	}, nil
 }
+
+func (c SubmissionController) FindByContestID(i string) ([]model.FindSubmissionByContestIDResponseJSON, error) {
+	r, err := c.findService.FindByContestID(id.SnowFlakeID(i))
+	if err != nil {
+		return nil, err
+	}
+
+	res := make([]model.FindSubmissionByContestIDResponseJSON, 0)
+	for _, k := range r.S {
+		problemName := ""
+		for _, q := range r.P {
+			if k.GetProblemID() == q.GetID() {
+				problemName = fmt.Sprintf("%s - %s", q.GetIndex(), q.GetTitle())
+			}
+		}
+		res = append(res, model.FindSubmissionByContestIDResponseJSON{
+			ID:          string(k.GetID()),
+			SubmittedAt: k.GetSubmittedAt(),
+			User: struct {
+				Id   string `json:"id"`
+				Name string `json:"name"`
+			}{
+				string(k.GetContestantID()),
+				"",
+			},
+			Problem: struct {
+				Id   string `json:"id"`
+				Name string `json:"name"`
+			}{
+				string(k.GetProblemID()),
+				problemName,
+			},
+			Lang:   k.GetLang(),
+			Points: k.GetPoint(),
+			Status: k.GetResult(),
+			Time:   k.GetExecTime(),
+			Memory: k.GetExecMemory(),
+		},
+		)
+	}
+	return res, nil
+}

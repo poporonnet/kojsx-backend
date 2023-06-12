@@ -77,3 +77,21 @@ type GetSubmissionResults struct {
 	Time   int    `json:"time"`
 	Memory int    `json:"memory"`
 }
+
+type FindSubmissionByContestIDResponseJSON struct {
+	ID          string    `json:"id"`
+	SubmittedAt time.Time `json:"submittedAt"`
+	User        struct {
+		Id   string `json:"id"`
+		Name string `json:"name"`
+	} `json:"user"`
+	Problem struct {
+		Id   string `json:"id"`
+		Name string `json:"name"`
+	} `json:"problem"`
+	Lang   string `json:"lang"`
+	Points int    `json:"points"`
+	Status string `json:"status"`
+	Time   int    `json:"time"`
+	Memory int    `json:"memory"`
+}

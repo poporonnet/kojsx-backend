@@ -12,7 +12,8 @@ import (
 
 func TestFindSubmissionService_FindByID(t *testing.T) {
 	r := inmemory.NewSubmissionRepository(seed.NewSeeds().Submission)
-	s := submission.NewFindSubmissionService(r)
+	p := inmemory.NewProblemRepository(seed.NewSeeds().Problems)
+	s := submission.NewFindSubmissionService(r, p)
 
 	res, _ := s.FindByID("200")
 	assert.Equal(t, submission.DomainToData(seed.NewSeeds().Submission[0]), res)

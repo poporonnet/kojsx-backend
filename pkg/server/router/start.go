@@ -127,7 +127,7 @@ func initServer(mode string) {
 			*service.NewSubmissionService(submissionRepository),
 			problemRepository,
 		)
-		findService := *submission.NewFindSubmissionService(submissionRepository)
+		findService := *submission.NewFindSubmissionService(submissionRepository, problemRepository)
 		findProblemService := *problem.NewFindProblemService(problemRepository)
 		findUserService := *user.NewFindUserService(userRepository)
 		cont := *controller.NewSubmissionController(
@@ -154,7 +154,7 @@ func StartServer(port int, mode string) {
 		},
 	}))
 	e.HideBanner = true
-
+	e.HidePort = true
 	// routerの呼び出し
 	rootRouter(e)
 
