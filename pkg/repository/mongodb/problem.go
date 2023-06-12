@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/mct-joken/kojs5-backend/pkg/utils"
 
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/repository/mongodb/entity"
@@ -50,6 +51,7 @@ func (p ProblemRepository) CreateProblem(in domain.Problem) error {
 
 	_, err := p.cli.Cli.Database("kojs").Collection("problem").InsertOne(context.Background(), e)
 	if err != nil {
+		utils.SugarLogger.Errorf("failed to create problem: %v", err)
 		return fmt.Errorf("failed to create problem: %w", err)
 	}
 
@@ -61,6 +63,7 @@ func (p ProblemRepository) FindProblemByID(id id.SnowFlakeID) (*domain.Problem, 
 
 	var problem entity.Problem
 	if err := result.Decode(&problem); err != nil {
+		utils.SugarLogger.Errorf("failed to decode problem data: %v", err)
 		return nil, fmt.Errorf("failed to decode problem data: %w", err)
 	}
 	res := problem.ToDomain()
@@ -72,6 +75,7 @@ func (p ProblemRepository) FindProblemByTitle(name string) (*domain.Problem, err
 
 	var problem entity.Problem
 	if err := result.Decode(&problem); err != nil {
+		utils.SugarLogger.Errorf("failed to decode problem data: %v", err)
 		return nil, fmt.Errorf("failed to decode problem data: %w", err)
 	}
 	res := problem.ToDomain()
@@ -84,6 +88,7 @@ func (p ProblemRepository) FindCaseSetByID(id id.SnowFlakeID) (*domain.Caseset, 
 
 	var problem entity.Problem
 	if err := cursor.Decode(&problem); err != nil {
+		utils.SugarLogger.Errorf("failed to decode problem data: %v", err)
 		return nil, fmt.Errorf("failed to decode problem data: %w", err)
 	}
 	res := problem.ToDomain()
@@ -100,6 +105,7 @@ func (p ProblemRepository) FindCaseByID(id id.SnowFlakeID) (*domain.Case, error)
 
 	var problem entity.Problem
 	if err := cursor.Decode(&problem); err != nil {
+		utils.SugarLogger.Errorf("failed to decode problem data: %v", err)
 		return nil, fmt.Errorf("failed to decode problem data: %w", err)
 	}
 	res := problem.ToDomain()
@@ -117,11 +123,13 @@ func (p ProblemRepository) FindCaseByID(id id.SnowFlakeID) (*domain.Case, error)
 func (p ProblemRepository) FindProblemByContestID(id id.SnowFlakeID) ([]domain.Problem, error) {
 	cursor, err := p.cli.Cli.Database("kojs").Collection("problem").Find(context.Background(), &bson.M{"contestID": id})
 	if err != nil {
+		utils.SugarLogger.Errorf("failed to find problems: %v", err)
 		return []domain.Problem{}, fmt.Errorf("failed to find problems: %w", err)
 	}
 
 	var problem []entity.Problem
 	if err := cursor.All(context.Background(), &problem); err != nil {
+		utils.SugarLogger.Errorf("failed to decode problems: %v", err)
 		return []domain.Problem{}, fmt.Errorf("failed to decode problems: %w", err)
 	}
 	res := make([]domain.Problem, len(problem))

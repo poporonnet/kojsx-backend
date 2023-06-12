@@ -3,6 +3,7 @@ package mongodb
 import (
 	"context"
 	"fmt"
+	"github.com/mct-joken/kojs5-backend/pkg/utils"
 
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/repository/mongodb/entity"
@@ -32,6 +33,7 @@ func (s SubmissionRepository) CreateSubmission(submission domain.Submission) err
 
 	_, err := s.client.Cli.Database("kojs").Collection("submission").InsertOne(context.Background(), e)
 	if err != nil {
+		utils.SugarLogger.Errorf("failed to create submision: %v", err)
 		return fmt.Errorf("failed to create submission: %w", err)
 	}
 
@@ -45,6 +47,7 @@ func (s SubmissionRepository) FindSubmissionByID(id id.SnowFlakeID) (*domain.Sub
 
 	var submission entity.Submission
 	if err := result.Decode(&submission); err != nil {
+		utils.SugarLogger.Errorf("failed to decode submission data: %v", err)
 		return nil, fmt.Errorf("failed to decode submission data: %w", err)
 	}
 
@@ -57,11 +60,13 @@ func (s SubmissionRepository) FindSubmissionByStatus(status string) ([]domain.Su
 
 	cursor, err := s.client.Cli.Database("kojs").Collection("submission").Find(context.Background(), filter)
 	if err != nil {
+		utils.SugarLogger.Errorf("failed to find submission by status: %v", err)
 		return nil, fmt.Errorf("failed to find submission by status: %w", err)
 	}
 
 	var submission []entity.Submission
 	if err := cursor.All(context.Background(), &submission); err != nil {
+		utils.SugarLogger.Errorf("failed to decode submission data: %v", err)
 		return nil, fmt.Errorf("failed to decode submission data: %w", err)
 	}
 
@@ -101,6 +106,7 @@ func (s SubmissionRepository) UpdateSubmissionResult(submission domain.Submissio
 	}
 	_, err := s.client.Cli.Database("kojs").Collection("submission").ReplaceOne(context.Background(), bson.M{"_id": submission.GetID()}, e)
 	if err != nil {
+		utils.SugarLogger.Errorf("failed to update submission: %v", err)
 		return nil, fmt.Errorf("failed to update submission: %w", err)
 	}
 

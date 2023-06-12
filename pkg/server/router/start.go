@@ -38,8 +38,7 @@ var (
 	mongoClient       *mongodb.Client
 )
 
-func initServer() {
-	mode := os.Getenv("KOJS_MODE")
+func initServer(mode string) {
 	var (
 		contestRepository    repository.ContestRepository
 		userRepository       repository.UserRepository
@@ -49,19 +48,23 @@ func initServer() {
 
 	logger = utils.NewLogger()
 	if mode == "prod" {
+		utils.SugarLogger.Info("start the server in production mode.")
+		utils.SugarLogger.Info("connect to mongodb server...")
 		mongoClient = mongodb.NewMongoDBClient("mongodb://localhost:27017")
 		contestRepository = mongodb.NewContestRepository(*mongoClient)
 		userRepository = mongodb.NewUserRepository(*mongoClient)
 		problemRepository = mongodb.NewProblemRepository(*mongoClient)
 		submissionRepository = mongodb.NewSubmissionRepository(*mongoClient)
-		logger.Sugar().Info("start the server in production mode.")
+		utils.SugarLogger.Info("repository initialized")
 	} else {
+		logger.Sugar().Info("start the server in development mode.")
+		utils.SugarLogger.Info("in-memory repository initialisation with seeds...")
 		seeds := seed.NewSeeds()
 		contestRepository = inmemory.NewContestRepository(seeds.Contests)
 		userRepository = inmemory.NewUserRepository(seeds.Users)
 		problemRepository = inmemory.NewProblemRepository([]domain.Problem{})
 		submissionRepository = inmemory.NewSubmissionRepository([]domain.Submission{}, []domain.SubmissionResult{})
-		logger.Sugar().Info("start the server in development mode.")
+		utils.SugarLogger.Info("repository initialized")
 	}
 
 	contestHandler = func() *handlers.ContestHandlers {
@@ -139,8 +142,8 @@ func initServer() {
 	}()
 }
 
-func StartServer(port int) {
-	initServer()
+func StartServer(port int, mode string) {
+	initServer(mode)
 	e := echo.New()
 	e.Use(middleware.CORS())
 	e.Use(middleware.RecoverWithConfig(middleware.RecoverConfig{

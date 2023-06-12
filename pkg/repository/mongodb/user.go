@@ -3,6 +3,7 @@ package mongodb
 import (
 	"context"
 	"fmt"
+	"github.com/mct-joken/kojs5-backend/pkg/utils"
 
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/repository/mongodb/entity"
@@ -37,6 +38,7 @@ func (u UserRepository) CreateUser(d domain.User) error {
 
 	_, err := u.client.Cli.Database("kojs").Collection("user").InsertOne(context.Background(), e)
 	if err != nil {
+		utils.SugarLogger.Errorf("failed to create user: %v", err)
 		return err
 	}
 
@@ -47,11 +49,13 @@ func (u UserRepository) FindAllUsers() ([]domain.User, error) {
 	filter := &bson.D{}
 	cursor, err := u.client.Cli.Database("kojs").Collection("user").Find(context.Background(), filter)
 	if err != nil {
+		utils.SugarLogger.Errorf("failed to find users: %v", err)
 		return []domain.User{}, fmt.Errorf("failed to find users: %w", err)
 	}
 
 	var user []entity.User
 	if err := cursor.All(context.Background(), &user); err != nil {
+		utils.SugarLogger.Errorf("failed to decode users: %v", err)
 		return []domain.User{}, fmt.Errorf("failed to decode users: %w", err)
 	}
 
@@ -69,6 +73,7 @@ func (u UserRepository) FindUserByID(id id.SnowFlakeID) (*domain.User, error) {
 
 	var user entity.User
 	if err := result.Decode(&user); err != nil {
+		utils.SugarLogger.Errorf("failed to decode user: %v", err)
 		return nil, fmt.Errorf("failed to decode user: %w", err)
 	}
 	res := user.ToDomain()
@@ -82,6 +87,7 @@ func (u UserRepository) FindUserByName(name string) (*domain.User, error) {
 
 	var user entity.User
 	if err := result.Decode(&user); err != nil {
+		utils.SugarLogger.Errorf("failed to decode user: %v", err)
 		return nil, fmt.Errorf("failed to decode user: %w", err)
 	}
 	res := user.ToDomain()
@@ -95,6 +101,7 @@ func (u UserRepository) FindUserByEmail(email string) (*domain.User, error) {
 
 	var user entity.User
 	if err := result.Decode(&user); err != nil {
+		utils.SugarLogger.Errorf("failed to decode user: %v", err)
 		return nil, fmt.Errorf("failed to decode user: %w", err)
 	}
 	res := user.ToDomain()

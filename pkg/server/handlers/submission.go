@@ -44,7 +44,6 @@ func (h SubmissionHandlers) FindByID(c echo.Context) error {
 	i := c.Param("submissionId")
 	res, err := h.controller.FindByID(id.SnowFlakeID(i))
 	if err != nil {
-		h.logger.Sugar().Errorf("%s", err)
 		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
 	}
 	return c.JSON(http.StatusOK, res)
@@ -58,7 +57,6 @@ func (h SubmissionHandlers) GetTask(c echo.Context) error {
 			h.logger.Sugar().Infof("no judge task: %s", err)
 			return c.NoContent(http.StatusNoContent)
 		}
-		h.logger.Sugar().Errorf("%s", err)
 		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
 	}
 
@@ -68,13 +66,11 @@ func (h SubmissionHandlers) GetTask(c echo.Context) error {
 func (h SubmissionHandlers) CreateSubmissionResult(c echo.Context) error {
 	req := model.CreateSubmissionResultRequestJSON{}
 	if err := c.Bind(&req); err != nil {
-		h.logger.Sugar().Errorf("%s", err)
 		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
 	}
 
 	err := h.controller.CreateSubmissionResult(req)
 	if err != nil {
-		h.logger.Sugar().Errorf("%s", err)
 		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
 	}
 	return c.NoContent(http.StatusNoContent)

@@ -3,6 +3,7 @@ package mongodb
 import (
 	"context"
 	"fmt"
+	"github.com/mct-joken/kojs5-backend/pkg/utils"
 
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/repository/mongodb/entity"
@@ -28,6 +29,7 @@ func (c ContestantRepository) JoinContest(d domain.Contestant) error {
 	}
 	_, err := c.client.Cli.Database("kojs").Collection("contestant").InsertOne(context.Background(), e)
 	if err != nil {
+		utils.SugarLogger.Errorf("failed to create contestant: %v", err)
 		return err
 	}
 
@@ -41,6 +43,7 @@ func (c ContestantRepository) FindContestantByID(id id.SnowFlakeID) (*domain.Con
 
 	var contestant entity.Contestant
 	if err := result.Decode(&contestant); err != nil {
+		utils.SugarLogger.Errorf("failed to decode contestant data: %v", err)
 		return nil, fmt.Errorf("failed to decode contestant data: %w", err)
 	}
 	res := contestant.ToDomain()
@@ -52,11 +55,13 @@ func (c ContestantRepository) FindContestantByUserID(id id.SnowFlakeID) ([]domai
 
 	cursor, err := c.client.Cli.Database("kojs").Collection("contestant").Find(context.Background(), filter)
 	if err != nil {
+		utils.SugarLogger.Errorf("failed to find contestant data: %v", err)
 		return []domain.Contestant{}, fmt.Errorf("failed to find contestant data: %w", err)
 	}
 
 	var contestant []entity.Contestant
 	if err := cursor.All(context.Background(), &contestant); err != nil {
+		utils.SugarLogger.Errorf("failed to decode contestant data: %v", err)
 		return nil, fmt.Errorf("failed to decode contestant data: %w", err)
 	}
 	res := make([]domain.Contestant, len(contestant))
@@ -70,11 +75,13 @@ func (c ContestantRepository) FindContestantByContestID(id id.SnowFlakeID) ([]do
 	filter := &bson.M{"contestID": id}
 	cursor, err := c.client.Cli.Database("kojs").Collection("contestant").Find(context.Background(), filter)
 	if err != nil {
+		utils.SugarLogger.Errorf("failed to find contestant data: %v", err)
 		return []domain.Contestant{}, fmt.Errorf("failed to find contestant data: %w", err)
 	}
 
 	var contestant []entity.Contestant
 	if err := cursor.All(context.Background(), &contestant); err != nil {
+		utils.SugarLogger.Errorf("failed to decode contestant data: %v", err)
 		return nil, fmt.Errorf("failed to decode contestant data: %w", err)
 	}
 	res := make([]domain.Contestant, len(contestant))

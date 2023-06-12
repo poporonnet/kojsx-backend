@@ -28,13 +28,11 @@ func NewUserHandlers(
 func (h *UserHandlers) CreateUser(c echo.Context) error {
 	req := model.CreateUserRequestJSON{}
 	if err := c.Bind(&req); err != nil {
-		h.logger.Sugar().Errorf("%s", err)
 		return c.JSON(http.StatusBadRequest, responses.InvalidRequestErrorResponseJSON)
 	}
 
 	res, err := h.UserController.Create(req)
 	if err != nil {
-		h.logger.Sugar().Errorf("%s", err)
 		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
 	}
 
@@ -44,7 +42,6 @@ func (h *UserHandlers) CreateUser(c echo.Context) error {
 func (h *UserHandlers) FindAllUser(c echo.Context) error {
 	res, err := h.UserController.FindAllUsers()
 	if err != nil {
-		h.logger.Sugar().Errorf("%s", err)
 		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
 	}
 
@@ -54,13 +51,11 @@ func (h *UserHandlers) FindAllUser(c echo.Context) error {
 func (h *UserHandlers) Login(c echo.Context) error {
 	req := model.LoginRequestJSON{}
 	if err := c.Bind(&req); err != nil {
-		h.logger.Sugar().Errorf("%s", err)
 		return c.JSON(http.StatusBadRequest, responses.InvalidRequestErrorResponseJSON)
 	}
 
 	res, err := h.auth.Login(req)
 	if err != nil {
-		h.logger.Sugar().Errorf("%s", err)
 		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
 	}
 
@@ -71,11 +66,9 @@ func (h *UserHandlers) Verify(c echo.Context) error {
 	t := c.Param("token")
 	ok, err := h.auth.Verify(t)
 	if err != nil {
-		h.logger.Sugar().Errorf("%s", err)
 		return c.JSON(http.StatusBadRequest, responses.InvalidRequestErrorResponseJSON)
 	}
 	if !ok {
-		h.logger.Sugar().Errorf("%s", err)
 		return c.JSON(http.StatusBadRequest, responses.InvalidRequestErrorResponseJSON)
 	}
 	return c.NoContent(http.StatusOK)

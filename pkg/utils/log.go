@@ -6,6 +6,7 @@ import (
 )
 
 var Logger *zap.Logger
+var SugarLogger *zap.SugaredLogger
 
 func NewLogger() *zap.Logger {
 	cfg := zap.Config{
@@ -29,5 +30,6 @@ func NewLogger() *zap.Logger {
 		ErrorOutputPaths: []string{"stderr"},
 	}
 	Logger, _ = cfg.Build()
+	SugarLogger = Logger.Sugar()
 	return Logger
 }

@@ -3,6 +3,7 @@ package mongodb
 import (
 	"context"
 	"fmt"
+	"github.com/mct-joken/kojs5-backend/pkg/utils"
 
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/repository/mongodb/entity"
@@ -25,6 +26,7 @@ func (c ContestRepository) CreateContest(d domain.Contest) error {
 
 	_, err := c.client.Cli.Database("kojs").Collection("contest").InsertOne(context.Background(), e)
 	if err != nil {
+		utils.SugarLogger.Errorf("failed to create contest: %v", err)
 		return fmt.Errorf("failed to create contest: %w", err)
 	}
 
@@ -35,11 +37,13 @@ func (c ContestRepository) FindAllContests() ([]domain.Contest, error) {
 	filter := &bson.D{}
 	cursor, err := c.client.Cli.Database("kojs").Collection("contest").Find(context.Background(), filter)
 	if err != nil {
+		utils.SugarLogger.Errorf("failed to find contests: %v", err)
 		return []domain.Contest{}, fmt.Errorf("failed to find contests: %w", err)
 	}
 
 	var contest []entity.Contest
 	if err := cursor.All(context.Background(), &contest); err != nil {
+		utils.SugarLogger.Errorf("failed to get value from cursor: %v", err)
 		return []domain.Contest{}, fmt.Errorf("failed get value from cursor: %w", err)
 	}
 
@@ -57,6 +61,7 @@ func (c ContestRepository) FindContestByID(id id.SnowFlakeID) (*domain.Contest, 
 
 	var contest entity.Contest
 	if err := result.Decode(&contest); err != nil {
+		utils.SugarLogger.Errorf("failed to decode contest data: %v", err)
 		return nil, fmt.Errorf("failed to decode contest data: %w", err)
 	}
 	res := contest.ToDomain()
@@ -69,6 +74,7 @@ func (c ContestRepository) FindContestByTitle(title string) (*domain.Contest, er
 
 	var contest entity.Contest
 	if err := result.Decode(&contest); err != nil {
+		utils.SugarLogger.Errorf("failed to decode contest data: %v", err)
 		return nil, fmt.Errorf("failed to decode contest data: %w", err)
 	}
 	res := contest.ToDomain()
