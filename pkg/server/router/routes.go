@@ -14,7 +14,7 @@ func rootRouter(e *echo.Echo) {
 			user.GET("/me", dummyHandler)
 			user.PUT("/me/password", dummyHandler)
 
-			user.GET("/:id", dummyHandler)
+			user.GET("/:id", userHandler.FindByID)
 			user.GET("/", userHandler.FindAllUser)
 			user.POST("/", userHandler.CreateUser)
 			user.POST("/verify/:token", userHandler.Verify)

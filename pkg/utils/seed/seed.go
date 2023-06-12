@@ -39,7 +39,7 @@ func NewSeeds() Seeds {
 			"Eric",
 			"eric@example.jp",
 			"Argon2.8ce04ed8562b03c813343a04022f93db7629f9f2.1a7[0]",
-			1,
+			domain.Admin,
 		)
 
 		user2 := user.NewData(
@@ -47,7 +47,7 @@ func NewSeeds() Seeds {
 			"Eric",
 			"eric@example.jp",
 			"Argon2.8ce04ed8562b03c813343a04022f93db7629f9f2.1a7[0]",
-			2,
+			domain.Normal,
 		)
 		return []domain.User{user1.ToDomain(), user2.ToDomain()}
 	}()
