@@ -18,7 +18,6 @@ import (
 	"github.com/mct-joken/kojs5-backend/pkg/application/problem"
 	"github.com/mct-joken/kojs5-backend/pkg/application/submission"
 	"github.com/mct-joken/kojs5-backend/pkg/application/user"
-	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/domain/service"
 	"github.com/mct-joken/kojs5-backend/pkg/repository"
 	"github.com/mct-joken/kojs5-backend/pkg/repository/inmemory"
@@ -62,8 +61,8 @@ func initServer(mode string) {
 		seeds := seed.NewSeeds()
 		contestRepository = inmemory.NewContestRepository(seeds.Contests)
 		userRepository = inmemory.NewUserRepository(seeds.Users)
-		problemRepository = inmemory.NewProblemRepository([]domain.Problem{})
-		submissionRepository = inmemory.NewSubmissionRepository([]domain.Submission{}, []domain.SubmissionResult{})
+		problemRepository = inmemory.NewProblemRepository(seeds.Problems)
+		submissionRepository = inmemory.NewSubmissionRepository(seeds.Submission)
 		utils.SugarLogger.Info("repository initialized")
 	}
 

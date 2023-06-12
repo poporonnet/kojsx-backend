@@ -1,24 +1,25 @@
-package controller
+package controller_test
 
 import (
-	"fmt"
 	"testing"
 	"time"
+
+	"github.com/mct-joken/kojs5-backend/pkg/server/controller"
+	"github.com/mct-joken/kojs5-backend/pkg/utils/seed"
 
 	"github.com/mct-joken/kojs5-backend/pkg/application/contest"
 	"github.com/mct-joken/kojs5-backend/pkg/repository/inmemory"
 	"github.com/mct-joken/kojs5-backend/pkg/server/controller/model"
-	"github.com/mct-joken/kojs5-backend/pkg/utils/dummyData"
 	"github.com/stretchr/testify/assert"
 )
 
-var controller *ContestController
+var cont *controller.ContestController
 
 func init() {
-	r := inmemory.NewContestRepository(dummyData.ContestArray)
+	r := inmemory.NewContestRepository(seed.NewSeeds().Contests)
 	s := contest.NewCreateContestService(r)
 	f := contest.NewFindContestService(r)
-	controller = NewContestController(r, *s, *f)
+	cont = controller.NewContestController(r, *s, *f)
 }
 
 func TestContestController_CreateContest(t *testing.T) {
@@ -29,7 +30,7 @@ func TestContestController_CreateContest(t *testing.T) {
 		EndAt:       time.Now().Add(1 * time.Hour),
 	}
 
-	res, _ := controller.CreateContest(req)
+	res, _ := cont.CreateContest(req)
 
 	assert.Equal(t, req.Title, res.Title)
 	assert.Equal(t, req.Description, res.Description)
@@ -38,10 +39,10 @@ func TestContestController_CreateContest(t *testing.T) {
 }
 
 func TestContestController_FindContestByID(t *testing.T) {
-	res, err := controller.FindContestByID("1")
-	fmt.Println(err)
-	assert.Equal(t, dummyData.ExistsContestData.GetTitle(), res.Title)
-	assert.Equal(t, dummyData.ExistsContestData.GetDescription(), res.Description)
-	assert.Equal(t, dummyData.ExistsContestData.GetStartAt(), res.StartAt)
-	assert.Equal(t, dummyData.ExistsContestData.GetEndAt(), res.EndAt)
+	res, _ := cont.FindContestByID("10")
+	e := seed.NewSeeds().Contests
+	assert.Equal(t, e[0].GetTitle(), res.Title)
+	assert.Equal(t, e[0].GetDescription(), res.Description)
+	assert.Equal(t, e[0].GetStartAt(), res.StartAt)
+	assert.Equal(t, e[0].GetEndAt(), res.EndAt)
 }

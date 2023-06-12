@@ -9,7 +9,6 @@ import (
 
 type SubmissionRepository struct {
 	submission []domain.Submission
-	result     []domain.SubmissionResult
 }
 
 func (s *SubmissionRepository) UpdateSubmissionResult(submission domain.Submission) (*domain.Submission, error) {
@@ -28,8 +27,8 @@ func (s *SubmissionRepository) CreateSubmission(submission domain.Submission) er
 	return nil
 }
 
-func NewSubmissionRepository(s []domain.Submission, r []domain.SubmissionResult) *SubmissionRepository {
-	return &SubmissionRepository{submission: s, result: r}
+func NewSubmissionRepository(s []domain.Submission) *SubmissionRepository {
+	return &SubmissionRepository{submission: s}
 }
 
 func (s *SubmissionRepository) FindSubmissionByID(id id.SnowFlakeID) (*domain.Submission, error) {

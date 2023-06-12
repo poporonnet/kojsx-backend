@@ -33,7 +33,7 @@ type Result struct {
 	execMemory int
 }
 
-func newResult(id id.SnowFlakeID, output, result, caseName string, exitStatus, execTime, execMemory int) *Result {
+func NewResult(id id.SnowFlakeID, output, result, caseName string, exitStatus, execTime, execMemory int) *Result {
 	return &Result{id: id,
 		result:     result,
 		output:     output,
@@ -170,7 +170,7 @@ func DomainToData(in domain.Submission) *Data {
 func submissionResultToResults(in []domain.SubmissionResult) []Result {
 	res := make([]Result, len(in))
 	for i, v := range in {
-		res[i] = *newResult(
+		res[i] = *NewResult(
 			v.GetID(),
 			v.GetOutput(),
 			v.GetResult(),
@@ -183,9 +183,9 @@ func submissionResultToResults(in []domain.SubmissionResult) []Result {
 	return res
 }
 
-func DataToDomain(in Data) *domain.Submission {
-	r, _ := domain.NewSubmission(in.GetID(), in.GetProblemID(), in.GetContestantID(), in.GetLang(), in.GetCode(), in.GetSubmittedAt())
-	addSubmissionResult(r, in.GetResults())
+func (d Data) ToDomain() *domain.Submission {
+	r, _ := domain.NewSubmission(d.GetID(), d.GetProblemID(), d.GetContestantID(), d.GetLang(), d.GetCode(), d.GetSubmittedAt())
+	addSubmissionResult(r, d.GetResults())
 	return r
 }
 
