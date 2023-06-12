@@ -33,32 +33,38 @@ func (d Data) GetPassword() string {
 	return d.password
 }
 
+// IsAdmin role -> 0
 func (d Data) IsAdmin() bool {
 	return d.role == 0
 }
 
+// IsVerified role -> 0,1
 func (d Data) IsVerified() bool {
 	return d.role != 2
 }
 
-// DataToDomain DTOをドメインモデルに変換
+// ToDomain DTOをドメインモデルに変換
 func (d Data) ToDomain() domain.User {
 	u, _ := domain.NewUser(d.GetID(), d.GetName(), d.GetEmail())
+	if d.IsVerified() {
+		u.SetVerified()
+	}
 	if d.IsAdmin() {
 		u.SetAdmin()
 	}
+
 	u.SetPassword(d.GetPassword())
 	return *u
 }
 
 // DomainToData ドメインモデルをDTOに変換
 func DomainToData(in domain.User) Data {
-	role := 0
-	if !in.IsAdmin() {
-		role = 1
-	}
+	role := 1
 	if !in.IsVerified() {
 		role = 2
+	}
+	if in.IsAdmin() {
+		role = 0
 	}
 	return *NewData(in.GetID(), in.GetName(), in.GetEmail(), in.GetPassword(), role)
 }

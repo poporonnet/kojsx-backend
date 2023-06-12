@@ -39,6 +39,15 @@ func (h *UserHandlers) CreateUser(c echo.Context) error {
 	return c.JSON(http.StatusCreated, res)
 }
 
+func (h *UserHandlers) FindByID(c echo.Context) error {
+	i := c.Param("id")
+	res, err := h.UserController.FindByID(i)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
+	}
+	return c.JSON(http.StatusOK, res)
+}
+
 func (h *UserHandlers) FindAllUser(c echo.Context) error {
 	res, err := h.UserController.FindAllUsers()
 	if err != nil {

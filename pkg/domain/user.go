@@ -6,13 +6,21 @@ import (
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 )
 
+type UserRole int
+
+const (
+	Admin = iota
+	Normal
+	Unverified
+)
+
 // User ユーザー
 type User struct {
 	id       id.SnowFlakeID
 	name     string
 	email    string
 	password string
-	role     int
+	role     UserRole
 }
 
 // UserNameLengthError ユーザー名の長さエラー
@@ -69,35 +77,31 @@ func (u *User) GetPassword() string {
 	return u.password
 }
 
+// IsVerified role -> NOT 2
 func (u *User) IsVerified() bool {
-	return u.role != 2
+	return u.role == Unverified
 }
 
+// IsAdmin role -> 0
 func (u *User) IsAdmin() bool {
-	/*
-		role:
-			admin 0
-			normal 1
-			unverified 2
-	*/
-	return u.role == 0
+	return u.role == Admin
 }
 
 func (u *User) SetAdmin() {
 	if !u.IsAdmin() {
-		u.role = 0
+		u.role = Admin
 	}
 }
 
 func (u *User) SetNormal() {
 	if u.IsAdmin() {
-		u.role = 1
+		u.role = Normal
 	}
 }
 
 func (u *User) SetVerified() {
 	if !u.IsVerified() {
-		u.role = 1
+		u.role = Normal
 	}
 }
 
