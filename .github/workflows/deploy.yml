@@ -12,5 +12,10 @@ jobs:
       name: Testing
       url: https://ojs.laminne33569.net
     steps:
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          known_hosts: $${{ secrets.KNOWN_HOST }}
       - name: do deploy
         run: ssh -o LogLevel=QUIET -t ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} -p ${{ secrets.SSH_PORT }} "sudo sh /srv/deploy.sh"
