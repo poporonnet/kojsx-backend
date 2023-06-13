@@ -1,0 +1,13 @@
+name: Deploy to server
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: do deploy
+        run: ssh -o LogLevel=QUIET -t ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} -p ${{ secrets.SSH_PORT }} "sudo sh /srv/deploy.sh"
