@@ -1,8 +1,12 @@
 package router
 
-import "github.com/labstack/echo/v4"
+import (
+	"github.com/labstack/echo/v4"
+	"net/http"
+)
 
 func rootRouter(e *echo.Echo) {
+	e.GET("/", topHandler)
 	v2 := e.Group("/api/v2")
 	{
 		v2.POST("/login", userHandler.Login)
@@ -57,4 +61,14 @@ func rootRouter(e *echo.Echo) {
 
 func dummyHandler(c echo.Context) error {
 	return c.String(400, "未実装のエンドポイントです")
+}
+
+func topHandler(c echo.Context) error {
+	message := struct {
+		Message string
+	}{
+		Message: "-----WELCOME TO Kemomimi Online Judge System v6-----\napi base url is '/api/v2'. learn more: github.com/poporonnet/kojs6-api-spec",
+	}
+
+	return c.JSON(http.StatusOK, message)
 }
