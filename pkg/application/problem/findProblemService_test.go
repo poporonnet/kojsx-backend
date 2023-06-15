@@ -4,11 +4,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/mct-joken/kojs5-backend/pkg/application/problem"
 	"github.com/mct-joken/kojs5-backend/pkg/repository/inmemory"
 	"github.com/mct-joken/kojs5-backend/pkg/utils"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/seed"
-	"github.com/stretchr/testify/assert"
 )
 
 var pService problem.FindProblemService
@@ -40,7 +41,6 @@ func TestFindProblemService_FindByID(t *testing.T) {
 	t.Run("コンテスト開始前は取得できない", func(t *testing.T) {
 		assert.Equal(t, (*problem.Data)(nil), act[1])
 	})
-
 }
 
 func TestFindProblemService_FindByContestID(t *testing.T) {
