@@ -3,8 +3,9 @@ package submission
 import (
 	"errors"
 	"fmt"
-	"github.com/mct-joken/kojs5-backend/pkg/utils"
 	"sort"
+
+	"github.com/mct-joken/kojs5-backend/pkg/utils"
 
 	"github.com/mct-joken/kojs5-backend/pkg/application/problem"
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
