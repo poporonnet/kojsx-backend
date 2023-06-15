@@ -57,6 +57,7 @@ func (h SubmissionHandlers) GetTask(c echo.Context) error {
 			h.logger.Sugar().Infof("no judge task: %s", err)
 			return c.NoContent(http.StatusNoContent)
 		}
+		h.logger.Sugar().Errorf("unknown error!: %s", err)
 		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
 	}
 

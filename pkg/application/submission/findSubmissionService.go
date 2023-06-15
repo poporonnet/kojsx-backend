@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"sort"
 
+	"github.com/mct-joken/kojs5-backend/pkg/utils"
+
 	"github.com/mct-joken/kojs5-backend/pkg/application/problem"
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 
@@ -32,6 +34,7 @@ func (s FindSubmissionService) FindByID(id id.SnowFlakeID) (*Data, error) {
 func (s FindSubmissionService) FindTask() (*Data, error) {
 	res, err := s.submissionRepository.FindSubmissionByStatus("WE")
 	if err != nil {
+		utils.SugarLogger.Errorf("failed to update submission status: %v", err)
 		return nil, fmt.Errorf("failed to find task: %w", err)
 	}
 
@@ -46,6 +49,7 @@ func (s FindSubmissionService) FindTask() (*Data, error) {
 	task := res[0]
 	res[0].SetResult("WJ")
 	if _, err := s.submissionRepository.UpdateSubmissionResult(res[0]); err != nil {
+		utils.SugarLogger.Errorf("failed to update submission status: %v", err)
 		return nil, fmt.Errorf("failed to update submission status: %w", err)
 	}
 

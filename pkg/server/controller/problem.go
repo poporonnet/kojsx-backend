@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/mct-joken/kojs5-backend/pkg/application/problem"
 	"github.com/mct-joken/kojs5-backend/pkg/repository"
@@ -51,7 +52,7 @@ func (c *ProblemController) CreateProblem(req model.CreateProblemRequestJSON) (m
 }
 
 func (c *ProblemController) FindByID(i string) (model.FindProblemResponseJSON, error) {
-	res, err := c.findService.FindByID(id.SnowFlakeID(i))
+	res, err := c.findService.FindByID(id.SnowFlakeID(i), time.Now())
 	if err != nil {
 		return model.FindProblemResponseJSON{}, fmt.Errorf("failed to find problem: %w", err)
 	}
