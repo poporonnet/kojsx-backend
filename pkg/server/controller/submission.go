@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/mct-joken/kojs5-backend/pkg/application/problem"
 	"github.com/mct-joken/kojs5-backend/pkg/application/submission"
@@ -59,7 +60,7 @@ func (c SubmissionController) FindByID(id id.SnowFlakeID) (model.GetSubmissionRe
 	if err != nil {
 		return model.GetSubmissionResponseJSON{}, err
 	}
-	p, err := c.findProblemService.FindByID(s.GetProblemID())
+	p, err := c.findProblemService.FindByID(s.GetProblemID(), time.Now())
 	if err != nil {
 		return model.GetSubmissionResponseJSON{}, err
 	}
@@ -123,7 +124,7 @@ func (c SubmissionController) FindTask() (model.GetSubmissionTaskResponseJSON, e
 		return model.GetSubmissionTaskResponseJSON{}, err
 	}
 
-	p, err := c.findProblemService.FindByID(res.GetProblemID())
+	p, err := c.findProblemService.FindByID(res.GetProblemID(), time.Now())
 	if err != nil {
 		return model.GetSubmissionTaskResponseJSON{}, err
 	}

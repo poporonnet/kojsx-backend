@@ -112,7 +112,7 @@ func initServer(mode string) {
 		cont := *controller.NewProblemController(
 			problemRepository,
 			createService,
-			*problem.NewFindProblemService(problemRepository),
+			*problem.NewFindProblemService(problemRepository, contestRepository),
 		)
 
 		return handlers.NewProblemHandlers(
@@ -128,7 +128,7 @@ func initServer(mode string) {
 			problemRepository,
 		)
 		findService := *submission.NewFindSubmissionService(submissionRepository, problemRepository)
-		findProblemService := *problem.NewFindProblemService(problemRepository)
+		findProblemService := *problem.NewFindProblemService(problemRepository, contestRepository)
 		findUserService := *user.NewFindUserService(userRepository)
 		cont := *controller.NewSubmissionController(
 			submissionRepository,

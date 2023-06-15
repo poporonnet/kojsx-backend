@@ -16,14 +16,6 @@ type ScoreResult struct {
 
 // scoring
 func scoring(problem domain.Problem, results []domain.SubmissionResult) (ScoreResult, error) {
-	/*
-		やらないといけないこと:
-		1. ケースセットごとに提出結果をまとめる
-		2. statusを求める
-		3. ケースセットごとに得点を計算して、足す
-		4. 得点と結果を返す
-		(ELEなどのペナルティー系は後回しにする?)
-	*/
 	// 1. ケースセットごとに提出結果をまとめる
 	// まとめる用のmap
 	setGroup := map[id.SnowFlakeID][]domain.SubmissionResult{}
