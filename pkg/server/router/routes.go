@@ -1,8 +1,9 @@
 package router
 
 import (
-	"github.com/labstack/echo/v4"
 	"net/http"
+
+	"github.com/labstack/echo/v4"
 )
 
 func rootRouter(e *echo.Echo) {
