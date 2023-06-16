@@ -92,6 +92,6 @@ func (c ContestantRepository) FindContestantByContestID(id id.SnowFlakeID) ([]do
 	return res, nil
 }
 
-func NewContestantRepository(cli Client) *ContestRepository {
-	return &ContestRepository{client: cli}
+func NewContestantRepository(cli Client) *ContestantRepository {
+	return &ContestantRepository{client: cli}
 }

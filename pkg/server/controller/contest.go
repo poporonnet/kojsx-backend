@@ -24,7 +24,15 @@ func NewContestController(repository repository.ContestRepository, createService
 }
 
 func (c *ContestController) CreateContest(req model.CreateContestRequestJSON) (model.CreateContestResponseJSON, error) {
-	res, err := c.createService.Handle(req.Title, req.Description, req.StartAt, req.EndAt)
+	res, err := c.createService.Handle(
+		contest.CreateContestArgs{
+			Title:       req.Title,
+			Description: req.Description,
+			StartAt:     req.StartAt,
+			EndAt:       req.EndAt,
+			// ToDo: 操作を行うユーザーを指定する
+		},
+	)
 	if err != nil {
 		return model.CreateContestResponseJSON{}, fmt.Errorf("failed to create contest: %w", err)
 	}

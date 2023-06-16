@@ -20,11 +20,18 @@ func NewJoinContestService(contestantRepository repository.ContestantRepository,
 	return &JoinContestService{contestantRepository: contestantRepository, contestantService: service}
 }
 
-func (s JoinContestService) Join(contestID, userID id.SnowFlakeID) error {
-	i := id.NewSnowFlakeIDGenerator()
-	id := i.NewID(time.Now())
+func (s JoinContestService) Join(contestID id.SnowFlakeID, user domain.User, role domain.ContestantRole) error {
+	idGen := id.NewSnowFlakeIDGenerator()
+	i := idGen.NewID(time.Now())
 
-	d := domain.NewContestant(id, contestID, userID)
+	d := domain.NewContestant(i, contestID, user.GetID())
+	// システムの管理者は自動的にコンテストの管理者になる
+	if user.IsAdmin() {
+		d.SetAdmin()
+	} else if role == domain.ContestTester {
+		// テスターに指定されている場合はテスターとしてマークする
+		d.SetTester()
+	}
 
 	if s.contestantService.IsExists(*d) {
 		return errors.New("AlreadyJoined")

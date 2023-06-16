@@ -60,7 +60,8 @@ func (c SubmissionController) FindByID(id id.SnowFlakeID) (model.GetSubmissionRe
 	if err != nil {
 		return model.GetSubmissionResponseJSON{}, err
 	}
-	p, err := c.findProblemService.FindByID(s.GetProblemID(), time.Now())
+	// ToDo: 内部的な問題の取得のユーザーをどうするか
+	p, err := c.findProblemService.FindByID(s.GetProblemID(), time.Now(), "")
 	if err != nil {
 		return model.GetSubmissionResponseJSON{}, err
 	}
@@ -124,7 +125,8 @@ func (c SubmissionController) FindTask() (model.GetSubmissionTaskResponseJSON, e
 		return model.GetSubmissionTaskResponseJSON{}, err
 	}
 
-	p, err := c.findProblemService.FindByID(res.GetProblemID(), time.Now())
+	// ToDo: Agent用のContestantを作る
+	p, err := c.findProblemService.FindByID(res.GetProblemID(), time.Now(), "")
 	if err != nil {
 		return model.GetSubmissionTaskResponseJSON{}, err
 	}

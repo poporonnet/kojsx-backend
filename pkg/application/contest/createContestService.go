@@ -12,31 +12,43 @@ import (
 )
 
 type CreateContestService struct {
-	contestRepository repository.ContestRepository
-	contestService    *service.ContestService
+	contestRepository  repository.ContestRepository
+	contestService     *service.ContestService
+	joinContestService JoinContestService
 }
 
-func NewCreateContestService(contestRepository repository.ContestRepository) *CreateContestService {
+func NewCreateContestService(
+	contestRepository repository.ContestRepository,
+	contestantRepository repository.ContestantRepository,
+	contestantService service.ContestantService,
+) *CreateContestService {
 	return &CreateContestService{
-		contestRepository: contestRepository,
-		contestService:    service.NewContestService(contestRepository),
+		contestRepository:  contestRepository,
+		contestService:     service.NewContestService(contestRepository),
+		joinContestService: *NewJoinContestService(contestantRepository, contestantService),
 	}
 }
 
-func (s *CreateContestService) Handle(title string, description string, startAt time.Time, endAt time.Time) (*Data, error) {
+func (s *CreateContestService) Handle(args CreateContestArgs) (*Data, error) {
 	gen := id.NewSnowFlakeIDGenerator()
-	id := gen.NewID(time.Now())
-	c := domain.NewContest(id)
-	if err := c.SetTitle(title); err != nil {
+	i := gen.NewID(time.Now())
+	c := domain.NewContest(i)
+
+	// コンテストの作成は管理者のみできる
+	if !args.User.IsAdmin() {
+		return nil, errors.New("can't create contest: forbidden")
+	}
+
+	if err := c.SetTitle(args.Title); err != nil {
 		return nil, fmt.Errorf("failed to set title: %w", err)
 	}
-	if err := c.SetDescription(description); err != nil {
+	if err := c.SetDescription(args.Description); err != nil {
 		return nil, fmt.Errorf("failed to set description: %w", err)
 	}
-	if err := c.SetStartAt(startAt); err != nil {
+	if err := c.SetStartAt(args.StartAt); err != nil {
 		return nil, fmt.Errorf("failed to set startAt: %w", err)
 	}
-	if err := c.SetEndAt(endAt); err != nil {
+	if err := c.SetEndAt(args.EndAt); err != nil {
 		return nil, fmt.Errorf("failed to set endAt: %w", err)
 	}
 
@@ -47,6 +59,25 @@ func (s *CreateContestService) Handle(title string, description string, startAt 
 	if err := s.contestRepository.CreateContest(*c); err != nil {
 		return nil, fmt.Errorf("failed to create contest: %w", err)
 	}
+	time.Sleep(1 * time.Millisecond)
+	// コンテストの作成者はコンテストの管理者になる
+	err := s.joinContestService.Join(i, args.User, domain.ContestAdmin)
+	if err != nil {
+		return nil, err
+	}
 	r := DomainToData(*c)
 	return &r, nil
+}
+
+type CreateContestArgs struct {
+	// Title コンテストのタイトル
+	Title string
+	// Description コンテストの説明
+	Description string
+	// StartAt 開始時刻
+	StartAt time.Time
+	// EndAt 終了時刻
+	EndAt time.Time
+	// User 操作を行うユーザー
+	User domain.User
 }
