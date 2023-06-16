@@ -1,10 +1,11 @@
 package contest_test
 
 import (
-	"github.com/mct-joken/kojs5-backend/pkg/domain"
-	"github.com/mct-joken/kojs5-backend/pkg/domain/service"
 	"testing"
 	"time"
+
+	"github.com/mct-joken/kojs5-backend/pkg/domain"
+	"github.com/mct-joken/kojs5-backend/pkg/domain/service"
 
 	"github.com/mct-joken/kojs5-backend/pkg/application/contest"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/seed"

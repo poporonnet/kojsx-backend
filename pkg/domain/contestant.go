@@ -52,6 +52,17 @@ func (c *Contestant) IsAdmin() bool {
 	return false
 }
 
+func (c *Contestant) IsTester() bool {
+	if c.role == ContestTester {
+		return true
+	}
+	return false
+}
+
+func (c *Contestant) IsNormal() bool {
+	return c.role != ContestAdmin && c.role != ContestTester
+}
+
 func (c *Contestant) GetPoint() int {
 	return c.point
 }

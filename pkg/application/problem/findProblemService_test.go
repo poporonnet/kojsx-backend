@@ -19,6 +19,7 @@ func TestMain(t *testing.M) {
 	pService = *problem.NewFindProblemService(
 		inmemory.NewProblemRepository(seed.NewSeeds().Problems),
 		inmemory.NewContestRepository(seed.NewSeeds().Contests),
+		inmemory.NewContestantRepository(seed.NewSeeds().Contestants),
 	)
 	t.Run()
 }
@@ -26,11 +27,11 @@ func TestMain(t *testing.M) {
 func TestFindProblemService_FindByID(t *testing.T) {
 	act := []*problem.Data{
 		func() *problem.Data {
-			r, _ := pService.FindByID("110", time.Now())
+			r, _ := pService.FindByID("110", time.Now(), "20")
 			return r
 		}(),
 		func() *problem.Data {
-			r, _ := pService.FindByID("110", time.Date(2020, time.April, 1, 12, 0, 0, 0, time.UTC))
+			r, _ := pService.FindByID("110", time.Date(2020, time.April, 1, 12, 0, 0, 0, time.UTC), "30")
 			return r
 		}(),
 	}
@@ -40,6 +41,9 @@ func TestFindProblemService_FindByID(t *testing.T) {
 	})
 	t.Run("コンテスト開始前は取得できない", func(t *testing.T) {
 		assert.Equal(t, (*problem.Data)(nil), act[1])
+	})
+	t.Run("コンテスト開始前でもコンテスト管理者, テスターは取得できる", func(t *testing.T) {
+		assert.NotEqual(t, (*problem.Data)(nil), *act[0])
 	})
 }
 

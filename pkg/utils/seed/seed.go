@@ -12,10 +12,11 @@ import (
 )
 
 type Seeds struct {
-	Contests   []domain.Contest
-	Users      []domain.User
-	Problems   []domain.Problem
-	Submission []domain.Submission
+	Contests    []domain.Contest
+	Contestants []domain.Contestant
+	Users       []domain.User
+	Problems    []domain.Problem
+	Submission  []domain.Submission
 }
 
 func NewSeeds() Seeds {
@@ -31,6 +32,14 @@ func NewSeeds() Seeds {
 			d.Add(24*time.Hour*31*12*10),
 		)
 		return []domain.Contest{data.ToDomain()}
+	}()
+
+	contestants := func() []domain.Contestant {
+		data := domain.NewContestant("900", "10", "20")
+		data.SetAdmin()
+		data2 := domain.NewContestant("910", "10", "30")
+		data2.SetNormal()
+		return []domain.Contestant{*data, *data2}
 	}()
 
 	users := func() []domain.User {
@@ -145,9 +154,10 @@ func NewSeeds() Seeds {
 	}()
 
 	return Seeds{
-		Contests:   contests,
-		Users:      users,
-		Problems:   problems,
-		Submission: submissions,
+		Contests:    contests,
+		Contestants: contestants,
+		Users:       users,
+		Problems:    problems,
+		Submission:  submissions,
 	}
 }
