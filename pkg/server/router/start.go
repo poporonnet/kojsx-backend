@@ -43,6 +43,7 @@ func initServer(mode string) {
 		userRepository       repository.UserRepository
 		problemRepository    repository.ProblemRepository
 		submissionRepository repository.SubmissionRepository
+		contestantRepository repository.ContestantRepository
 	)
 
 	logger = utils.NewLogger()
@@ -54,6 +55,7 @@ func initServer(mode string) {
 		userRepository = mongodb.NewUserRepository(*mongoClient)
 		problemRepository = mongodb.NewProblemRepository(*mongoClient)
 		submissionRepository = mongodb.NewSubmissionRepository(*mongoClient)
+		contestantRepository = mongodb.NewContestantRepository(*mongoClient)
 		utils.SugarLogger.Info("repository initialized")
 	} else {
 		logger.Sugar().Info("start the server in development mode.")
@@ -67,7 +69,7 @@ func initServer(mode string) {
 	}
 
 	contestHandler = func() *handlers.ContestHandlers {
-		createService := *contest.NewCreateContestService(contestRepository)
+		createService := *contest.NewCreateContestService(contestRepository, contestantRepository, *service.NewContestantService(contestantRepository))
 		findService := *contest.NewFindContestService(contestRepository)
 		c := *controller.NewContestController(
 			contestRepository,

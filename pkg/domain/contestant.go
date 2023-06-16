@@ -6,6 +6,14 @@ import (
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 )
 
+type ContestantRole int
+
+const (
+	ContestParticipants = iota
+	ContestAdmin
+	ContestTester
+)
+
 type Contestant struct {
 	id        id.SnowFlakeID
 	contestID id.SnowFlakeID
@@ -36,8 +44,9 @@ func (c *Contestant) IsAdmin() bool {
 		ロール:
 			0 参加者
 			1 アドミン
+			2 テスター
 	*/
-	if c.role == 1 {
+	if c.role == ContestAdmin {
 		return true
 	}
 	return false
@@ -48,14 +57,20 @@ func (c *Contestant) GetPoint() int {
 }
 
 func (c *Contestant) SetAdmin() {
-	if c.role == 0 {
-		c.role = 1
+	if c.role == ContestParticipants {
+		c.role = ContestAdmin
 	}
 }
 
 func (c *Contestant) SetNormal() {
-	if c.role == 1 {
-		c.role = 0
+	if c.role != ContestParticipants {
+		c.role = ContestParticipants
+	}
+}
+
+func (c *Contestant) SetTester() {
+	if c.role != ContestTester {
+		c.role = ContestTester
 	}
 }
 

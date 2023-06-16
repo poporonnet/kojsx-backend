@@ -1,6 +1,8 @@
 package controller_test
 
 import (
+	"github.com/mct-joken/kojs5-backend/pkg/domain"
+	"github.com/mct-joken/kojs5-backend/pkg/domain/service"
 	"testing"
 	"time"
 
@@ -17,7 +19,8 @@ var cont *controller.ContestController
 
 func init() {
 	r := inmemory.NewContestRepository(seed.NewSeeds().Contests)
-	s := contest.NewCreateContestService(r)
+	c := inmemory.NewContestantRepository([]domain.Contestant{})
+	s := contest.NewCreateContestService(r, c, *service.NewContestantService(c))
 	f := contest.NewFindContestService(r)
 	cont = controller.NewContestController(r, *s, *f)
 }
