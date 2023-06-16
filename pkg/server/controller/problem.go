@@ -52,7 +52,8 @@ func (c *ProblemController) CreateProblem(req model.CreateProblemRequestJSON) (m
 }
 
 func (c *ProblemController) FindByID(i string) (model.FindProblemResponseJSON, error) {
-	res, err := c.findService.FindByID(id.SnowFlakeID(i), time.Now())
+	// ToDo: 検索を実行したユーザーを渡す
+	res, err := c.findService.FindByID(id.SnowFlakeID(i), time.Now(), "")
 	if err != nil {
 		return model.FindProblemResponseJSON{}, fmt.Errorf("failed to find problem: %w", err)
 	}
