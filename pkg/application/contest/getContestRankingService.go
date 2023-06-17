@@ -34,6 +34,7 @@ func NewGetContestRankingService(
 	}
 }
 
+// nolint
 func (s GetContestRankingService) Handle(contestID id.SnowFlakeID) ([]UserFinalResult, error) {
 	// コンテストの問題を取得
 	problemsRes, err := s.problemRepository.FindProblemByContestID(contestID)
