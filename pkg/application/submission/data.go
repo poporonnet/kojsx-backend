@@ -185,6 +185,10 @@ func submissionResultToResults(in []domain.SubmissionResult) []Result {
 
 func (d Data) ToDomain() *domain.Submission {
 	r, _ := domain.NewSubmission(d.GetID(), d.GetProblemID(), d.GetContestantID(), d.GetLang(), d.GetCode(), d.GetSubmittedAt())
+	_ = r.SetPoint(d.point)
+	r.SetResult(d.result)
+	r.SetExecMemory(d.execMemory)
+	r.SetExecTime(d.execTime)
 	addSubmissionResult(r, d.GetResults())
 	return r
 }
