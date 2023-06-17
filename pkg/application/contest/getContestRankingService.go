@@ -2,11 +2,12 @@ package contest
 
 import (
 	"errors"
+	"sort"
+
 	"github.com/mct-joken/kojs5-backend/pkg/domain"
 	"github.com/mct-joken/kojs5-backend/pkg/repository"
 	"github.com/mct-joken/kojs5-backend/pkg/utils"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
-	"sort"
 )
 
 type GetContestRankingService struct {

@@ -18,3 +18,20 @@ type CreateContestResponseJSON struct {
 }
 
 type FindContestResponseJSON = CreateContestResponseJSON
+
+type GetRankingResponseJSON struct {
+	Rank    int
+	Point   int
+	User    RankingUser
+	Results []RankingProblemResult
+}
+
+type RankingUser struct {
+	ID   string
+	Name string
+}
+
+type RankingProblemResult struct {
+	ProblemID string
+	Point     int
+}

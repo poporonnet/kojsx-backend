@@ -10,16 +10,23 @@ import (
 )
 
 type ContestController struct {
-	repository    repository.ContestRepository
-	createService contest.CreateContestService
-	findService   contest.FindContestService
+	repository        repository.ContestRepository
+	createService     contest.CreateContestService
+	findService       contest.FindContestService
+	getRankingService contest.GetContestRankingService
 }
 
-func NewContestController(repository repository.ContestRepository, createService contest.CreateContestService, findService contest.FindContestService) *ContestController {
+func NewContestController(
+	repository repository.ContestRepository,
+	createService contest.CreateContestService,
+	findService contest.FindContestService,
+	service contest.GetContestRankingService,
+) *ContestController {
 	return &ContestController{
-		repository:    repository,
-		createService: createService,
-		findService:   findService,
+		repository:        repository,
+		createService:     createService,
+		findService:       findService,
+		getRankingService: service,
 	}
 }
 
@@ -75,4 +82,31 @@ func (c *ContestController) FindContest() ([]model.FindContestResponseJSON, erro
 		}
 	}
 	return res, nil
+}
+
+func (c *ContestController) GetRanking(i string) ([]model.GetRankingResponseJSON, error) {
+	res, err := c.getRankingService.Handle(id.SnowFlakeID(i))
+	if err != nil {
+		return nil, err
+	}
+	resp := make([]model.GetRankingResponseJSON, len(res))
+	for ii, v := range res {
+		result := make([]model.RankingProblemResult, len(v.Submissions))
+		for j, k := range v.Submissions {
+			result[j] = model.RankingProblemResult{
+				ProblemID: string(k.GetProblemID()),
+				Point:     k.GetPoint(),
+			}
+		}
+		resp[ii] = model.GetRankingResponseJSON{
+			Rank:  v.Rank,
+			Point: v.Point,
+			User: model.RankingUser{
+				ID:   string(v.User.GetID()),
+				Name: v.User.GetName(),
+			},
+			Results: result,
+		}
+	}
+	return resp, nil
 }

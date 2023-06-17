@@ -71,10 +71,18 @@ func initServer(mode string) {
 	contestHandler = func() *handlers.ContestHandlers {
 		createService := *contest.NewCreateContestService(contestRepository, contestantRepository, *service.NewContestantService(contestantRepository))
 		findService := *contest.NewFindContestService(contestRepository)
+		rankingService := contest.NewGetContestRankingService(
+			contestRepository,
+			contestantRepository,
+			problemRepository,
+			submissionRepository,
+			userRepository,
+		)
 		c := *controller.NewContestController(
 			contestRepository,
 			createService,
 			findService,
+			*rankingService,
 		)
 		return handlers.NewContestHandlers(
 			c,

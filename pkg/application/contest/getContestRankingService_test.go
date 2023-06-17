@@ -2,6 +2,9 @@ package contest_test
 
 import (
 	"fmt"
+	"testing"
+	"time"
+
 	"github.com/mct-joken/kojs5-backend/pkg/application/contest"
 	"github.com/mct-joken/kojs5-backend/pkg/application/problem"
 	"github.com/mct-joken/kojs5-backend/pkg/application/submission"
@@ -11,8 +14,6 @@ import (
 	"github.com/mct-joken/kojs5-backend/pkg/utils"
 	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
 	"github.com/stretchr/testify/assert"
-	"testing"
-	"time"
 )
 
 var s contest.GetContestRankingService
