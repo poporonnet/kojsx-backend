@@ -125,7 +125,7 @@ func NewSeeds() Seeds {
 		submission1 := submission.NewData(
 			"200",
 			problems[0].GetProblemID(),
-			"1",
+			"900",
 			0,
 			"G++",
 			180,
@@ -139,7 +139,7 @@ func NewSeeds() Seeds {
 		submission2 := submission.NewData(
 			"210",
 			problems[0].GetProblemID(),
-			"1",
+			"900",
 			0,
 			"G++",
 			180,

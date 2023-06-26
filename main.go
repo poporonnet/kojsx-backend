@@ -2,9 +2,7 @@ package main
 
 import (
 	"fmt"
-	"os"
-
-	"github.com/mct-joken/kojs5-backend/pkg/server/router"
+	_ "github.com/lib/pq"
 )
 
 var (
@@ -18,6 +16,6 @@ func main() {
  | 0 0 |   "Kemomimi" Online Judge System
  |  ω  |   (C) 2023 Poporon Network / Tatsuto Yamamoto
 `, VERSION, REVISION)
-	mode := os.Getenv("KOJS_MODE")
-	router.StartServer(3060, mode)
+	//mode := os.Getenv("KOJS_MODE")
+	//router.StartServer(3060, mode)
 }
