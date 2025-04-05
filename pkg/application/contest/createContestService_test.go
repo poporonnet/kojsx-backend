@@ -91,5 +91,4 @@ func TestCreateContestService_Handle(t *testing.T) {
 
 		assert.Equal(t, true, co.IsAdmin())
 	})
-
 }

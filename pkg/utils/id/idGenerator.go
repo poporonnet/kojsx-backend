@@ -23,8 +23,8 @@ const SnowFlakeEpoch = 1585666800
 
 func (i *SnowFlakeIDGenerator) NewID(t time.Time) SnowFlakeID {
 	var snowFlakeID int64
-	var unixDate int64 = t.UnixMilli()
-	var date int64 = unixDate - SnowFlakeEpoch
+	var unixDate = t.UnixMilli()
+	var date = unixDate - SnowFlakeEpoch
 	var workerID int64 = 0
 	var processID int64 = 0
 	var increment int64 = 0

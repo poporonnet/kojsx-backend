@@ -17,9 +17,5 @@ func (s *CaseService) IsExists(p domain.Case) bool {
 	// 重複判定: ID
 	i, _ := s.problemRepository.FindCaseByID(p.GetID())
 
-	if i == nil {
-		return false
-	}
-
-	return true
+	return i != nil
 }

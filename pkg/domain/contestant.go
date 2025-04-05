@@ -53,10 +53,7 @@ func (c *Contestant) IsAdmin() bool {
 }
 
 func (c *Contestant) IsTester() bool {
-	if c.role == ContestTester {
-		return true
-	}
-	return false
+	return c.role == ContestTester
 }
 
 func (c *Contestant) IsNormal() bool {

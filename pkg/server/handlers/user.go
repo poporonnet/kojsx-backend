@@ -12,9 +12,9 @@ import (
 )
 
 type UserHandlers struct {
-	controller.UserController
-	auth   controller.AuthController
-	logger *zap.Logger
+	controller controller.UserController
+	auth       controller.AuthController
+	logger     *zap.Logger
 }
 
 func NewUserHandlers(
@@ -31,7 +31,7 @@ func (h *UserHandlers) CreateUser(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, responses.InvalidRequestErrorResponseJSON)
 	}
 
-	res, err := h.UserController.Create(req)
+	res, err := h.controller.Create(req)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
 	}
@@ -41,7 +41,7 @@ func (h *UserHandlers) CreateUser(c echo.Context) error {
 
 func (h *UserHandlers) FindByID(c echo.Context) error {
 	i := c.Param("id")
-	res, err := h.UserController.FindByID(i)
+	res, err := h.controller.FindByID(i)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
 	}
@@ -49,7 +49,7 @@ func (h *UserHandlers) FindByID(c echo.Context) error {
 }
 
 func (h *UserHandlers) FindAllUser(c echo.Context) error {
-	res, err := h.UserController.FindAllUsers()
+	res, err := h.controller.FindAllUsers()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
 	}
