@@ -1,6 +1,6 @@
 package domain
 
-import "github.com/mct-joken/kojs5-backend/pkg/utils/id"
+import "github.com/poporonnet/kojsx-backend/pkg/utils/id"
 
 // SubmissionResult 提出詳細(ケースごとの結果/ケース名/実行時間/実行メモリ
 type SubmissionResult struct {

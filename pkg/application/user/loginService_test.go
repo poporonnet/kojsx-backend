@@ -3,9 +3,9 @@ package user
 import (
 	"testing"
 
-	"github.com/mct-joken/kojs5-backend/pkg/domain"
-	"github.com/mct-joken/kojs5-backend/pkg/repository/inmemory"
-	"github.com/mct-joken/kojs5-backend/pkg/utils/password/argon2"
+	"github.com/poporonnet/kojsx-backend/pkg/domain"
+	"github.com/poporonnet/kojsx-backend/pkg/repository/inmemory"
+	"github.com/poporonnet/kojsx-backend/pkg/utils/password/argon2"
 	"github.com/stretchr/testify/assert"
 )
 

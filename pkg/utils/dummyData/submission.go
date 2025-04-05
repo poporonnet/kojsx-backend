@@ -3,7 +3,7 @@ package dummyData
 import (
 	"time"
 
-	"github.com/mct-joken/kojs5-backend/pkg/domain"
+	"github.com/poporonnet/kojsx-backend/pkg/domain"
 )
 
 var (

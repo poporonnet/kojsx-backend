@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/mct-joken/kojs5-backend/pkg/domain"
-	"github.com/mct-joken/kojs5-backend/pkg/repository"
+	"github.com/poporonnet/kojsx-backend/pkg/domain"
+	"github.com/poporonnet/kojsx-backend/pkg/repository"
 )
 
 type ContestService struct {

@@ -3,12 +3,12 @@ package seed
 import (
 	"time"
 
-	"github.com/mct-joken/kojs5-backend/pkg/application/contest"
-	"github.com/mct-joken/kojs5-backend/pkg/application/problem"
-	"github.com/mct-joken/kojs5-backend/pkg/application/submission"
-	"github.com/mct-joken/kojs5-backend/pkg/application/user"
+	"github.com/poporonnet/kojsx-backend/pkg/application/contest"
+	"github.com/poporonnet/kojsx-backend/pkg/application/problem"
+	"github.com/poporonnet/kojsx-backend/pkg/application/submission"
+	"github.com/poporonnet/kojsx-backend/pkg/application/user"
 
-	"github.com/mct-joken/kojs5-backend/pkg/domain"
+	"github.com/poporonnet/kojsx-backend/pkg/domain"
 )
 
 type Seeds struct {

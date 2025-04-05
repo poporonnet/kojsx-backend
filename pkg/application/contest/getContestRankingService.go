@@ -4,10 +4,10 @@ import (
 	"errors"
 	"sort"
 
-	"github.com/mct-joken/kojs5-backend/pkg/domain"
-	"github.com/mct-joken/kojs5-backend/pkg/repository"
-	"github.com/mct-joken/kojs5-backend/pkg/utils"
-	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
+	"github.com/poporonnet/kojsx-backend/pkg/domain"
+	"github.com/poporonnet/kojsx-backend/pkg/repository"
+	"github.com/poporonnet/kojsx-backend/pkg/utils"
+	"github.com/poporonnet/kojsx-backend/pkg/utils/id"
 )
 
 type GetContestRankingService struct {

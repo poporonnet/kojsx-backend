@@ -3,9 +3,9 @@ package controller
 import (
 	"fmt"
 
-	"github.com/mct-joken/kojs5-backend/pkg/application/user"
-	"github.com/mct-joken/kojs5-backend/pkg/repository"
-	"github.com/mct-joken/kojs5-backend/pkg/server/controller/model"
+	"github.com/poporonnet/kojsx-backend/pkg/application/user"
+	"github.com/poporonnet/kojsx-backend/pkg/repository"
+	"github.com/poporonnet/kojsx-backend/pkg/server/controller/model"
 )
 
 type AuthController struct {

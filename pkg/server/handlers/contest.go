@@ -6,9 +6,9 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/labstack/echo/v4"
-	"github.com/mct-joken/kojs5-backend/pkg/server/controller"
-	"github.com/mct-joken/kojs5-backend/pkg/server/controller/model"
-	"github.com/mct-joken/kojs5-backend/pkg/server/responses"
+	"github.com/poporonnet/kojsx-backend/pkg/server/controller"
+	"github.com/poporonnet/kojsx-backend/pkg/server/controller/model"
+	"github.com/poporonnet/kojsx-backend/pkg/server/responses"
 )
 
 type ContestHandlers struct {

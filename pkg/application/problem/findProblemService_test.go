@@ -6,10 +6,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/mct-joken/kojs5-backend/pkg/application/problem"
-	"github.com/mct-joken/kojs5-backend/pkg/repository/inmemory"
-	"github.com/mct-joken/kojs5-backend/pkg/utils"
-	"github.com/mct-joken/kojs5-backend/pkg/utils/seed"
+	"github.com/poporonnet/kojsx-backend/pkg/application/problem"
+	"github.com/poporonnet/kojsx-backend/pkg/repository/inmemory"
+	"github.com/poporonnet/kojsx-backend/pkg/utils"
+	"github.com/poporonnet/kojsx-backend/pkg/utils/seed"
 )
 
 var pService problem.FindProblemService

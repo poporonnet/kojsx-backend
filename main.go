@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mct-joken/kojs5-backend/pkg/server/router"
+	"github.com/poporonnet/kojsx-backend/pkg/server/router"
 )
 
 var (

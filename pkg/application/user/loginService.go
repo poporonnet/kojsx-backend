@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/mct-joken/kojs5-backend/pkg/repository"
-	password2 "github.com/mct-joken/kojs5-backend/pkg/utils/password"
-	"github.com/mct-joken/kojs5-backend/pkg/utils/password/argon2"
-	"github.com/mct-joken/kojs5-backend/pkg/utils/token"
+	"github.com/poporonnet/kojsx-backend/pkg/repository"
+	password2 "github.com/poporonnet/kojsx-backend/pkg/utils/password"
+	"github.com/poporonnet/kojsx-backend/pkg/utils/password/argon2"
+	"github.com/poporonnet/kojsx-backend/pkg/utils/token"
 )
 
 type LoginService struct {

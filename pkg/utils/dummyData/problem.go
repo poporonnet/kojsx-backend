@@ -1,6 +1,6 @@
 package dummyData
 
-import "github.com/mct-joken/kojs5-backend/pkg/domain"
+import "github.com/poporonnet/kojsx-backend/pkg/domain"
 
 var (
 	g = domain.NewProblem("3", "1")
