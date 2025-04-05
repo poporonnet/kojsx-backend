@@ -3,7 +3,7 @@ package domain
 import (
 	"unicode/utf8"
 
-	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
+	"github.com/poporonnet/kojsx-backend/pkg/utils/id"
 )
 
 type UserRole int

@@ -3,8 +3,8 @@ package contest
 import (
 	"fmt"
 
-	"github.com/mct-joken/kojs5-backend/pkg/repository"
-	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
+	"github.com/poporonnet/kojsx-backend/pkg/repository"
+	"github.com/poporonnet/kojsx-backend/pkg/utils/id"
 )
 
 type FindContestService struct {

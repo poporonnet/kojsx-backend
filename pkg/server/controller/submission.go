@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mct-joken/kojs5-backend/pkg/application/problem"
-	"github.com/mct-joken/kojs5-backend/pkg/application/submission"
-	"github.com/mct-joken/kojs5-backend/pkg/application/user"
-	"github.com/mct-joken/kojs5-backend/pkg/repository"
-	"github.com/mct-joken/kojs5-backend/pkg/server/controller/model"
-	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
+	"github.com/poporonnet/kojsx-backend/pkg/application/problem"
+	"github.com/poporonnet/kojsx-backend/pkg/application/submission"
+	"github.com/poporonnet/kojsx-backend/pkg/application/user"
+	"github.com/poporonnet/kojsx-backend/pkg/repository"
+	"github.com/poporonnet/kojsx-backend/pkg/server/controller/model"
+	"github.com/poporonnet/kojsx-backend/pkg/utils/id"
 )
 
 type SubmissionController struct {

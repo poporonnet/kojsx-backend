@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mct-joken/kojs5-backend/pkg/domain"
-	"github.com/mct-joken/kojs5-backend/pkg/domain/service"
-	"github.com/mct-joken/kojs5-backend/pkg/repository"
-	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
+	"github.com/poporonnet/kojsx-backend/pkg/domain"
+	"github.com/poporonnet/kojsx-backend/pkg/domain/service"
+	"github.com/poporonnet/kojsx-backend/pkg/repository"
+	"github.com/poporonnet/kojsx-backend/pkg/utils/id"
 )
 
 type CreateContestService struct {

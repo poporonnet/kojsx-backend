@@ -4,13 +4,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mct-joken/kojs5-backend/pkg/domain"
-	"github.com/mct-joken/kojs5-backend/pkg/domain/service"
+	"github.com/poporonnet/kojsx-backend/pkg/domain"
+	"github.com/poporonnet/kojsx-backend/pkg/domain/service"
 
-	"github.com/mct-joken/kojs5-backend/pkg/application/contest"
-	"github.com/mct-joken/kojs5-backend/pkg/utils/seed"
+	"github.com/poporonnet/kojsx-backend/pkg/application/contest"
+	"github.com/poporonnet/kojsx-backend/pkg/utils/seed"
 
-	"github.com/mct-joken/kojs5-backend/pkg/repository/inmemory"
+	"github.com/poporonnet/kojsx-backend/pkg/repository/inmemory"
 	"github.com/stretchr/testify/assert"
 )
 

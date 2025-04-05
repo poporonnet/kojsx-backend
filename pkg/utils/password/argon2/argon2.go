@@ -9,7 +9,7 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/mct-joken/kojs5-backend/pkg/utils/password"
+	"github.com/poporonnet/kojsx-backend/pkg/utils/password"
 	"golang.org/x/crypto/argon2"
 )
 

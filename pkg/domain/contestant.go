@@ -3,7 +3,7 @@ package domain
 import (
 	"errors"
 
-	"github.com/mct-joken/kojs5-backend/pkg/utils/id"
+	"github.com/poporonnet/kojsx-backend/pkg/utils/id"
 )
 
 type ContestantRole int
