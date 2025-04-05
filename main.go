@@ -8,15 +8,19 @@ import (
 )
 
 var (
-	VERSION  = "v6.0.0"
+	VERSION  = "v9.0.0-alpha"
 	REVISION = "dev"
 )
 
 func main() {
 	fmt.Printf(`
- ∩_____∩   KOJS v6 (%s @%s)
- | 0 0 |   "Kemomimi" Online Judge System
- |  ω  |   (C) 2023 Poporon Network / Tatsuto Yamamoto
+   .__,  _   
+  / n | |∩|   KOJS v9 (%s @%s)
+  ∪ | |_| |   "Kemomimi" Online Judge System
+   /       \  (C) 2025 Poporon Network / Tatsuto Yamamoto
+  |  ε  , ε | 
+   \    ω  /
+
 `, VERSION, REVISION)
 	mode := os.Getenv("KOJS_MODE")
 	router.StartServer(3060, mode)

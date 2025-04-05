@@ -1,9 +1,11 @@
 package dummyData
 
-import "github.com/poporonnet/kojsx-backend/pkg/domain"
+import (
+	"github.com/poporonnet/kojsx-backend/pkg/contest/model"
+)
 
 var (
-	nc                   = domain.NewContest("3")
+	nc                   = model.NewContest("3")
 	_                    = nc.SetTitle("Contest")
 	NotExistsContestData = nc
 )

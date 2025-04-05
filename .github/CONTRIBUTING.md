@@ -1,4 +1,4 @@
-# JK-OJS Backendへの貢献
+# KOJS Backendへの貢献
 
 ## Issueへのコメント,PRについて
 - どちらも歓迎します.

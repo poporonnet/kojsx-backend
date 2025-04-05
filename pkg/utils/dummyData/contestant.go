@@ -1,13 +1,15 @@
 package dummyData
 
-import "github.com/poporonnet/kojsx-backend/pkg/domain"
+import (
+	"github.com/poporonnet/kojsx-backend/pkg/contest/model"
+)
 
 var (
-	m = domain.NewContestant("1", "2", "3")
-	n = domain.NewContestant("4", "2", "5")
+	m = model.NewContestant("1", "2", "3")
+	n = model.NewContestant("4", "2", "5")
 
 	ExistsContestantData    = m
-	NotExistsContestantData = domain.NewContestant("6", "2", "7")
+	NotExistsContestantData = model.NewContestant("6", "2", "7")
 
-	ContestantArray = []domain.Contestant{*m, *n}
+	ContestantArray = []model.Contestant{*m, *n}
 )

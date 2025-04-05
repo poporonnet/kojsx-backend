@@ -9,90 +9,81 @@ import (
 	"syscall"
 	"time"
 
+	controller2 "github.com/poporonnet/kojsx-backend/pkg/contest/adaptor/controller"
+	handlers2 "github.com/poporonnet/kojsx-backend/pkg/contest/adaptor/handlers"
+	inmemory3 "github.com/poporonnet/kojsx-backend/pkg/contest/adaptor/repository/inmemory"
+	repository2 "github.com/poporonnet/kojsx-backend/pkg/contest/model/repository"
+	service2 "github.com/poporonnet/kojsx-backend/pkg/contest/model/service"
+	contest2 "github.com/poporonnet/kojsx-backend/pkg/contest/service/contest"
+	problem2 "github.com/poporonnet/kojsx-backend/pkg/contest/service/problem"
+	submission2 "github.com/poporonnet/kojsx-backend/pkg/contest/service/submission"
+	"github.com/poporonnet/kojsx-backend/pkg/user/adaptor/controller"
+	"github.com/poporonnet/kojsx-backend/pkg/user/adaptor/handlers"
+	"github.com/poporonnet/kojsx-backend/pkg/user/adaptor/repository/inmemory"
+	"github.com/poporonnet/kojsx-backend/pkg/user/model/repository"
+	"github.com/poporonnet/kojsx-backend/pkg/user/model/service"
+	service3 "github.com/poporonnet/kojsx-backend/pkg/user/service"
 	"github.com/poporonnet/kojsx-backend/pkg/utils"
 	"github.com/poporonnet/kojsx-backend/pkg/utils/seed"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/poporonnet/kojsx-backend/pkg/application/contest"
-	"github.com/poporonnet/kojsx-backend/pkg/application/problem"
-	"github.com/poporonnet/kojsx-backend/pkg/application/submission"
-	"github.com/poporonnet/kojsx-backend/pkg/application/user"
-	"github.com/poporonnet/kojsx-backend/pkg/domain/service"
-	"github.com/poporonnet/kojsx-backend/pkg/repository"
-	"github.com/poporonnet/kojsx-backend/pkg/repository/inmemory"
-	"github.com/poporonnet/kojsx-backend/pkg/repository/mongodb"
-	"github.com/poporonnet/kojsx-backend/pkg/server/controller"
-	"github.com/poporonnet/kojsx-backend/pkg/server/handlers"
 	"github.com/poporonnet/kojsx-backend/pkg/utils/mail/dummy"
 	"go.uber.org/zap"
 )
 
 var (
-	contestHandler    *handlers.ContestHandlers
+	contestHandler    *handlers2.ContestHandlers
 	userHandler       *handlers.UserHandlers
-	problemHandler    *handlers.ProblemHandlers
-	submissionHandler *handlers.SubmissionHandlers
+	problemHandler    *handlers2.ProblemHandlers
+	submissionHandler *handlers2.SubmissionHandlers
 	logger            *zap.Logger
-	mongoClient       *mongodb.Client
 )
 
 func initServer(mode string) {
 	var (
-		contestRepository    repository.ContestRepository
+		contestRepository    repository2.ContestRepository
 		userRepository       repository.UserRepository
-		problemRepository    repository.ProblemRepository
-		submissionRepository repository.SubmissionRepository
-		contestantRepository repository.ContestantRepository
+		problemRepository    repository2.ProblemRepository
+		submissionRepository repository2.SubmissionRepository
+		contestantRepository repository2.ContestantRepository
 	)
 
 	logger = utils.NewLogger()
-	if mode == "prod" {
-		utils.SugarLogger.Info("start the server in production mode.")
-		utils.SugarLogger.Info("connect to mongodb server...")
-		mongoClient = mongodb.NewMongoDBClient("mongodb://localhost:27017")
-		contestRepository = mongodb.NewContestRepository(*mongoClient)
-		userRepository = mongodb.NewUserRepository(*mongoClient)
-		problemRepository = mongodb.NewProblemRepository(*mongoClient)
-		submissionRepository = mongodb.NewSubmissionRepository(*mongoClient)
-		contestantRepository = mongodb.NewContestantRepository(*mongoClient)
-		utils.SugarLogger.Info("repository initialized")
-	} else {
-		logger.Sugar().Info("start the server in development mode.")
-		utils.SugarLogger.Info("in-memory repository initialisation with seeds...")
-		seeds := seed.NewSeeds()
-		contestRepository = inmemory.NewContestRepository(seeds.Contests)
-		userRepository = inmemory.NewUserRepository(seeds.Users)
-		problemRepository = inmemory.NewProblemRepository(seeds.Problems)
-		submissionRepository = inmemory.NewSubmissionRepository(seeds.Submission)
-		utils.SugarLogger.Info("repository initialized")
-	}
+	logger.Sugar().Info("start the server in development mode.")
+	utils.SugarLogger.Info("in-memory repository initialisation with seeds...")
+	seeds := seed.NewSeeds()
+	contestRepository = inmemory3.NewContestRepository(seeds.Contests)
+	userRepository = inmemory.NewUserRepository(seeds.Users)
+	problemRepository = inmemory3.NewProblemRepository(seeds.Problems)
+	submissionRepository = inmemory3.NewSubmissionRepository(seeds.Submission)
+	utils.SugarLogger.Info("repository initialized")
 
-	contestHandler = func() *handlers.ContestHandlers {
-		createService := *contest.NewCreateContestService(contestRepository, contestantRepository, *service.NewContestantService(contestantRepository))
-		findService := *contest.NewFindContestService(contestRepository)
-		rankingService := contest.NewGetContestRankingService(
+	contestHandler = func() *handlers2.ContestHandlers {
+		createService := *contest2.NewCreateContestService(contestRepository, contestantRepository, *service2.NewContestantService(contestantRepository))
+		findService := *contest2.NewFindContestService(contestRepository)
+		rankingService := contest2.NewGetContestRankingService(
 			contestRepository,
 			contestantRepository,
 			problemRepository,
 			submissionRepository,
 			userRepository,
 		)
-		c := *controller.NewContestController(
+		c := *controller2.NewContestController(
 			contestRepository,
 			createService,
 			findService,
 			*rankingService,
 		)
-		return handlers.NewContestHandlers(
+		return handlers2.NewContestHandlers(
 			c,
 			logger,
 		)
 	}()
 
 	userHandler = func() *handlers.UserHandlers {
-		findService := *user.NewFindUserService(userRepository)
-		createService := *user.NewCreateUserService(
+		findService := *service3.NewFindUserService(userRepository)
+		createService := *service3.NewCreateUserService(
 			userRepository,
 			*service.NewUserService(userRepository),
 			dummy.NewMailer(),
@@ -105,7 +96,7 @@ func initServer(mode string) {
 			findService,
 		)
 
-		auth := *controller.NewAuthController(userRepository, "")
+		auth := *controller2.NewAuthController(userRepository, "")
 
 		return handlers.NewUserHandlers(
 			cont,
@@ -114,40 +105,40 @@ func initServer(mode string) {
 		)
 	}()
 
-	problemHandler = func() *handlers.ProblemHandlers {
-		createService := *problem.NewCreateProblemService(
+	problemHandler = func() *handlers2.ProblemHandlers {
+		createService := *problem2.NewCreateProblemService(
 			problemRepository,
-			*service.NewProblemService(problemRepository),
+			*service2.NewProblemService(problemRepository),
 		)
-		cont := *controller.NewProblemController(
+		cont := *controller2.NewProblemController(
 			problemRepository,
 			createService,
-			*problem.NewFindProblemService(problemRepository, contestRepository, contestantRepository),
+			*problem2.NewFindProblemService(problemRepository, contestRepository, contestantRepository),
 		)
 
-		return handlers.NewProblemHandlers(
+		return handlers2.NewProblemHandlers(
 			cont,
 			logger,
 		)
 	}()
 
-	submissionHandler = func() *handlers.SubmissionHandlers {
-		createService := *submission.NewCreateSubmissionService(
+	submissionHandler = func() *handlers2.SubmissionHandlers {
+		createService := *submission2.NewCreateSubmissionService(
 			submissionRepository,
-			*service.NewSubmissionService(submissionRepository),
+			*service2.NewSubmissionService(submissionRepository),
 			problemRepository,
 		)
-		findService := *submission.NewFindSubmissionService(submissionRepository, problemRepository)
-		findProblemService := *problem.NewFindProblemService(problemRepository, contestRepository, contestantRepository)
-		findUserService := *user.NewFindUserService(userRepository)
-		cont := *controller.NewSubmissionController(
+		findService := *submission2.NewFindSubmissionService(submissionRepository, problemRepository)
+		findProblemService := *problem2.NewFindProblemService(problemRepository, contestRepository, contestantRepository)
+		findUserService := *service3.NewFindUserService(userRepository)
+		cont := *controller2.NewSubmissionController(
 			submissionRepository,
 			createService,
 			findService,
 			findProblemService,
 			findUserService,
 		)
-		return handlers.NewSubmissionHandlers(cont, logger)
+		return handlers2.NewSubmissionHandlers(cont, logger)
 	}()
 }
 
@@ -187,10 +178,4 @@ func StartServer(port int, mode string) {
 		logger.Sugar().Fatal(err)
 	}
 	logger.Sugar().Info("WebServer terminated successfully.")
-	if mongoClient != nil {
-		if err := mongoClient.Cli.Disconnect(ctx); err != nil {
-			logger.Sugar().Fatal(err)
-		}
-		logger.Sugar().Info("Disconnected from database.")
-	}
 }
