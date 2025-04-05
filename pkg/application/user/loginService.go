@@ -62,9 +62,6 @@ func (s *LoginService) Verify(t string) bool {
 	do.SetVerified()
 	// ToDo: updateService作る
 	err = s.repository.UpdateUser(do)
-	if err != nil {
-		return false
-	}
 
-	return true
+	return err == nil
 }

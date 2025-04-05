@@ -118,16 +118,10 @@ func (c *Contest) SetEndAt(at time.Time) error {
 
 // IsStarted 開催開始しているか
 func (c *Contest) IsStarted(t time.Time) bool {
-	if c.startAt.Before(t) {
-		return true
-	}
-	return false
+	return c.startAt.Before(t)
 }
 
 // IsClosed 開催終了したか
 func (c *Contest) IsClosed(t time.Time) bool {
-	if c.endAt.After(t) {
-		return true
-	}
-	return false
+	return c.endAt.After(t)
 }
