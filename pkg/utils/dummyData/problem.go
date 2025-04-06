@@ -1,12 +1,14 @@
 package dummyData
 
-import "github.com/poporonnet/kojsx-backend/pkg/domain"
+import (
+	"github.com/poporonnet/kojsx-backend/pkg/contest/model"
+)
 
 var (
-	g = domain.NewProblem("3", "1")
+	g = model.NewProblem("3", "1")
 	_ = g.SetTitle("Test problem3")
 
 	NotExistsProblem     = g
-	NotExistsCasesetData = domain.NewCaseset("3")
-	NotExistsCase        = domain.NewCase("5", "6")
+	NotExistsCasesetData = model.NewCaseset("3")
+	NotExistsCase        = model.NewCase("5", "6")
 )

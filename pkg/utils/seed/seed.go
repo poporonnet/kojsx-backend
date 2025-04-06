@@ -3,27 +3,27 @@ package seed
 import (
 	"time"
 
-	"github.com/poporonnet/kojsx-backend/pkg/application/contest"
-	"github.com/poporonnet/kojsx-backend/pkg/application/problem"
-	"github.com/poporonnet/kojsx-backend/pkg/application/submission"
-	"github.com/poporonnet/kojsx-backend/pkg/application/user"
-
-	"github.com/poporonnet/kojsx-backend/pkg/domain"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/model"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/service/contest"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/service/problem"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/service/submission"
+	model2 "github.com/poporonnet/kojsx-backend/pkg/user/model"
+	"github.com/poporonnet/kojsx-backend/pkg/user/service"
 )
 
 type Seeds struct {
-	Contests    []domain.Contest
-	Contestants []domain.Contestant
-	Users       []domain.User
-	Problems    []domain.Problem
-	Submission  []domain.Submission
+	Contests    []model.Contest
+	Contestants []model.Contestant
+	Users       []model2.User
+	Problems    []model.Problem
+	Submission  []model.Submission
 }
 
 func NewSeeds() Seeds {
 	loc := time.UTC
 	d := time.Date(2021, time.October, 1, 0, 0, 0, 0, loc)
 
-	contests := func() []domain.Contest {
+	contests := func() []model.Contest {
 		data := contest.NewData(
 			"10",
 			"Contest 1",
@@ -31,37 +31,37 @@ func NewSeeds() Seeds {
 			d,
 			d.Add(24*time.Hour*31*12*10),
 		)
-		return []domain.Contest{data.ToDomain()}
+		return []model.Contest{data.ToDomain()}
 	}()
 
-	contestants := func() []domain.Contestant {
-		data := domain.NewContestant("900", "10", "20")
+	contestants := func() []model.Contestant {
+		data := model.NewContestant("900", "10", "20")
 		data.SetAdmin()
-		data2 := domain.NewContestant("910", "10", "30")
+		data2 := model.NewContestant("910", "10", "30")
 		data2.SetNormal()
-		return []domain.Contestant{*data, *data2}
+		return []model.Contestant{*data, *data2}
 	}()
 
-	users := func() []domain.User {
-		user1 := user.NewData(
+	users := func() []model2.User {
+		user1 := service.NewData(
 			"20",
 			"Eric",
 			"eric@example.jp",
 			"Argon2.8ce04ed8562b03c813343a04022f93db7629f9f2.1a7[0]",
-			domain.Admin,
+			model2.Admin,
 		)
 
-		user2 := user.NewData(
+		user2 := service.NewData(
 			"30",
 			"Eric",
 			"eric@example.jp",
 			"Argon2.8ce04ed8562b03c813343a04022f93db7629f9f2.1a7[0]",
-			domain.Normal,
+			model2.Normal,
 		)
-		return []domain.User{user1.ToDomain(), user2.ToDomain()}
+		return []model2.User{user1.ToDomain(), user2.ToDomain()}
 	}()
 
-	problems := func() []domain.Problem {
+	problems := func() []model.Problem {
 		// Case
 		case1 := *problem.NewCaseData(
 			"70",
@@ -118,10 +118,10 @@ func NewSeeds() Seeds {
 			},
 		)
 
-		return []domain.Problem{*problem1.ToDomain()}
+		return []model.Problem{*problem1.ToDomain()}
 	}()
 
-	submissions := func() []domain.Submission {
+	submissions := func() []model.Submission {
 		submission1 := submission.NewData(
 			"200",
 			problems[0].GetProblemID(),
@@ -150,7 +150,7 @@ func NewSeeds() Seeds {
 			d,
 			nil,
 		)
-		return []domain.Submission{*submission1.ToDomain(), *submission2.ToDomain()}
+		return []model.Submission{*submission1.ToDomain(), *submission2.ToDomain()}
 	}()
 
 	return Seeds{
