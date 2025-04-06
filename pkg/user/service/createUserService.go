@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/poporonnet/kojsx-backend/pkg/user/model"
+	"github.com/poporonnet/kojsx-backend/pkg/user/model/domainService"
 	"github.com/poporonnet/kojsx-backend/pkg/user/model/repository"
-	"github.com/poporonnet/kojsx-backend/pkg/user/model/service"
 	"github.com/poporonnet/kojsx-backend/pkg/utils/id"
 	"github.com/poporonnet/kojsx-backend/pkg/utils/mail"
 	"github.com/poporonnet/kojsx-backend/pkg/utils/password/argon2"
@@ -21,13 +21,13 @@ const (
 
 type CreateUserService struct {
 	userRepository repository.UserRepository
-	userService    service.UserService
+	userService    domainService.UserService
 	idGenerator    id.Generator
 	mailer         mail.Mailer
 	key            string
 }
 
-func NewCreateUserService(userRepository repository.UserRepository, service service.UserService, mailer mail.Mailer, key string) *CreateUserService {
+func NewCreateUserService(userRepository repository.UserRepository, service domainService.UserService, mailer mail.Mailer, key string) *CreateUserService {
 	return &CreateUserService{
 		userRepository: userRepository,
 		userService:    service,

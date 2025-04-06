@@ -1,4 +1,4 @@
-package model
+package schema
 
 type CreateUserRequestJSON struct {
 	Name     string `json:"name"`

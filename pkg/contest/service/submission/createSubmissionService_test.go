@@ -7,14 +7,14 @@ import (
 	"github.com/poporonnet/kojsx-backend/pkg/contest/adaptor/repository/inmemory"
 	"github.com/poporonnet/kojsx-backend/pkg/contest/model"
 	"github.com/poporonnet/kojsx-backend/pkg/contest/model/service"
-	submission2 "github.com/poporonnet/kojsx-backend/pkg/contest/service/submission"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/service/submission"
 
 	"github.com/poporonnet/kojsx-backend/pkg/utils"
 	"github.com/poporonnet/kojsx-backend/pkg/utils/seed"
 	"github.com/stretchr/testify/assert"
 )
 
-var ss *submission2.CreateSubmissionService
+var ss *submission.CreateSubmissionService
 var loc = time.UTC
 var d = time.Date(2021, time.October, 1, 0, 0, 0, 0, loc)
 
@@ -23,12 +23,12 @@ func TestMain(m *testing.M) {
 	s := seed.NewSeeds()
 	submissionRepository := inmemory.NewSubmissionRepository(s.Submission)
 	problemRepository := inmemory.NewProblemRepository(s.Problems)
-	ss = submission2.NewCreateSubmissionService(submissionRepository, *service.NewSubmissionService(submissionRepository), problemRepository)
+	ss = submission.NewCreateSubmissionService(submissionRepository, *service.NewSubmissionService(submissionRepository), problemRepository)
 	m.Run()
 }
 
 func TestCreateSubmissionService_CreateResult(t *testing.T) {
-	args := []submission2.CreateResultArgs{
+	args := []submission.CreateResultArgs{
 		{
 			Result:     "WJ",
 			Output:     "world\n",
@@ -78,15 +78,15 @@ func TestCreateSubmissionService_CreateResult(t *testing.T) {
 
 	t.Run("Result以外のテスト", func(t *testing.T) {
 		// Result以外のテスト
-		act := submission2.NewData(res.GetID(), res.GetProblemID(), res.GetContestantID(), res.GetPoint(), res.GetLang(), res.GetCodeLength(), res.GetResult(), res.GetExecTime(), res.GetExecMemory(), res.GetCode(), res.GetSubmittedAt(), []submission2.Result{})
-		assert.Equal(t, submission2.DomainToData(*e), act)
+		act := submission.NewData(res.GetID(), res.GetProblemID(), res.GetContestantID(), res.GetPoint(), res.GetLang(), res.GetCodeLength(), res.GetResult(), res.GetExecTime(), res.GetExecMemory(), res.GetCode(), res.GetSubmittedAt(), []submission.Result{})
+		assert.Equal(t, submission.DomainToData(*e), act)
 	})
 
 	t.Run("Resultのテスト", func(t *testing.T) {
 		act := res.GetResults()
 		for i, tt := range args {
 			t.Run(tt.CaseName, func(t *testing.T) {
-				exp := *submission2.NewResult(
+				exp := *submission.NewResult(
 					act[i].GetID(),
 					tt.Output,
 					"AC",

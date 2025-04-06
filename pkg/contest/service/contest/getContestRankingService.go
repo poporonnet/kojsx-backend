@@ -5,27 +5,27 @@ import (
 	"sort"
 
 	"github.com/poporonnet/kojsx-backend/pkg/contest/model"
-	repository2 "github.com/poporonnet/kojsx-backend/pkg/contest/model/repository"
-	model2 "github.com/poporonnet/kojsx-backend/pkg/user/model"
-	"github.com/poporonnet/kojsx-backend/pkg/user/model/repository"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/model/repository"
+	userModel "github.com/poporonnet/kojsx-backend/pkg/user/model"
+	userRepository "github.com/poporonnet/kojsx-backend/pkg/user/model/repository"
 	"github.com/poporonnet/kojsx-backend/pkg/utils"
 	"github.com/poporonnet/kojsx-backend/pkg/utils/id"
 )
 
 type GetContestRankingService struct {
-	contestRepository    repository2.ContestRepository
-	contestantRepository repository2.ContestantRepository
-	problemRepository    repository2.ProblemRepository
-	submissionRepository repository2.SubmissionRepository
-	userRepository       repository.UserRepository
+	contestRepository    repository.ContestRepository
+	contestantRepository repository.ContestantRepository
+	problemRepository    repository.ProblemRepository
+	submissionRepository repository.SubmissionRepository
+	userRepository       userRepository.UserRepository
 }
 
 func NewGetContestRankingService(
-	contest repository2.ContestRepository,
-	contestant repository2.ContestantRepository,
-	problem repository2.ProblemRepository,
-	submission repository2.SubmissionRepository,
-	user repository.UserRepository,
+	contest repository.ContestRepository,
+	contestant repository.ContestantRepository,
+	problem repository.ProblemRepository,
+	submission repository.SubmissionRepository,
+	user userRepository.UserRepository,
 ) *GetContestRankingService {
 	return &GetContestRankingService{
 		contestRepository:    contest,
@@ -68,7 +68,7 @@ func (s GetContestRankingService) Handle(contestID id.SnowFlakeID) ([]UserFinalR
 	}
 	// コンテストの参加者のユーザー情報を取得
 	// [UserID]domain.User
-	users := map[id.SnowFlakeID]model2.User{}
+	users := map[id.SnowFlakeID]userModel.User{}
 	for k := range contestants {
 		user, err := s.userRepository.FindUserByID(k)
 		if err != nil {
@@ -150,7 +150,7 @@ func (s GetContestRankingService) Handle(contestID id.SnowFlakeID) ([]UserFinalR
 type UserFinalResult struct {
 	Rank        int
 	Point       int
-	User        model2.User
+	User        userModel.User
 	Contestant  model.Contestant
 	Submissions []model.Submission
 }

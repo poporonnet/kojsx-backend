@@ -3,24 +3,24 @@ package controller
 import (
 	"fmt"
 
-	"github.com/poporonnet/kojsx-backend/pkg/contest/adaptor/controller/model"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/adaptor/controller/schema"
 	"github.com/poporonnet/kojsx-backend/pkg/contest/model/repository"
-	contest2 "github.com/poporonnet/kojsx-backend/pkg/contest/service/contest"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/service/contest"
 	"github.com/poporonnet/kojsx-backend/pkg/utils/id"
 )
 
 type ContestController struct {
 	repository        repository.ContestRepository
-	createService     contest2.CreateContestService
-	findService       contest2.FindContestService
-	getRankingService contest2.GetContestRankingService
+	createService     contest.CreateContestService
+	findService       contest.FindContestService
+	getRankingService contest.GetContestRankingService
 }
 
 func NewContestController(
 	repository repository.ContestRepository,
-	createService contest2.CreateContestService,
-	findService contest2.FindContestService,
-	service contest2.GetContestRankingService,
+	createService contest.CreateContestService,
+	findService contest.FindContestService,
+	service contest.GetContestRankingService,
 ) *ContestController {
 	return &ContestController{
 		repository:        repository,
@@ -30,9 +30,9 @@ func NewContestController(
 	}
 }
 
-func (c *ContestController) CreateContest(req model.CreateContestRequestJSON) (model.CreateContestResponseJSON, error) {
+func (c *ContestController) CreateContest(req schema.CreateContestRequestJSON) (schema.CreateContestResponseJSON, error) {
 	res, err := c.createService.Handle(
-		contest2.CreateContestArgs{
+		contest.CreateContestArgs{
 			Title:       req.Title,
 			Description: req.Description,
 			StartAt:     req.StartAt,
@@ -41,9 +41,9 @@ func (c *ContestController) CreateContest(req model.CreateContestRequestJSON) (m
 		},
 	)
 	if err != nil {
-		return model.CreateContestResponseJSON{}, fmt.Errorf("failed to create contest: %w", err)
+		return schema.CreateContestResponseJSON{}, fmt.Errorf("failed to create contest: %w", err)
 	}
-	return model.CreateContestResponseJSON{
+	return schema.CreateContestResponseJSON{
 		ID:          string(res.GetID()),
 		Title:       res.GetTitle(),
 		Description: res.GetDescription(),
@@ -52,12 +52,12 @@ func (c *ContestController) CreateContest(req model.CreateContestRequestJSON) (m
 	}, nil
 }
 
-func (c *ContestController) FindContestByID(i string) (*model.FindContestResponseJSON, error) {
+func (c *ContestController) FindContestByID(i string) (*schema.FindContestResponseJSON, error) {
 	res, err := c.findService.FindByID(id.SnowFlakeID(i))
 	if err != nil {
 		return nil, fmt.Errorf("failed to find contest: %w", err)
 	}
-	return &model.FindContestResponseJSON{
+	return &schema.FindContestResponseJSON{
 		ID:          string(res.GetID()),
 		Title:       res.GetTitle(),
 		Description: res.GetDescription(),
@@ -66,14 +66,14 @@ func (c *ContestController) FindContestByID(i string) (*model.FindContestRespons
 	}, nil
 }
 
-func (c *ContestController) FindContest() ([]model.FindContestResponseJSON, error) {
+func (c *ContestController) FindContest() ([]schema.FindContestResponseJSON, error) {
 	co, err := c.findService.FindAll()
 	if err != nil {
 		return nil, err
 	}
-	res := make([]model.FindContestResponseJSON, len(co))
+	res := make([]schema.FindContestResponseJSON, len(co))
 	for i, v := range co {
-		res[i] = model.FindContestResponseJSON{
+		res[i] = schema.FindContestResponseJSON{
 			ID:          string(v.GetID()),
 			Title:       v.GetTitle(),
 			Description: v.GetDescription(),
@@ -84,24 +84,24 @@ func (c *ContestController) FindContest() ([]model.FindContestResponseJSON, erro
 	return res, nil
 }
 
-func (c *ContestController) GetRanking(i string) ([]model.GetRankingResponseJSON, error) {
+func (c *ContestController) GetRanking(i string) ([]schema.GetRankingResponseJSON, error) {
 	res, err := c.getRankingService.Handle(id.SnowFlakeID(i))
 	if err != nil {
 		return nil, err
 	}
-	resp := make([]model.GetRankingResponseJSON, len(res))
+	resp := make([]schema.GetRankingResponseJSON, len(res))
 	for ii, v := range res {
-		result := make([]model.RankingProblemResult, len(v.Submissions))
+		result := make([]schema.RankingProblemResult, len(v.Submissions))
 		for j, k := range v.Submissions {
-			result[j] = model.RankingProblemResult{
+			result[j] = schema.RankingProblemResult{
 				ProblemID: string(k.GetProblemID()),
 				Point:     k.GetPoint(),
 			}
 		}
-		resp[ii] = model.GetRankingResponseJSON{
+		resp[ii] = schema.GetRankingResponseJSON{
 			Rank:  v.Rank,
 			Point: v.Point,
-			User: model.RankingUser{
+			User: schema.RankingUser{
 				ID:   string(v.User.GetID()),
 				Name: v.User.GetName(),
 			},

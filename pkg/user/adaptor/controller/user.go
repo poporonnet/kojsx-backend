@@ -3,7 +3,7 @@ package controller
 import (
 	"fmt"
 
-	"github.com/poporonnet/kojsx-backend/pkg/user/adaptor/controller/model"
+	"github.com/poporonnet/kojsx-backend/pkg/user/adaptor/controller/schema"
 	"github.com/poporonnet/kojsx-backend/pkg/user/model/repository"
 	"github.com/poporonnet/kojsx-backend/pkg/user/service"
 	"github.com/poporonnet/kojsx-backend/pkg/utils/id"
@@ -19,21 +19,21 @@ func NewUserController(repository repository.UserRepository, createService servi
 	return &UserController{repository: repository, createService: createService, findService: service}
 }
 
-func (c *UserController) Create(req model.CreateUserRequestJSON) (model.CreateUserResponseJSON, error) {
+func (c *UserController) Create(req schema.CreateUserRequestJSON) (schema.CreateUserResponseJSON, error) {
 	d, _, err := c.createService.Handle(req.Name, req.Password, req.Email)
 	if err != nil {
-		return model.CreateUserResponseJSON{}, fmt.Errorf("failed to create user: %w", err)
+		return schema.CreateUserResponseJSON{}, fmt.Errorf("failed to create user: %w", err)
 	}
 
-	return model.CreateUserResponseJSON{ID: string(d.GetID()), Name: d.GetName(), Email: d.GetEmail()}, nil
+	return schema.CreateUserResponseJSON{ID: string(d.GetID()), Name: d.GetName(), Email: d.GetEmail()}, nil
 }
 
-func (c *UserController) FindByID(uID string) (model.FindUsersResponseJSON, error) {
+func (c *UserController) FindByID(uID string) (schema.FindUsersResponseJSON, error) {
 	res, err := c.findService.FindByID(id.SnowFlakeID(uID))
 	if err != nil {
-		return model.FindUsersResponseJSON{}, err
+		return schema.FindUsersResponseJSON{}, err
 	}
-	return model.FindUsersResponseJSON{
+	return schema.FindUsersResponseJSON{
 		ID:   string(res.GetID()),
 		Name: res.GetName(),
 		Role: func() int {
@@ -48,20 +48,20 @@ func (c *UserController) FindByID(uID string) (model.FindUsersResponseJSON, erro
 	}, err
 }
 
-func (c *UserController) FindAllUsers() ([]model.FindUsersResponseJSON, error) {
+func (c *UserController) FindAllUsers() ([]schema.FindUsersResponseJSON, error) {
 	d, err := c.findService.FindAllUsers()
 	if err != nil {
-		return []model.FindUsersResponseJSON{}, fmt.Errorf("failed to find users: %w", err)
+		return []schema.FindUsersResponseJSON{}, fmt.Errorf("failed to find users: %w", err)
 	}
 
-	res := make([]model.FindUsersResponseJSON, len(d))
+	res := make([]schema.FindUsersResponseJSON, len(d))
 	for i, v := range d {
 		role := 0
 		if !v.IsAdmin() {
 			role = 1
 		}
 
-		res[i] = model.FindUsersResponseJSON{
+		res[i] = schema.FindUsersResponseJSON{
 			ID:   string(v.GetID()),
 			Name: v.GetName(),
 			Role: role,

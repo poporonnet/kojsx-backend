@@ -6,18 +6,18 @@ import (
 	"time"
 
 	"github.com/poporonnet/kojsx-backend/pkg/contest/model"
-	repository2 "github.com/poporonnet/kojsx-backend/pkg/contest/model/repository"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/model/repository"
 	"github.com/poporonnet/kojsx-backend/pkg/utils"
 	"github.com/poporonnet/kojsx-backend/pkg/utils/id"
 )
 
 type FindProblemService struct {
-	repository repository2.ProblemRepository
-	contest    repository2.ContestRepository
-	contestant repository2.ContestantRepository
+	repository repository.ProblemRepository
+	contest    repository.ContestRepository
+	contestant repository.ContestantRepository
 }
 
-func NewFindProblemService(repo repository2.ProblemRepository, contest repository2.ContestRepository, contestantRepository repository2.ContestantRepository) *FindProblemService {
+func NewFindProblemService(repo repository.ProblemRepository, contest repository.ContestRepository, contestantRepository repository.ContestantRepository) *FindProblemService {
 	return &FindProblemService{repo, contest, contestantRepository}
 }
 

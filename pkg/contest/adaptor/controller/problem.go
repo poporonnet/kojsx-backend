@@ -4,22 +4,22 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/poporonnet/kojsx-backend/pkg/contest/adaptor/controller/model"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/adaptor/controller/schema"
 	"github.com/poporonnet/kojsx-backend/pkg/contest/model/repository"
-	problem2 "github.com/poporonnet/kojsx-backend/pkg/contest/service/problem"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/service/problem"
 	"github.com/poporonnet/kojsx-backend/pkg/utils/id"
 )
 
 type ProblemController struct {
 	repository    repository.ProblemRepository
-	createService problem2.CreateProblemService
-	findService   problem2.FindProblemService
+	createService problem.CreateProblemService
+	findService   problem.FindProblemService
 }
 
 func NewProblemController(
 	repository repository.ProblemRepository,
-	createService problem2.CreateProblemService,
-	findService problem2.FindProblemService,
+	createService problem.CreateProblemService,
+	findService problem.FindProblemService,
 ) *ProblemController {
 	return &ProblemController{
 		repository:    repository,
@@ -28,12 +28,12 @@ func NewProblemController(
 	}
 }
 
-func (c *ProblemController) CreateProblem(req model.CreateProblemRequestJSON) (model.CreateProblemResponseJSON, error) {
+func (c *ProblemController) CreateProblem(req schema.CreateProblemRequestJSON) (schema.CreateProblemResponseJSON, error) {
 	res, err := c.createService.Handle(id.SnowFlakeID(req.ContestID), string(req.Title[0]), req.Title, req.Text, req.Points, req.Limits.Time)
 	if err != nil {
-		return model.CreateProblemResponseJSON{}, fmt.Errorf("failed to create problem: %w", err)
+		return schema.CreateProblemResponseJSON{}, fmt.Errorf("failed to create problem: %w", err)
 	}
-	return model.CreateProblemResponseJSON{
+	return schema.CreateProblemResponseJSON{
 		ID:     string(res.GetID()),
 		Title:  res.GetTitle(),
 		Text:   res.GetText(),
@@ -51,13 +51,13 @@ func (c *ProblemController) CreateProblem(req model.CreateProblemRequestJSON) (m
 	}, nil
 }
 
-func (c *ProblemController) FindByID(i string) (model.FindProblemResponseJSON, error) {
+func (c *ProblemController) FindByID(i string) (schema.FindProblemResponseJSON, error) {
 	// ToDo: 検索を実行したユーザーを渡す
 	res, err := c.findService.FindByID(id.SnowFlakeID(i), time.Now(), "")
 	if err != nil {
-		return model.FindProblemResponseJSON{}, fmt.Errorf("failed to find problem: %w", err)
+		return schema.FindProblemResponseJSON{}, fmt.Errorf("failed to find problem: %w", err)
 	}
-	return model.CreateProblemResponseJSON{
+	return schema.CreateProblemResponseJSON{
 		ID:     string(res.GetID()),
 		Title:  res.GetTitle(),
 		Text:   res.GetText(),
@@ -75,15 +75,15 @@ func (c *ProblemController) FindByID(i string) (model.FindProblemResponseJSON, e
 	}, nil
 }
 
-func (c *ProblemController) FindByContestID(id id.SnowFlakeID) ([]model.FindProblemResponseJSON, error) {
+func (c *ProblemController) FindByContestID(id id.SnowFlakeID) ([]schema.FindProblemResponseJSON, error) {
 	res, err := c.findService.FindByContestID(id)
 	if err != nil {
-		return []model.FindProblemResponseJSON{}, fmt.Errorf("failed to find problem: %w", err)
+		return []schema.FindProblemResponseJSON{}, fmt.Errorf("failed to find problem: %w", err)
 	}
 
-	response := make([]model.FindProblemResponseJSON, len(res))
+	response := make([]schema.FindProblemResponseJSON, len(res))
 	for i, v := range res {
-		response[i] = model.CreateProblemResponseJSON{
+		response[i] = schema.CreateProblemResponseJSON{
 			ID:     string(v.GetID()),
 			Title:  v.GetTitle(),
 			Text:   v.GetText(),

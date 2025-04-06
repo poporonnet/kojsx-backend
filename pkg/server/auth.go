@@ -1,9 +1,9 @@
-package controller
+package server
 
 import (
 	"fmt"
 
-	"github.com/poporonnet/kojsx-backend/pkg/contest/adaptor/controller/model"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/adaptor/controller/schema"
 	"github.com/poporonnet/kojsx-backend/pkg/user/model/repository"
 	"github.com/poporonnet/kojsx-backend/pkg/user/service"
 )
@@ -17,13 +17,13 @@ func NewAuthController(userRepository repository.UserRepository, key string) *Au
 	return &AuthController{repository: userRepository, loginService: *service.NewLoginService(userRepository, key)}
 }
 
-func (c *AuthController) Login(req model.LoginRequestJSON) (model.LoginResponseJSON, error) {
+func (c *AuthController) Login(req schema.LoginRequestJSON) (schema.LoginResponseJSON, error) {
 	a, r, err := c.loginService.Login(req.Email, req.Password)
 	if err != nil {
-		return model.LoginResponseJSON{}, fmt.Errorf("failed to login: %w", err)
+		return schema.LoginResponseJSON{}, fmt.Errorf("failed to login: %w", err)
 	}
 
-	return model.LoginResponseJSON{
+	return schema.LoginResponseJSON{
 		AccessToken:  a,
 		RefreshToken: r,
 	}, nil

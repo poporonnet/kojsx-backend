@@ -5,24 +5,24 @@ import (
 	"testing"
 	"time"
 
-	inmemory3 "github.com/poporonnet/kojsx-backend/pkg/contest/adaptor/repository/inmemory"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/adaptor/repository/inmemory"
 	"github.com/poporonnet/kojsx-backend/pkg/contest/model"
-	contest2 "github.com/poporonnet/kojsx-backend/pkg/contest/service/contest"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/service/contest"
 	"github.com/poporonnet/kojsx-backend/pkg/contest/service/problem"
 	"github.com/poporonnet/kojsx-backend/pkg/contest/service/submission"
-	"github.com/poporonnet/kojsx-backend/pkg/user/adaptor/repository/inmemory"
-	model2 "github.com/poporonnet/kojsx-backend/pkg/user/model"
+	userInmemory "github.com/poporonnet/kojsx-backend/pkg/user/adaptor/repository/inmemory"
+	userModel "github.com/poporonnet/kojsx-backend/pkg/user/model"
 	"github.com/poporonnet/kojsx-backend/pkg/user/service"
 	"github.com/poporonnet/kojsx-backend/pkg/utils"
 	"github.com/poporonnet/kojsx-backend/pkg/utils/id"
 	"github.com/stretchr/testify/assert"
 )
 
-var s contest2.GetContestRankingService
+var s contest.GetContestRankingService
 
 func TestMain(t *testing.M) {
 	contests := []model.Contest{
-		contest2.NewData(
+		contest.NewData(
 			"1",
 			"Test Contest",
 			"Hello world!",
@@ -88,34 +88,34 @@ func TestMain(t *testing.M) {
 		}(),
 	}
 
-	users := []model2.User{
+	users := []userModel.User{
 		service.NewData(
 			"10000",
 			"Eric",
 			"eric@example.com",
 			"",
-			model2.Admin,
+			userModel.Admin,
 		).ToDomain(),
 		service.NewData(
 			"10001",
 			"George",
 			"george@example.com",
 			"",
-			model2.Normal,
+			userModel.Normal,
 		).ToDomain(),
 		service.NewData(
 			"10002",
 			"Joan",
 			"joan@example.com",
 			"",
-			model2.Normal,
+			userModel.Normal,
 		).ToDomain(),
 		service.NewData(
 			"10003",
 			"Kate",
 			"kate@example.com",
 			"",
-			model2.Normal,
+			userModel.Normal,
 		).ToDomain(),
 	}
 
@@ -270,12 +270,12 @@ func TestMain(t *testing.M) {
 	}
 	fmt.Println(submissions)
 
-	s = *contest2.NewGetContestRankingService(
-		inmemory3.NewContestRepository(contests),
-		inmemory3.NewContestantRepository(contestants),
-		inmemory3.NewProblemRepository(problems),
-		inmemory3.NewSubmissionRepository(submissions),
-		inmemory.NewUserRepository(users),
+	s = *contest.NewGetContestRankingService(
+		inmemory.NewContestRepository(contests),
+		inmemory.NewContestantRepository(contestants),
+		inmemory.NewProblemRepository(problems),
+		inmemory.NewSubmissionRepository(submissions),
+		userInmemory.NewUserRepository(users),
 	)
 	utils.NewLogger()
 	t.Run()

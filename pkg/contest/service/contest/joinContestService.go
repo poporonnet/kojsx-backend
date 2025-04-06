@@ -8,7 +8,7 @@ import (
 	"github.com/poporonnet/kojsx-backend/pkg/contest/model"
 	"github.com/poporonnet/kojsx-backend/pkg/contest/model/repository"
 	"github.com/poporonnet/kojsx-backend/pkg/contest/model/service"
-	model2 "github.com/poporonnet/kojsx-backend/pkg/user/model"
+	userModel "github.com/poporonnet/kojsx-backend/pkg/user/model"
 	"github.com/poporonnet/kojsx-backend/pkg/utils/id"
 )
 
@@ -21,7 +21,7 @@ func NewJoinContestService(contestantRepository repository.ContestantRepository,
 	return &JoinContestService{contestantRepository: contestantRepository, contestantService: service}
 }
 
-func (s JoinContestService) Join(contestID id.SnowFlakeID, user model2.User, role model.ContestantRole) error {
+func (s JoinContestService) Join(contestID id.SnowFlakeID, user userModel.User, role model.ContestantRole) error {
 	idGen := id.NewSnowFlakeIDGenerator()
 	i := idGen.NewID(time.Now())
 

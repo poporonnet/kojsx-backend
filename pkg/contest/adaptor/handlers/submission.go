@@ -4,11 +4,11 @@ import (
 	"net/http"
 
 	"github.com/poporonnet/kojsx-backend/pkg/contest/adaptor/controller"
-	"github.com/poporonnet/kojsx-backend/pkg/contest/adaptor/controller/model"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/adaptor/controller/schema"
 	"github.com/poporonnet/kojsx-backend/pkg/utils/id"
+	errorSchema "github.com/poporonnet/kojsx-backend/pkg/utils/schema"
 
 	"github.com/labstack/echo/v4"
-	"github.com/poporonnet/kojsx-backend/pkg/server/responses"
 	"go.uber.org/zap"
 )
 
@@ -25,16 +25,16 @@ func NewSubmissionHandlers(controller controller.SubmissionController, logger *z
 }
 
 func (h SubmissionHandlers) CreateSubmission(c echo.Context) error {
-	req := model.CreateSubmissionRequestJSON{}
+	req := schema.CreateSubmissionRequestJSON{}
 	if err := c.Bind(&req); err != nil {
 		h.logger.Sugar().Errorf("%s", err)
-		return c.JSON(http.StatusBadRequest, responses.InvalidRequestErrorResponseJSON)
+		return c.JSON(http.StatusBadRequest, errorSchema.InvalidRequestErrorResponseJSON)
 	}
 	// ToDo: 提出したユーザー(コンテスタント)IDを渡す
 	res, err := h.controller.CreateSubmission("", req)
 	if err != nil {
 		h.logger.Sugar().Errorf("%s", err)
-		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
+		return c.JSON(http.StatusInternalServerError, errorSchema.InternalServerErrorResponseJSON)
 	}
 
 	return c.JSON(http.StatusCreated, res)
@@ -44,7 +44,7 @@ func (h SubmissionHandlers) FindByID(c echo.Context) error {
 	i := c.Param("submissionId")
 	res, err := h.controller.FindByID(id.SnowFlakeID(i))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
+		return c.JSON(http.StatusInternalServerError, errorSchema.InternalServerErrorResponseJSON)
 	}
 	return c.JSON(http.StatusOK, res)
 }
@@ -58,21 +58,21 @@ func (h SubmissionHandlers) GetTask(c echo.Context) error {
 			return c.NoContent(http.StatusNoContent)
 		}
 		h.logger.Sugar().Errorf("unknown error!: %s", err)
-		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
+		return c.JSON(http.StatusInternalServerError, errorSchema.InternalServerErrorResponseJSON)
 	}
 
 	return c.JSON(http.StatusOK, res)
 }
 
 func (h SubmissionHandlers) CreateSubmissionResult(c echo.Context) error {
-	req := model.CreateSubmissionResultRequestJSON{}
+	req := schema.CreateSubmissionResultRequestJSON{}
 	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
+		return c.JSON(http.StatusInternalServerError, errorSchema.InternalServerErrorResponseJSON)
 	}
 
 	err := h.controller.CreateSubmissionResult(req)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
+		return c.JSON(http.StatusInternalServerError, errorSchema.InternalServerErrorResponseJSON)
 	}
 	return c.NoContent(http.StatusNoContent)
 }
@@ -81,7 +81,7 @@ func (h SubmissionHandlers) FindSubmissionByContestID(c echo.Context) error {
 	i := c.Param("id")
 	res, err := h.controller.FindByContestID(i)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, responses.InternalServerErrorResponseJSON)
+		return c.JSON(http.StatusInternalServerError, errorSchema.InternalServerErrorResponseJSON)
 	}
 	return c.JSON(http.StatusOK, res)
 }

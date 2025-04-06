@@ -6,7 +6,7 @@ import (
 	"sort"
 
 	"github.com/poporonnet/kojsx-backend/pkg/contest/model"
-	repository2 "github.com/poporonnet/kojsx-backend/pkg/contest/model/repository"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/model/repository"
 	"github.com/poporonnet/kojsx-backend/pkg/contest/service/problem"
 	"github.com/poporonnet/kojsx-backend/pkg/utils"
 
@@ -14,11 +14,11 @@ import (
 )
 
 type FindSubmissionService struct {
-	submissionRepository repository2.SubmissionRepository
-	problemRepository    repository2.ProblemRepository
+	submissionRepository repository.SubmissionRepository
+	problemRepository    repository.ProblemRepository
 }
 
-func NewFindSubmissionService(submissionRepository repository2.SubmissionRepository, problemRepository repository2.ProblemRepository) *FindSubmissionService {
+func NewFindSubmissionService(submissionRepository repository.SubmissionRepository, problemRepository repository.ProblemRepository) *FindSubmissionService {
 	return &FindSubmissionService{submissionRepository: submissionRepository, problemRepository: problemRepository}
 }
 

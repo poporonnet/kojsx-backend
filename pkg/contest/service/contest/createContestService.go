@@ -6,26 +6,26 @@ import (
 	"time"
 
 	"github.com/poporonnet/kojsx-backend/pkg/contest/model"
-	repository2 "github.com/poporonnet/kojsx-backend/pkg/contest/model/repository"
-	service2 "github.com/poporonnet/kojsx-backend/pkg/contest/model/service"
-	model2 "github.com/poporonnet/kojsx-backend/pkg/user/model"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/model/repository"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/model/service"
+	userModel "github.com/poporonnet/kojsx-backend/pkg/user/model"
 	"github.com/poporonnet/kojsx-backend/pkg/utils/id"
 )
 
 type CreateContestService struct {
-	contestRepository  repository2.ContestRepository
-	contestService     *service2.ContestService
+	contestRepository  repository.ContestRepository
+	contestService     *service.ContestService
 	joinContestService JoinContestService
 }
 
 func NewCreateContestService(
-	contestRepository repository2.ContestRepository,
-	contestantRepository repository2.ContestantRepository,
-	contestantService service2.ContestantService,
+	contestRepository repository.ContestRepository,
+	contestantRepository repository.ContestantRepository,
+	contestantService service.ContestantService,
 ) *CreateContestService {
 	return &CreateContestService{
 		contestRepository:  contestRepository,
-		contestService:     service2.NewContestService(contestRepository),
+		contestService:     service.NewContestService(contestRepository),
 		joinContestService: *NewJoinContestService(contestantRepository, contestantService),
 	}
 }
@@ -80,5 +80,5 @@ type CreateContestArgs struct {
 	// EndAt 終了時刻
 	EndAt time.Time
 	// User 操作を行うユーザー
-	User model2.User
+	User userModel.User
 }

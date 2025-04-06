@@ -1,4 +1,4 @@
-package responses
+package schema
 
 type commonAPIErrorResponseJSON struct {
 	Type    string `json:"type"`

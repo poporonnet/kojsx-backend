@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/poporonnet/kojsx-backend/pkg/user/model/repository"
-	password2 "github.com/poporonnet/kojsx-backend/pkg/utils/password"
+	"github.com/poporonnet/kojsx-backend/pkg/utils/password"
 	"github.com/poporonnet/kojsx-backend/pkg/utils/password/argon2"
 	"github.com/poporonnet/kojsx-backend/pkg/utils/token"
 )
@@ -24,7 +24,7 @@ func NewLoginService(repository repository.UserRepository, key string) *LoginSer
 	}
 }
 
-func (s *LoginService) Login(email string, password string) (string, string, error) {
+func (s *LoginService) Login(email string, pass string) (string, string, error) {
 	res, err := s.findService.FindUserByEmail(email)
 	if err != nil {
 		return "", "", fmt.Errorf("failed to find user: %w", err)
@@ -34,7 +34,7 @@ func (s *LoginService) Login(email string, password string) (string, string, err
 		return "", "", errors.New("not verified")
 	}
 	enc := argon2.NewArgon2PasswordEncoder()
-	if !enc.IsMatchPassword(password, password2.EncodedPassword(res.GetPassword())) {
+	if !enc.IsMatchPassword(pass, password.EncodedPassword(res.GetPassword())) {
 		return "", "", errors.New("password not matched")
 	}
 

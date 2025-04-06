@@ -1,4 +1,4 @@
-package service
+package domainService
 
 import (
 	"github.com/poporonnet/kojsx-backend/pkg/user/model"

@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/poporonnet/kojsx-backend/pkg/contest/model"
-	repository2 "github.com/poporonnet/kojsx-backend/pkg/contest/model/repository"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/model/repository"
 	"github.com/poporonnet/kojsx-backend/pkg/contest/model/service"
 	"github.com/poporonnet/kojsx-backend/pkg/utils"
 
@@ -15,16 +15,16 @@ import (
 )
 
 type CreateSubmissionService struct {
-	repository        repository2.SubmissionRepository
-	problemRepository repository2.ProblemRepository
+	repository        repository.SubmissionRepository
+	problemRepository repository.ProblemRepository
 	service           service.SubmissionService
 	idGenerator       id.Generator
 }
 
 func NewCreateSubmissionService(
-	repo repository2.SubmissionRepository,
+	repo repository.SubmissionRepository,
 	service service.SubmissionService,
-	problemRepository repository2.ProblemRepository,
+	problemRepository repository.ProblemRepository,
 ) *CreateSubmissionService {
 	return &CreateSubmissionService{
 		repo,

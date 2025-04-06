@@ -4,26 +4,26 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/poporonnet/kojsx-backend/pkg/contest/adaptor/controller/model"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/adaptor/controller/schema"
 	"github.com/poporonnet/kojsx-backend/pkg/contest/model/repository"
 	"github.com/poporonnet/kojsx-backend/pkg/contest/service/problem"
-	submission2 "github.com/poporonnet/kojsx-backend/pkg/contest/service/submission"
+	"github.com/poporonnet/kojsx-backend/pkg/contest/service/submission"
 	"github.com/poporonnet/kojsx-backend/pkg/user/service"
 	"github.com/poporonnet/kojsx-backend/pkg/utils/id"
 )
 
 type SubmissionController struct {
 	repository         repository.SubmissionRepository
-	createService      submission2.CreateSubmissionService
-	findService        submission2.FindSubmissionService
+	createService      submission.CreateSubmissionService
+	findService        submission.FindSubmissionService
 	findProblemService problem.FindProblemService
 	findUserService    service.FindUserService
 }
 
 func NewSubmissionController(
 	repository repository.SubmissionRepository,
-	createService submission2.CreateSubmissionService,
-	findService submission2.FindSubmissionService,
+	createService submission.CreateSubmissionService,
+	findService submission.FindSubmissionService,
 	findProblemService problem.FindProblemService,
 	findUserService service.FindUserService,
 ) *SubmissionController {
@@ -36,7 +36,7 @@ func NewSubmissionController(
 	}
 }
 
-func (c SubmissionController) CreateSubmission(cID string, req model.CreateSubmissionRequestJSON) (model.CreateSubmissionResponseJSON, error) {
+func (c SubmissionController) CreateSubmission(cID string, req schema.CreateSubmissionRequestJSON) (schema.CreateSubmissionResponseJSON, error) {
 	d, err := c.createService.Handle(
 		id.SnowFlakeID(req.ProblemID),
 		id.SnowFlakeID(cID),
@@ -44,10 +44,10 @@ func (c SubmissionController) CreateSubmission(cID string, req model.CreateSubmi
 		req.Code,
 	)
 	if err != nil {
-		return model.CreateSubmissionResponseJSON{}, err
+		return schema.CreateSubmissionResponseJSON{}, err
 	}
 
-	return model.CreateSubmissionResponseJSON{
+	return schema.CreateSubmissionResponseJSON{
 		ID:        string(d.GetID()),
 		ProblemID: string(d.GetProblemID()),
 		Code:      d.GetCode(),
@@ -55,20 +55,20 @@ func (c SubmissionController) CreateSubmission(cID string, req model.CreateSubmi
 	}, nil
 }
 
-func (c SubmissionController) FindByID(id id.SnowFlakeID) (model.GetSubmissionResponseJSON, error) {
+func (c SubmissionController) FindByID(id id.SnowFlakeID) (schema.GetSubmissionResponseJSON, error) {
 	s, err := c.findService.FindByID(id)
 	if err != nil {
-		return model.GetSubmissionResponseJSON{}, err
+		return schema.GetSubmissionResponseJSON{}, err
 	}
 	// ToDo: 内部的な問題の取得のユーザーをどうするか
 	p, err := c.findProblemService.FindByID(s.GetProblemID(), time.Now(), "")
 	if err != nil {
-		return model.GetSubmissionResponseJSON{}, err
+		return schema.GetSubmissionResponseJSON{}, err
 	}
 
-	results := make([]model.GetSubmissionResults, len(s.GetResults()))
+	results := make([]schema.GetSubmissionResults, len(s.GetResults()))
 	for i, v := range s.GetResults() {
-		results[i] = model.GetSubmissionResults{
+		results[i] = schema.GetSubmissionResults{
 			Name:   v.GetCaseName(),
 			Status: v.GetResult(),
 			Time:   v.GetExecTime(),
@@ -76,7 +76,7 @@ func (c SubmissionController) FindByID(id id.SnowFlakeID) (model.GetSubmissionRe
 		}
 	}
 	// ToDo: Contestant情報を入れる
-	return model.GetSubmissionResponseJSON{
+	return schema.GetSubmissionResponseJSON{
 		ID:          string(s.GetID()),
 		SubmittedAt: s.GetSubmittedAt(),
 		User: struct {
@@ -100,10 +100,10 @@ func (c SubmissionController) FindByID(id id.SnowFlakeID) (model.GetSubmissionRe
 	}, nil
 }
 
-func (c SubmissionController) CreateSubmissionResult(req model.CreateSubmissionResultRequestJSON) error {
-	arg := make([]submission2.CreateResultArgs, len(req.Results))
+func (c SubmissionController) CreateSubmissionResult(req schema.CreateSubmissionResultRequestJSON) error {
+	arg := make([]submission.CreateResultArgs, len(req.Results))
 	for i, v := range req.Results {
-		arg[i] = submission2.CreateResultArgs{
+		arg[i] = submission.CreateResultArgs{
 			Result:     "WJ",
 			Output:     v.Output,
 			CaseName:   v.CaseName,
@@ -119,49 +119,49 @@ func (c SubmissionController) CreateSubmissionResult(req model.CreateSubmissionR
 	return nil
 }
 
-func (c SubmissionController) FindTask() (model.GetSubmissionTaskResponseJSON, error) {
+func (c SubmissionController) FindTask() (schema.GetSubmissionTaskResponseJSON, error) {
 	res, err := c.findService.FindTask()
 	if err != nil {
-		return model.GetSubmissionTaskResponseJSON{}, err
+		return schema.GetSubmissionTaskResponseJSON{}, err
 	}
 
 	// ToDo: Agent用のContestantを作る
 	p, err := c.findProblemService.FindByID(res.GetProblemID(), time.Now(), "")
 	if err != nil {
-		return model.GetSubmissionTaskResponseJSON{}, err
+		return schema.GetSubmissionTaskResponseJSON{}, err
 	}
 
-	cases := make([]model.GetSubmissionTaskResponseCases, 0)
+	cases := make([]schema.GetSubmissionTaskResponseCases, 0)
 	for _, v := range p.GetCaseSets() {
 		for _, k := range v.GetCases() {
 			cases = append(cases,
-				model.GetSubmissionTaskResponseCases{
+				schema.GetSubmissionTaskResponseCases{
 					Name: fmt.Sprintf("%s.txt", k.GetID()),
 					Data: k.GetIn(),
 				},
 			)
 		}
 	}
-	return model.GetSubmissionTaskResponseJSON{
+	return schema.GetSubmissionTaskResponseJSON{
 		ID:        string(res.GetID()),
 		ProblemID: string(res.GetProblemID()),
 		Lang:      res.GetLang(),
 		Code:      res.GetCode(),
 		Cases:     cases,
-		Config: model.GetSubmissionTaskResponseConfig{
+		Config: schema.GetSubmissionTaskResponseConfig{
 			TimeLimit:   p.GetTimeLimit(),
 			MemoryLimit: p.GetMemoryLimit(),
 		},
 	}, nil
 }
 
-func (c SubmissionController) FindByContestID(i string) ([]model.FindSubmissionByContestIDResponseJSON, error) {
+func (c SubmissionController) FindByContestID(i string) ([]schema.FindSubmissionByContestIDResponseJSON, error) {
 	r, err := c.findService.FindByContestID(id.SnowFlakeID(i))
 	if err != nil {
 		return nil, err
 	}
 
-	res := make([]model.FindSubmissionByContestIDResponseJSON, 0)
+	res := make([]schema.FindSubmissionByContestIDResponseJSON, 0)
 	for _, k := range r.S {
 		problemName := ""
 		for _, q := range r.P {
@@ -169,7 +169,7 @@ func (c SubmissionController) FindByContestID(i string) ([]model.FindSubmissionB
 				problemName = fmt.Sprintf("%s - %s", q.GetIndex(), q.GetTitle())
 			}
 		}
-		res = append(res, model.FindSubmissionByContestIDResponseJSON{
+		res = append(res, schema.FindSubmissionByContestIDResponseJSON{
 			ID:          string(k.GetID()),
 			SubmittedAt: k.GetSubmittedAt(),
 			User: struct {
